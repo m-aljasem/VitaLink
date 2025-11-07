@@ -2,8 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import {
-  IonContent, IonHeader, IonTitle, IonToolbar, IonList, IonItem, IonLabel,
-  IonSelect, IonSelectOption, ToastController, AlertController, IonCard, IonCardContent,
+  IonContent, IonSelect, IonSelectOption, ToastController, AlertController, IonCard, IonCardContent,
   IonIcon, IonButton
 } from '@ionic/angular/standalone';
 import { TranslateModule } from '@ngx-translate/core';
@@ -26,8 +25,7 @@ import { ReminderService } from '../../core/reminder.service';
   standalone: true,
   imports: [
     CommonModule, FormsModule, RouterLink,
-    IonContent, IonHeader, IonTitle, IonToolbar, IonList, IonItem, IonLabel,
-    IonSelect, IonSelectOption, IonCard, IonCardContent, IonIcon, IonButton, TranslateModule
+    IonContent, IonSelect, IonSelectOption, IonCard, IonCardContent, IonIcon, IonButton, TranslateModule
   ],
 })
 export class SettingsPage implements OnInit {

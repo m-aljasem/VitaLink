@@ -3,9 +3,11 @@ import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { 
-  IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonInput, IonItem, IonLabel,
-  IonSpinner, ToastController
+  IonContent, IonButton, IonInput, IonItem, IonLabel,
+  IonSpinner, IonIcon, ToastController
 } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import { language } from 'ionicons/icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '../../core/auth.service';
 import { I18nService, SupportedLanguage } from '../../core/i18n.service';
@@ -22,8 +24,8 @@ interface LanguageOption {
   standalone: true,
   imports: [
     CommonModule, FormsModule,
-    IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonInput, IonItem, IonLabel,
-    IonSpinner, TranslateModule
+    IonContent, IonButton, IonInput, IonItem, IonLabel,
+    IonSpinner, IonIcon, TranslateModule
   ],
 })
 export class AuthPage implements OnInit {
@@ -48,7 +50,9 @@ export class AuthPage implements OnInit {
     private router: Router,
     private toastController: ToastController,
     private i18nService: I18nService
-  ) {}
+  ) {
+    addIcons({ language });
+  }
 
   ngOnInit() {
     this.currentLanguage = this.i18nService.getCurrentLanguage();

@@ -2,9 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { 
-  IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonSpinner,
+  IonContent, IonButton, IonSpinner, IonIcon,
   ToastController
 } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import { lockClosed } from 'ionicons/icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '../../core/auth.service';
 import { ProfileService } from '../../core/profile.service';
@@ -17,7 +19,7 @@ import { SixDigitInputComponent } from '../../shared/components/six-digit-input/
   standalone: true,
   imports: [
     CommonModule,
-    IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonSpinner,
+    IonContent, IonButton, IonSpinner, IonIcon,
     TranslateModule, SixDigitInputComponent
   ],
 })
@@ -32,7 +34,9 @@ export class VerifyPage implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private toastController: ToastController
-  ) {}
+  ) {
+    addIcons({ lockClosed });
+  }
 
   ngOnInit() {
     const state = history.state;

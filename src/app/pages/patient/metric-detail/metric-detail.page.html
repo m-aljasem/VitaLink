@@ -1,110 +1,133 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button defaultHref="/tabs/home"></ion-back-button>
-    </ion-buttons>
-    <ion-title>{{ 'METRICS.' + metric.toUpperCase() | translate }}</ion-title>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content [fullscreen]="true" class="ion-padding">
-  <div class="metric-detail-container">
-    <!-- Entry Form -->
-    <div class="entry-form" *ngIf="showForm">
-      <h2>{{ 'METRICS.ENTER_VALUE' | translate }}</h2>
-
-      <div *ngIf="metric === 'bp'">
-        <ion-item>
-          <ion-label position="stacked">{{ 'ONBOARDING.SYSTOLIC' | translate }}</ion-label>
-          <ion-input type="number" [(ngModel)]="systolic"></ion-input>
-        </ion-item>
-        <ion-item>
-          <ion-label position="stacked">{{ 'ONBOARDING.DIASTOLIC' | translate }}</ion-label>
-          <ion-input type="number" [(ngModel)]="diastolic"></ion-input>
-        </ion-item>
-        <ion-item>
-          <ion-label position="stacked">{{ 'METRICS.PULSE' | translate }} ({{ 'COMMON.OPTIONAL' | translate }})</ion-label>
-          <ion-input type="number" [(ngModel)]="pulse" placeholder="bpm"></ion-input>
-        </ion-item>
-      </div>
-
-      <div *ngIf="metric !== 'bp'">
-        <ion-item>
-          <ion-label position="stacked">{{ 'METRICS.ENTER_VALUE' | translate }}</ion-label>
-          <ion-input type="number" [(ngModel)]="numericValue"></ion-input>
-        </ion-item>
-      </div>
-
-      <div class="date-time-section">
-        <ion-label class="date-label">{{ 'METRICS.DATE_TIME' | translate }}</ion-label>
-        <div class="date-buttons">
-          <ion-button 
-            expand="block" 
-            [fill]="dateSelectionMode === 'right-now' ? 'solid' : 'outline'"
-            [color]="dateSelectionMode === 'right-now' ? 'primary' : 'medium'"
-            (click)="setRightNow()" 
-            class="date-button">
-            {{ 'METRICS.RIGHT_NOW' | translate }}
-          </ion-button>
-          <ion-button 
-            expand="block" 
-            [fill]="dateSelectionMode === 'custom' ? 'solid' : 'outline'"
-            [color]="dateSelectionMode === 'custom' ? 'primary' : 'medium'"
-            (click)="openDatePicker()" 
-            class="date-button">
-            {{ 'METRICS.CHOOSE_DATE' | translate }}
-          </ion-button>
-        </div>
-        <ion-text class="selected-date-text" color="medium">
-          {{ formatDateTime(selectedDateTime) }}
-        </ion-text>
-      </div>
-
-      <div *ngIf="availableTags.length > 0" class="tags-section">
-        <p>{{ 'METRICS.TAGS' | translate }}</p>
-        <div class="tags-container">
-          <ion-chip
-            *ngFor="let tag of availableTags"
-            [color]="selectedTags.includes(tag) ? 'primary' : 'medium'"
-            (click)="toggleTag(tag)"
-          >
-            {{ tag | translate }}
-          </ion-chip>
-        </div>
-      </div>
-
-      <ion-button expand="block" (click)="save()" class="ion-margin-top save-button">
-        {{ 'COMMON.SAVE' | translate }}
+<ion-content [fullscreen]="true" class="metric-detail-content" [style.--metric-color]="chartColor" [style.--metric-gradient]="getGradient()">
+  <div class="metric-detail-container ion-padding">
+    <div class="page-header">
+      <ion-button fill="clear" (click)="goBack()" class="back-button">
+        <ion-icon [name]="getBackIcon()"></ion-icon>
       </ion-button>
+      <h1 class="page-title">{{ 'METRICS.' + metric.toUpperCase() | translate }}</h1>
     </div>
+
+    <!-- Entry Form -->
+    <ion-card class="entry-form-card" *ngIf="showForm">
+      <ion-card-content>
+        <div class="entry-form">
+          <h2 class="form-title">
+            <ion-icon name="add-circle"></ion-icon>
+            {{ 'METRICS.ENTER_VALUE' | translate }}
+          </h2>
+
+          <div *ngIf="metric === 'bp'" class="form-fields bp-fields">
+            <ion-item class="form-item">
+              <ion-label position="stacked">{{ 'ONBOARDING.SYSTOLIC' | translate }}</ion-label>
+              <ion-input type="number" [(ngModel)]="systolic"></ion-input>
+            </ion-item>
+            <ion-item class="form-item">
+              <ion-label position="stacked">{{ 'ONBOARDING.DIASTOLIC' | translate }}</ion-label>
+              <ion-input type="number" [(ngModel)]="diastolic"></ion-input>
+            </ion-item>
+          </div>
+
+          <div *ngIf="metric !== 'bp'" class="form-fields">
+            <ion-item class="form-item">
+              <ion-label position="stacked">{{ 'METRICS.ENTER_VALUE' | translate }}</ion-label>
+              <ion-input type="number" [(ngModel)]="numericValue"></ion-input>
+            </ion-item>
+          </div>
+
+          <div class="date-time-section">
+            <ion-label class="date-label">
+              <ion-icon name="time-outline"></ion-icon>
+              {{ 'METRICS.DATE_TIME' | translate }}
+            </ion-label>
+            <div class="date-buttons">
+              <ion-button 
+                expand="block" 
+                [class.active]="dateSelectionMode === 'right-now'"
+                (click)="setRightNow()" 
+                class="date-button">
+                <ion-icon name="time" slot="start"></ion-icon>
+                {{ 'METRICS.RIGHT_NOW' | translate }}
+              </ion-button>
+              <ion-button 
+                expand="block" 
+                [class.active]="dateSelectionMode === 'custom'"
+                (click)="openDatePicker()" 
+                class="date-button">
+                <ion-icon name="calendar-outline" slot="start"></ion-icon>
+                {{ 'METRICS.CHOOSE_DATE' | translate }}
+              </ion-button>
+            </div>
+            <ion-text class="selected-date-text" color="medium">
+              <ion-icon name="checkmark-circle" size="small"></ion-icon>
+              {{ formatDateTime(selectedDateTime) }}
+            </ion-text>
+          </div>
+
+          <div *ngIf="availableTags.length > 0" class="tags-section">
+            <p class="tags-title">
+              <ion-icon name="pricetag-outline"></ion-icon>
+              {{ 'METRICS.TAGS' | translate }}
+            </p>
+            <div class="tags-container">
+              <ion-chip
+                *ngFor="let tag of availableTags"
+                class="tag-chip"
+                [class.selected]="selectedTags.includes(tag)"
+                (click)="toggleTag(tag)"
+              >
+                {{ tag | translate }}
+              </ion-chip>
+            </div>
+          </div>
+
+          <ion-button expand="block" (click)="save()" class="save-button">
+            <ion-icon name="checkmark-circle" slot="start"></ion-icon>
+            {{ 'COMMON.SAVE' | translate }}
+          </ion-button>
+        </div>
+      </ion-card-content>
+    </ion-card>
 
     <!-- Add New Record Button (shown when form is hidden) -->
     <div *ngIf="!showForm" class="add-record-section">
       <ion-button expand="block" (click)="showAddForm()" class="add-record-button">
+        <ion-icon name="add-circle" slot="start"></ion-icon>
         {{ 'METRICS.ADD_NEW_RECORD' | translate }}
       </ion-button>
     </div>
 
-    <!-- Chart -->
-    <div class="chart-section" *ngIf="chartData.length > 0">
-      <h2>{{ 'METRICS.CHART' | translate }}</h2>
-      <app-line-chart [data]="chartData" [labels]="chartLabels" [color]="chartColor"></app-line-chart>
-    </div>
+    <!-- Trend -->
+    <ion-card class="chart-card" *ngIf="chartData.length > 0">
+      <ion-card-content>
+        <div class="chart-section">
+          <h2 class="section-title">
+            <ion-icon name="bar-chart"></ion-icon>
+            {{ 'METRICS.TREND' | translate }}
+          </h2>
+          <app-line-chart [data]="chartData" [labels]="chartLabels" [color]="chartColor"></app-line-chart>
+        </div>
+      </ion-card-content>
+    </ion-card>
 
     <!-- History -->
     <div class="history-section">
-      <h2>{{ 'METRICS.HISTORY' | translate }}</h2>
+      <h2 class="section-title">
+        <ion-icon name="time-outline"></ion-icon>
+        {{ 'METRICS.HISTORY' | translate }}
+      </h2>
       <div class="history-cards">
-        <ion-card *ngFor="let obs of observations" class="history-card" [style.border-left-color]="chartColor">
+        <ion-card *ngFor="let obs of observations; let i = index" class="history-card" button (click)="showRecordDetail(obs)" [style.--metric-color]="chartColor" [style.--metric-gradient]="getGradient()">
           <ion-card-content>
             <div class="history-card-header">
-              <ion-icon [name]="getMetricIcon(obs.metric)" [style.color]="chartColor" class="history-icon"></ion-icon>
+              <div class="history-icon-wrapper" [style.background]="getGradient()">
+                <ion-icon [name]="getMetricIcon(obs.metric)" class="history-icon"></ion-icon>
+              </div>
               <div class="history-value-wrapper">
                 <div class="history-value" [style.color]="chartColor">
                   {{ formatValue(obs) }}
                 </div>
                 <div *ngIf="obs.tags && obs.tags.length > 0" class="history-tags">
-                  <ion-chip *ngFor="let tag of obs.tags" size="small" color="primary">
+                  <ion-chip *ngFor="let tag of obs.tags" size="small" class="history-chip" [style.--chip-color]="chartColor">
                     {{ tag | translate }}
                   </ion-chip>
                 </div>
@@ -120,6 +143,72 @@
         </ion-card>
       </div>
     </div>
+
+    <!-- Record Detail Modal -->
+    <ion-modal [isOpen]="showRecordModal" (didDismiss)="showRecordModal = false">
+      <ng-template>
+        <ion-header>
+          <ion-toolbar>
+            <ion-title>{{ 'METRICS.RECORD_DETAILS' | translate }}</ion-title>
+            <ion-buttons slot="end">
+              <ion-button (click)="showRecordModal = false">{{ 'COMMON.CLOSE' | translate }}</ion-button>
+            </ion-buttons>
+          </ion-toolbar>
+        </ion-header>
+        <ion-content class="ion-padding" *ngIf="selectedRecord">
+          <ion-card class="record-detail-card">
+            <ion-card-content>
+              <div class="record-detail-header">
+                <div class="record-icon-wrapper" [style.background]="getGradient()">
+                  <ion-icon [name]="getMetricIcon(selectedRecord.metric)" class="record-icon"></ion-icon>
+                </div>
+                <div class="record-info">
+                  <h3>{{ 'METRICS.' + selectedRecord.metric.toUpperCase() | translate }}</h3>
+                  <div class="record-value" [style.color]="chartColor">
+                    {{ formatValue(selectedRecord) }}
+                  </div>
+                </div>
+              </div>
+
+              <div class="record-details">
+                <div class="detail-row">
+                  <ion-icon name="time-outline"></ion-icon>
+                  <div>
+                    <strong>{{ 'METRICS.DATE_TIME' | translate }}:</strong>
+                    <p>{{ formatDateTime(selectedRecord.ts) }}</p>
+                  </div>
+                </div>
+                <div class="detail-row" *ngIf="selectedRecord.tags && selectedRecord.tags.length > 0">
+                  <ion-icon name="pricetag-outline"></ion-icon>
+                  <div>
+                    <strong>{{ 'METRICS.TAGS' | translate }}:</strong>
+                    <div class="record-tags">
+                      <ion-chip *ngFor="let tag of selectedRecord.tags" size="small" class="record-chip" [style.--chip-color]="chartColor">
+                        {{ tag | translate }}
+                      </ion-chip>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </ion-card-content>
+          </ion-card>
+
+          <div class="record-actions">
+            <ion-button expand="block" fill="outline" (click)="editRecord()" class="edit-button">
+              <ion-icon name="create-outline" slot="start"></ion-icon>
+              {{ 'COMMON.EDIT' | translate }}
+            </ion-button>
+            <ion-button expand="block" (click)="deleteRecord()" class="delete-button">
+              <ion-icon name="trash" slot="start"></ion-icon>
+              {{ 'COMMON.DELETE' | translate }}
+            </ion-button>
+            <ion-button expand="block" fill="clear" (click)="showRecordModal = false" class="ok-button">
+              {{ 'COMMON.OK' | translate }}
+            </ion-button>
+          </div>
+        </ion-content>
+      </ng-template>
+    </ion-modal>
   </div>
 </ion-content>
 

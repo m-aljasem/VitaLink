@@ -1,20 +1,21 @@
 
-
-<ion-content [fullscreen]="true" class="ion-padding">
-  <div class="auth-container">
+<ion-content [fullscreen]="true" class="auth-content">
+  <div class="auth-container ion-padding">
     <!-- Logo -->
     <div class="app-logo">
-      <span class="logo-emoji">🍏</span>
+      <div class="logo-wrapper">
+        <span class="logo-emoji">🍏</span>
+      </div>
     </div>
 
     <!-- Welcome Text - Centered -->
     <div class="auth-header">
       <h1>{{ 'AUTH.TITLE' | translate }}</h1>
-      <p>{{ 'AUTH.SUBTITLE' | translate }}</p>
+      <p class="subtitle">{{ 'AUTH.SUBTITLE' | translate }}</p>
     </div>
 
     <div class="auth-form">
-      <ion-item>
+      <ion-item class="form-item">
         <ion-label position="stacked">{{ 'AUTH.EMAIL' | translate }}</ion-label>
         <ion-input
           type="email"
@@ -28,21 +29,23 @@
         expand="block"
         (click)="requestCode()"
         [disabled]="loading || !email"
-        class="ion-margin-top"
+        class="request-button"
       >
         <ion-spinner *ngIf="loading" name="crescent"></ion-spinner>
-        <span *ngIf="!loading">{{ 'AUTH.REQUEST_CODE' | translate }}</span>
+        <span *ngIf="!loading">{{ 'AUTH.LOGIN' | translate }}</span>
       </ion-button>
     </div>
 
     <!-- Language Picker -->
     <div class="language-picker">
-      <h3 class="language-title">{{ 'SETTINGS.LANGUAGE' | translate }}</h3>
+      <h3 class="language-title">
+        <ion-icon name="language"></ion-icon>
+        {{ 'SETTINGS.LANGUAGE' | translate }}
+      </h3>
       <div class="language-buttons">
         <ion-button
           *ngFor="let lang of languages"
-          [color]="currentLanguage === lang.code ? 'primary' : 'medium'"
-          [fill]="currentLanguage === lang.code ? 'solid' : 'outline'"
+          [class.active]="currentLanguage === lang.code"
           (click)="changeLanguage(lang.code)"
           class="language-button"
         >

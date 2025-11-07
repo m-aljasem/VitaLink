@@ -107,10 +107,13 @@ export class AuthService {
       .from('profiles')
       .select('*')
       .eq('id', userId)
-      .single();
+      .maybeSingle();
 
     if (!error && data) {
       this.currentProfile$.next(data as Profile);
+    } else {
+      // Profile doesn't exist yet (new user), set to null
+      this.currentProfile$.next(null);
     }
   }
 

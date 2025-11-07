@@ -5,7 +5,8 @@ import { filter, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { 
   IonContent, IonRefresher, IonRefresherContent,
-  IonList, IonItem, IonLabel, IonIcon, IonText, IonChip, IonCard, IonCardContent
+  IonList, IonItem, IonLabel, IonIcon, IonText, IonChip, IonCard, IonCardContent,
+  IonModal, IonHeader, IonToolbar, IonTitle, IonButtons, IonButton, ToastController, AlertController
 } from '@ionic/angular/standalone';
 import { TranslateModule } from '@ngx-translate/core';
 import { AuthService, Profile } from '../../../core/auth.service';
@@ -13,7 +14,7 @@ import { ObservationService, MetricType, Observation } from '../../../core/obser
 import { MetricCardComponent } from '../../../shared/components/metric-card/metric-card.component';
 import { CommonModule } from '@angular/common';
 import { addIcons } from 'ionicons';
-import { heart, water, pulse, thermometer, bandage, scale, timeOutline } from 'ionicons/icons';
+import { heart, water, pulse, thermometer, bandage, scale, timeOutline, createOutline, trash, pricetagOutline } from 'ionicons/icons';
 
 interface MetricData {
   metric: MetricType;
@@ -32,7 +33,8 @@ interface MetricData {
   imports: [
     CommonModule,
     IonContent, IonRefresher, IonRefresherContent,
-    IonIcon, IonText, IonChip, IonCard, IonCardContent, TranslateModule, MetricCardComponent
+    IonIcon, IonText, IonChip, IonCard, IonCardContent, IonModal, IonHeader, IonToolbar, IonTitle, IonButtons, IonButton,
+    TranslateModule, MetricCardComponent
   ],
 })
 export class PatientHomePage implements OnInit, ViewWillEnter, OnDestroy {
@@ -42,6 +44,10 @@ export class PatientHomePage implements OnInit, ViewWillEnter, OnDestroy {
   recentActivity: Observation[] = [];
   loading = true;
   private destroy$ = new Subject<void>();
+
+  // Record detail modal
+  showRecordModal = false;
+  selectedRecord: Observation | null = null;
 
   metricColors: { [key in MetricType]: string } = {
     bp: '#EF4444',
@@ -55,9 +61,11 @@ export class PatientHomePage implements OnInit, ViewWillEnter, OnDestroy {
   constructor(
     private authService: AuthService,
     private observationService: ObservationService,
-    private router: Router
+    private router: Router,
+    private toastController: ToastController,
+    private alertController: AlertController
   ) {
-    addIcons({ heart, water, pulse, thermometer, bandage, scale, timeOutline });
+    addIcons({ heart, water, pulse, thermometer, bandage, scale, timeOutline, createOutline, trash, pricetagOutline });
     
     // Listen for navigation events to refresh data when returning to this page
     this.router.events
@@ -103,6 +111,18 @@ export class PatientHomePage implements OnInit, ViewWillEnter, OnDestroy {
 
   getMetricColor(metric: string): string {
     return this.metricColors[metric as MetricType] || '#3B82F6';
+  }
+
+  getMetricGradient(metric: string): string {
+    const gradients: { [key: string]: string } = {
+      bp: 'linear-gradient(135deg, #EF4444 0%, #DC2626 100%)',
+      glucose: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
+      spo2: 'linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)',
+      hr: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
+      pain: 'linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%)',
+      weight: 'linear-gradient(135deg, #6366F1 0%, #4F46E5 100%)',
+    };
+    return gradients[metric] || 'linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)';
   }
 
   async ngOnInit() {
@@ -284,6 +304,78 @@ export class PatientHomePage implements OnInit, ViewWillEnter, OnDestroy {
     // Older than a year
     const years = Math.floor(diffDays / 365);
     return years === 1 ? '1 year ago' : `${years} years ago`;
+  }
+
+  formatDateTime(dateString: string): string {
+    const date = new Date(dateString);
+    return date.toLocaleString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit'
+    });
+  }
+
+  showRecordDetail(obs: Observation) {
+    this.selectedRecord = obs;
+    this.showRecordModal = true;
+  }
+
+  editRecord() {
+    if (!this.selectedRecord) return;
+    
+    this.showRecordModal = false;
+    // Navigate to the metric detail page for editing
+    this.router.navigate(['/tabs/metric-detail', this.selectedRecord.metric], {
+      queryParams: { editId: this.selectedRecord.id }
+    });
+  }
+
+  async deleteRecord() {
+    if (!this.selectedRecord) return;
+
+    const alert = await this.alertController.create({
+      header: 'Delete Record',
+      message: 'Are you sure you want to delete this record?',
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel'
+        },
+        {
+          text: 'Delete',
+          role: 'destructive',
+          handler: async () => {
+            if (this.selectedRecord?.id) {
+              const { error } = await this.observationService.deleteObservation(this.selectedRecord.id);
+              
+              if (error) {
+                const toast = await this.toastController.create({
+                  message: 'Failed to delete record',
+                  duration: 2000,
+                  color: 'danger',
+                });
+                await toast.present();
+              } else {
+                const toast = await this.toastController.create({
+                  message: 'Record deleted successfully',
+                  duration: 2000,
+                  color: 'success',
+                });
+                await toast.present();
+                
+                this.showRecordModal = false;
+                this.selectedRecord = null;
+                await this.loadData(false);
+              }
+            }
+          }
+        }
+      ]
+    });
+
+    await alert.present();
   }
 }
 

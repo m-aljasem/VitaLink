@@ -1,13 +1,27 @@
-<ion-card (click)="navigateToDetail()" class="metric-card" [style.background]="getLightBackgroundColor()">
+<ion-card (click)="navigateToDetail()" class="metric-card" [style.--metric-color]="color" [style.--metric-gradient]="getGradient()">
   <ion-card-content>
+    <!-- Gradient background overlay -->
+    <div class="gradient-overlay"></div>
+    
     <!-- Sparkline as background -->
     <div class="sparkline-background" *ngIf="sparklineData && sparklineData.length > 0">
-      <svg class="sparkline" [attr.width]="120" [attr.height]="30" viewBox="0 0 120 30" preserveAspectRatio="none">
+      <svg class="sparkline" [attr.width]="120" [attr.height]="40" viewBox="0 0 120 40" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="sparkline-gradient-{{metric}}" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" [attr.stop-color]="color" stop-opacity="0.4"/>
+            <stop offset="100%" [attr.stop-color]="color" stop-opacity="0.05"/>
+          </linearGradient>
+        </defs>
+        <path
+          [attr.d]="getSparklinePathWithArea()"
+          [attr.fill]="'url(#sparkline-gradient-' + metric + ')'"
+          vector-effect="non-scaling-stroke"
+        />
         <path
           [attr.d]="getSparklinePath()"
           [attr.stroke]="color"
           fill="none"
-          stroke-width="2"
+          stroke-width="2.5"
           stroke-linecap="round"
           stroke-linejoin="round"
           vector-effect="non-scaling-stroke"
@@ -17,20 +31,30 @@
 
     <div class="metric-content">
       <div class="metric-header">
-        <ion-text class="metric-label">{{ getMetricLabel() | translate }}</ion-text>
-        <ion-icon 
-          *ngIf="trend !== 'neutral'"
-          [name]="trend === 'up' ? 'arrow-up' : 'arrow-down'"
-          [style.color]="trend === 'up' ? '#10B981' : '#EF4444'"
-        ></ion-icon>
+        <div class="metric-icon-wrapper" [style.background]="getGradient()">
+          <ion-icon [name]="getMetricIcon()" class="metric-icon"></ion-icon>
+        </div>
+        <div class="metric-header-text">
+          <ion-text class="metric-label">{{ getMetricLabel() | translate }}</ion-text>
+          <ion-icon 
+            *ngIf="trend !== 'neutral'"
+            [name]="trend === 'up' ? 'arrow-up' : 'arrow-down'"
+            class="trend-icon"
+            [class.trend-up]="trend === 'up'"
+            [class.trend-down]="trend === 'down'"
+          ></ion-icon>
+        </div>
       </div>
       
-      <div class="metric-value" [class.no-data]="!value" [style.color]="color">
-        {{ value || ('HOME.NO_DATA' | translate) }}
+      <div class="metric-value-wrapper">
+        <div class="metric-value" [class.no-data]="!value" [style.color]="color">
+          {{ value || ('HOME.NO_DATA' | translate) }}
+        </div>
       </div>
       
       <div class="metric-footer">
         <ion-text class="metric-time" *ngIf="lastTime">
+          <ion-icon name="time-outline" size="small"></ion-icon>
           {{ 'HOME.LAST' | translate }}: {{ formatTime(lastTime) }}
         </ion-text>
       </div>

@@ -1,60 +1,283 @@
-ion-content {
-  --padding-start: 0;
-  --padding-end: 0;
-  --padding-top: 0;
-  --padding-bottom: 0;
+.onboarding-content {
+  --background: linear-gradient(180deg, #667EEA 0%, #764BA2 50%, #F093FB 100%);
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+      radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+    pointer-events: none;
+  }
 }
 
 .onboarding-container {
   max-width: 600px;
   width: 100%;
   margin: 0 auto;
-  padding: 16px;
+  padding: 2rem 1.5rem;
   box-sizing: border-box;
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .step {
   width: 100%;
   max-width: 100%;
   box-sizing: border-box;
+  animation: fadeInUp 0.5s ease-out;
 
-  h1 {
-    font-size: 1.75rem;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-  }
-
-  p {
-    color: var(--ion-text-color);
-    opacity: 0.7;
+  .step-header {
+    text-align: center;
     margin-bottom: 2rem;
+
+    .step-icon-wrapper {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 1.5rem;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(10px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+
+      ion-icon {
+        font-size: 2.5rem;
+        color: white;
+      }
+    }
+
+    h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin: 0 0 0.75rem 0;
+      background: linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    p {
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 1.125rem;
+      font-weight: 400;
+      margin: 0;
+    }
+  }
+}
+
+.role-card {
+  margin: 0 0 1rem 0;
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease;
+  overflow: hidden;
+
+  &:active {
+    transform: scale(0.98);
   }
 
-  ion-item {
-    width: 100%;
-    --padding-start: 16px !important;
-    --padding-end: 16px !important;
-    --inner-padding-start: 0 !important;
-    --inner-padding-end: 0 !important;
-    margin-inline: 0 !important;
-    
-    ion-label {
-      margin-inline-start: 0 !important;
-      margin-inline-end: 0 !important;
+  ion-card-content {
+    padding: 2rem;
+    text-align: center;
+  }
+
+  .role-icon-wrapper {
+    width: 70px;
+    height: 70px;
+    margin: 0 auto 1rem;
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+    ion-icon {
+      font-size: 2.5rem;
+      color: white;
     }
   }
 
-  ion-button {
+  &.patient-card {
+    .role-icon-wrapper {
+      background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+    }
+
+    h2 {
+      color: var(--ion-text-color);
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin: 0;
+    }
+  }
+
+  &.provider-card {
+    .role-icon-wrapper {
+      background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
+    }
+
+    h2 {
+      color: var(--ion-text-color);
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin: 0;
+    }
+  }
+}
+
+.form-card {
+  margin: 0 0 1.5rem 0;
+  border-radius: 24px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  overflow: hidden;
+
+  ion-card-content {
+    padding: 1.5rem;
+  }
+
+  .form-item {
+    --background: #ffffff;
+    --border-radius: 16px;
+    --border-width: 1px;
+    --border-style: solid;
+    --border-color: #e5e7eb;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
     width: 100%;
-    max-width: 100%;
+    --padding-start: 16px;
+    --padding-end: 16px;
+    --inner-padding-start: 0;
+    --inner-padding-end: 0;
+    margin-inline: 0;
+    
+    &.item-has-focus {
+      --border-color: #667EEA;
+      --border-width: 2px;
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+      transform: translateY(-2px);
+    }
+    
+    ion-label {
+      margin-inline-start: 0;
+      margin-inline-end: 0;
+      --color: var(--ion-text-color);
+      font-weight: 600;
+      font-size: 0.875rem;
+    }
+
+    ion-input, ion-select {
+      --color: var(--ion-text-color);
+      font-size: 1rem;
+      font-weight: 500;
+    }
+  }
+
+  .provider-section {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e5e7eb;
+  }
+}
+
+.conditions-card {
+  margin: 0 0 1.5rem 0;
+  border-radius: 24px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  overflow: hidden;
+
+  ion-card-content {
+    padding: 1.5rem;
   }
 }
 
 .conditions-grid {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
+  gap: 0.75rem;
   width: 100%;
+
+  .condition-chip {
+    --background: #f3f4f6;
+    --color: var(--ion-text-color);
+    font-weight: 600;
+    font-size: 0.875rem;
+    height: 2.75rem;
+    border-radius: 12px;
+    margin: 0;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    border: 2px solid transparent;
+
+    &.selected {
+      --background: linear-gradient(135deg, #667EEA 0%, #764BA2 100%);
+      --color: white;
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+      transform: translateY(-2px);
+    }
+
+    &:active {
+      transform: scale(0.95);
+    }
+  }
 }
 
+.next-button {
+  --background: linear-gradient(135deg, #667EEA 0%, #764BA2 100%);
+  --color: white;
+  --border-radius: 16px;
+  --padding-top: 16px;
+  --padding-bottom: 16px;
+  font-weight: 600;
+  font-size: 1rem;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+  margin: 0 0 0.75rem 0;
+  transition: all 0.3s ease;
+
+  &:active {
+    transform: scale(0.98);
+  }
+
+  &[disabled] {
+    opacity: 0.6;
+  }
+}
+
+.skip-button {
+  --color: rgba(255, 255, 255, 0.9);
+  font-weight: 500;
+  margin: 0;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

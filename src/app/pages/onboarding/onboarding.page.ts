@@ -2,9 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import {
-  IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonInput, IonItem, IonLabel,
-  IonSelect, IonSelectOption, IonChip, IonSpinner
+  IonContent, IonButton, IonInput, IonItem, IonLabel,
+  IonSelect, IonSelectOption, IonChip, IonSpinner, IonCard, IonCardContent, IonIcon
 } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import { people, person, medical, pulse } from 'ionicons/icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { CommonModule } from '@angular/common';
 import { AuthService, Profile } from '../../core/auth.service';
@@ -12,7 +14,7 @@ import { ProfileService } from '../../core/profile.service';
 import { ObservationService } from '../../core/observation.service';
 import { I18nService } from '../../core/i18n.service';
 
-type OnboardingStep = 'role' | 'language' | 'profile' | 'conditions' | 'initial-metrics';
+type OnboardingStep = 'role' | 'profile' | 'conditions' | 'initial-metrics';
 
 @Component({
   selector: 'app-onboarding',
@@ -21,8 +23,8 @@ type OnboardingStep = 'role' | 'language' | 'profile' | 'conditions' | 'initial-
   standalone: true,
   imports: [
     CommonModule, FormsModule,
-    IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonInput, IonItem, IonLabel,
-    IonSelect, IonSelectOption, IonChip, IonSpinner, TranslateModule
+    IonContent, IonButton, IonInput, IonItem, IonLabel,
+    IonSelect, IonSelectOption, IonChip, IonSpinner, IonCard, IonCardContent, IonIcon, TranslateModule
   ],
 })
 export class OnboardingPage implements OnInit {
@@ -31,9 +33,6 @@ export class OnboardingPage implements OnInit {
 
   // Role step
   role: 'patient' | 'provider' | null = null;
-
-  // Language step
-  language = 'en';
 
   // Profile step
   firstName = '';
@@ -68,20 +67,60 @@ export class OnboardingPage implements OnInit {
     private observationService: ObservationService,
     private i18nService: I18nService,
     private router: Router
-  ) {}
+  ) {
+    addIcons({ people, person, medical, pulse });
+  }
 
   async ngOnInit() {
     this.user = this.authService.getCurrentUser();
     if (!this.user) {
       this.router.navigate(['/auth']);
+      return;
+    }
+
+    // Check if onboarding is already complete - show only once
+    const profile = await this.authService.getCurrentProfile();
+    if (profile && profile.role && profile.first_name) {
+      // Onboarding already complete, redirect to home
+      this.router.navigate(['/tabs/home']);
+      return;
+    }
+
+    // Load existing profile data to prefill form
+    if (profile) {
+      this.role = profile.role || null;
+      this.firstName = profile.first_name || '';
+      this.lastName = profile.last_name || '';
+      this.age = profile.age || null;
+      this.gender = profile.gender || null;
+      this.country = profile.country || '';
+      this.city = profile.city || '';
+      this.providerKind = profile.provider_kind || null;
+      this.hospital = profile.hospital || '';
+      this.conditions = profile.conditions || [];
+      this.height = profile.height_cm || null;
+      
+      // Load latest observations to prefill initial metrics
+      const latestWeight = await this.observationService.getLatestObservation(this.user.id, 'weight');
+      if (latestWeight.data?.numeric_value) {
+        this.weight = latestWeight.data.numeric_value;
+      }
+      
+      const latestBP = await this.observationService.getLatestObservation(this.user.id, 'bp');
+      if (latestBP.data) {
+        this.systolic = latestBP.data.systolic || null;
+        this.diastolic = latestBP.data.diastolic || null;
+      }
+      
+      // If role is already set, skip role step
+      if (this.role) {
+        this.currentStep = 'profile';
+      }
     }
   }
 
   nextStep() {
     if (this.currentStep === 'role') {
-      this.currentStep = 'language';
-    } else if (this.currentStep === 'language') {
-      this.i18nService.setLanguage(this.language as any);
       this.currentStep = 'profile';
     } else if (this.currentStep === 'profile') {
       if (this.role === 'provider') {
@@ -110,12 +149,15 @@ export class OnboardingPage implements OnInit {
 
     this.loading = true;
 
-    // Create profile
+    // Check if profile already exists
+    const existingProfile = await this.profileService.getProfile(this.user.id);
+    
+    // Prepare profile data
     const profileData: Partial<Profile> = {
       id: this.user.id,
       email: this.user.email || '',
       role: this.role!,
-      language: this.language,
+      language: this.i18nService.getCurrentLanguage(), // Use current language from i18n service
       first_name: this.firstName,
       last_name: this.lastName,
       age: this.age || undefined,
@@ -128,7 +170,12 @@ export class OnboardingPage implements OnInit {
       height_cm: this.height || undefined,
     };
 
-    await this.profileService.createProfile(profileData);
+    // Update existing profile or create new one
+    if (existingProfile.data) {
+      await this.profileService.updateProfile(this.user.id, profileData);
+    } else {
+      await this.profileService.createProfile(profileData);
+    }
 
     // Save initial observations
     if (this.systolic && this.diastolic) {

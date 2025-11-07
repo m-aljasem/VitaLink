@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonCard, IonCardContent, IonIcon, IonButton } from '@ionic/angular/standalone';
+import { IonContent, IonCard, IonCardContent, IonIcon, IonButton } from '@ionic/angular/standalone';
 import { TranslateModule } from '@ngx-translate/core';
 import { CommonModule } from '@angular/common';
 import { addIcons } from 'ionicons';
@@ -14,7 +14,7 @@ import { Router } from '@angular/router';
   templateUrl: './about.page.html',
   styleUrls: ['./about.page.scss'],
   standalone: true,
-  imports: [CommonModule, IonContent, IonHeader, IonTitle, IonToolbar, IonCard, IonCardContent, IonIcon, IonButton, TranslateModule],
+  imports: [CommonModule, IonContent, IonCard, IonCardContent, IonIcon, IonButton, TranslateModule],
 })
 export class AboutPage {
   version = '1.0.0';

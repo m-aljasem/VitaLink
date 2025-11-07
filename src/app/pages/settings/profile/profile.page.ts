@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import {
-  IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonInput, IonItem, IonLabel,
+  IonContent, IonButton, IonInput, IonItem, IonLabel,
   IonSelect, IonSelectOption, IonChip, ToastController, IonCard, IonCardContent, IonIcon
 } from '@ionic/angular/standalone';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -19,7 +19,7 @@ import { ProfileService } from '../../../core/profile.service';
   standalone: true,
   imports: [
     CommonModule, FormsModule,
-    IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonInput, IonItem, IonLabel,
+    IonContent, IonButton, IonInput, IonItem, IonLabel,
     IonSelect, IonSelectOption, IonChip, IonCard, IonCardContent, IonIcon, TranslateModule
   ],
 })

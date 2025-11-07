@@ -1,37 +1,45 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>{{ 'AUTH.VERIFY_CODE' | translate }}</ion-title>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content [fullscreen]="true" class="ion-padding">
+<ion-content [fullscreen]="true" class="verify-content">
   <div class="verify-container">
-    <div class="verify-header">
-      <h2>{{ 'AUTH.CODE_SENT' | translate }}</h2>
-      <p>{{ email }}</p>
+    <!-- Logo/Icon -->
+    <div class="verify-logo">
+      <div class="logo-wrapper">
+        <ion-icon name="lock-closed"></ion-icon>
+      </div>
     </div>
 
-    <app-six-digit-input
-      [(code)]="code"
-      (codeComplete)="onCodeComplete($event)"
-    ></app-six-digit-input>
+    <!-- Header -->
+    <div class="verify-header">
+      <h1>{{ 'AUTH.VERIFY_CODE' | translate }}</h1>
+      <p class="subtitle">{{ 'AUTH.CODE_SENT' | translate }}</p>
+      <p class="email">{{ email }}</p>
+    </div>
 
+    <!-- Code Input -->
+    <div class="code-input-wrapper">
+      <app-six-digit-input
+        [(code)]="code"
+        (codeComplete)="onCodeComplete($event)"
+      ></app-six-digit-input>
+    </div>
+
+    <!-- Verify Button -->
     <ion-button
       expand="block"
       (click)="verify()"
       [disabled]="loading || code.length !== 6"
-      class="ion-margin-top"
+      class="verify-button"
     >
       <ion-spinner *ngIf="loading" name="crescent"></ion-spinner>
       <span *ngIf="!loading">{{ 'AUTH.VERIFY' | translate }}</span>
     </ion-button>
 
+    <!-- Resend Button -->
     <ion-button
       fill="clear"
       expand="block"
       (click)="resendCode()"
       [disabled]="loading"
-      class="ion-margin-top"
+      class="resend-button"
     >
       {{ 'AUTH.RESEND' | translate }}
     </ion-button>

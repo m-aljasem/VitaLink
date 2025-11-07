@@ -1,161 +1,174 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>{{ 'ONBOARDING.PROFILE_TITLE' | translate }}</ion-title>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content [fullscreen]="true">
-  <div class="onboarding-container">
+<ion-content [fullscreen]="true" class="onboarding-content">
+  <div class="onboarding-container ion-padding">
     <!-- Role Step -->
     <div *ngIf="currentStep === 'role'" class="step">
-      <h1>{{ 'ONBOARDING.ROLE_TITLE' | translate }}</h1>
-      <p>{{ 'ONBOARDING.ROLE_SUBTITLE' | translate }}</p>
+      <div class="step-header">
+        <div class="step-icon-wrapper">
+          <ion-icon name="people"></ion-icon>
+        </div>
+        <h1>{{ 'ONBOARDING.ROLE_TITLE' | translate }}</h1>
+        <p>{{ 'ONBOARDING.ROLE_SUBTITLE' | translate }}</p>
+      </div>
       
-      <ion-button expand="block" (click)="role = 'patient'; nextStep()" class="ion-margin-top">
-        {{ 'ONBOARDING.PATIENT' | translate }}
-      </ion-button>
+      <ion-card class="role-card patient-card" button (click)="role = 'patient'; nextStep()">
+        <ion-card-content>
+          <div class="role-icon-wrapper">
+            <ion-icon name="person"></ion-icon>
+          </div>
+          <h2>{{ 'ONBOARDING.PATIENT' | translate }}</h2>
+        </ion-card-content>
+      </ion-card>
       
-      <ion-button expand="block" fill="outline" (click)="role = 'provider'; nextStep()" class="ion-margin-top">
-        {{ 'ONBOARDING.PROVIDER' | translate }}
-      </ion-button>
-    </div>
-
-    <!-- Language Step -->
-    <div *ngIf="currentStep === 'language'" class="step">
-      <h1>{{ 'ONBOARDING.LANGUAGE_TITLE' | translate }}</h1>
-      
-      <ion-item>
-        <ion-label>{{ 'ONBOARDING.LANGUAGE_TITLE' | translate }}</ion-label>
-        <ion-select [(ngModel)]="language">
-          <ion-select-option value="en">English</ion-select-option>
-          <ion-select-option value="es">Español</ion-select-option>
-          <ion-select-option value="fr">Français</ion-select-option>
-          <ion-select-option value="de">Deutsch</ion-select-option>
-          <ion-select-option value="ar">العربية</ion-select-option>
-          <ion-select-option value="fa">فارسی</ion-select-option>
-          <ion-select-option value="ur">اردو</ion-select-option>
-          <ion-select-option value="zh">中文</ion-select-option>
-          <ion-select-option value="ja">日本語</ion-select-option>
-        </ion-select>
-      </ion-item>
-      
-      <ion-button expand="block" (click)="nextStep()" class="ion-margin-top">
-        {{ 'COMMON.NEXT' | translate }}
-      </ion-button>
+      <ion-card class="role-card provider-card" button (click)="role = 'provider'; nextStep()">
+        <ion-card-content>
+          <div class="role-icon-wrapper">
+            <ion-icon name="people"></ion-icon>
+          </div>
+          <h2>{{ 'ONBOARDING.PROVIDER' | translate }}</h2>
+        </ion-card-content>
+      </ion-card>
     </div>
 
     <!-- Profile Step -->
     <div *ngIf="currentStep === 'profile'" class="step">
-      <h1>{{ 'ONBOARDING.PROFILE_TITLE' | translate }}</h1>
-      
-      <ion-item>
-        <ion-label position="stacked">{{ 'ONBOARDING.FIRST_NAME' | translate }}</ion-label>
-        <ion-input [(ngModel)]="firstName"></ion-input>
-      </ion-item>
-      
-      <ion-item>
-        <ion-label position="stacked">{{ 'ONBOARDING.LAST_NAME' | translate }}</ion-label>
-        <ion-input [(ngModel)]="lastName"></ion-input>
-      </ion-item>
-      
-      <ion-item>
-        <ion-label position="stacked">{{ 'ONBOARDING.AGE' | translate }}</ion-label>
-        <ion-input type="number" [(ngModel)]="age"></ion-input>
-      </ion-item>
-      
-      <ion-item>
-        <ion-label>{{ 'ONBOARDING.GENDER' | translate }}</ion-label>
-        <ion-select [(ngModel)]="gender">
-          <ion-select-option value="male">{{ 'ONBOARDING.MALE' | translate }}</ion-select-option>
-          <ion-select-option value="female">{{ 'ONBOARDING.FEMALE' | translate }}</ion-select-option>
-        </ion-select>
-      </ion-item>
-      
-      <ion-item>
-        <ion-label position="stacked">{{ 'ONBOARDING.COUNTRY' | translate }}</ion-label>
-        <ion-input [(ngModel)]="country"></ion-input>
-      </ion-item>
-      
-      <ion-item>
-        <ion-label position="stacked">{{ 'ONBOARDING.CITY' | translate }}</ion-label>
-        <ion-input [(ngModel)]="city"></ion-input>
-      </ion-item>
-
-      <div *ngIf="role === 'provider'" class="ion-margin-top">
-        <ion-item>
-          <ion-label>{{ 'ONBOARDING.PROVIDER_KIND' | translate }}</ion-label>
-          <ion-select [(ngModel)]="providerKind">
-            <ion-select-option value="doctor">{{ 'ONBOARDING.DOCTOR' | translate }}</ion-select-option>
-            <ion-select-option value="nurse">{{ 'ONBOARDING.NURSE' | translate }}</ion-select-option>
-            <ion-select-option value="family">{{ 'ONBOARDING.FAMILY' | translate }}</ion-select-option>
-            <ion-select-option value="friend">{{ 'ONBOARDING.FRIEND' | translate }}</ion-select-option>
-            <ion-select-option value="caregiver">{{ 'ONBOARDING.CAREGIVER' | translate }}</ion-select-option>
-          </ion-select>
-        </ion-item>
-        
-        <ion-item *ngIf="providerKind === 'doctor' || providerKind === 'nurse'">
-          <ion-label position="stacked">{{ 'ONBOARDING.HOSPITAL' | translate }}</ion-label>
-          <ion-input [(ngModel)]="hospital"></ion-input>
-        </ion-item>
+      <div class="step-header">
+        <div class="step-icon-wrapper">
+          <ion-icon name="person"></ion-icon>
+        </div>
+        <h1>{{ 'ONBOARDING.PROFILE_TITLE' | translate }}</h1>
       </div>
       
-      <ion-button expand="block" (click)="nextStep()" [disabled]="!firstName || !lastName" class="ion-margin-top">
+      <ion-card class="form-card">
+        <ion-card-content>
+          <ion-item class="form-item">
+            <ion-label position="stacked">{{ 'ONBOARDING.FIRST_NAME' | translate }}</ion-label>
+            <ion-input [(ngModel)]="firstName"></ion-input>
+          </ion-item>
+          
+          <ion-item class="form-item">
+            <ion-label position="stacked">{{ 'ONBOARDING.LAST_NAME' | translate }}</ion-label>
+            <ion-input [(ngModel)]="lastName"></ion-input>
+          </ion-item>
+          
+          <ion-item class="form-item">
+            <ion-label position="stacked">{{ 'ONBOARDING.AGE' | translate }}</ion-label>
+            <ion-input type="number" [(ngModel)]="age"></ion-input>
+          </ion-item>
+          
+          <ion-item class="form-item">
+            <ion-label>{{ 'ONBOARDING.GENDER' | translate }}</ion-label>
+            <ion-select [(ngModel)]="gender">
+              <ion-select-option value="male">{{ 'ONBOARDING.MALE' | translate }}</ion-select-option>
+              <ion-select-option value="female">{{ 'ONBOARDING.FEMALE' | translate }}</ion-select-option>
+            </ion-select>
+          </ion-item>
+          
+          <ion-item class="form-item">
+            <ion-label position="stacked">{{ 'ONBOARDING.COUNTRY' | translate }}</ion-label>
+            <ion-input [(ngModel)]="country"></ion-input>
+          </ion-item>
+          
+          <ion-item class="form-item">
+            <ion-label position="stacked">{{ 'ONBOARDING.CITY' | translate }}</ion-label>
+            <ion-input [(ngModel)]="city"></ion-input>
+          </ion-item>
+
+          <div *ngIf="role === 'provider'" class="provider-section">
+            <ion-item class="form-item">
+              <ion-label>{{ 'ONBOARDING.PROVIDER_KIND' | translate }}</ion-label>
+              <ion-select [(ngModel)]="providerKind">
+                <ion-select-option value="doctor">{{ 'ONBOARDING.DOCTOR' | translate }}</ion-select-option>
+                <ion-select-option value="nurse">{{ 'ONBOARDING.NURSE' | translate }}</ion-select-option>
+                <ion-select-option value="family">{{ 'ONBOARDING.FAMILY' | translate }}</ion-select-option>
+                <ion-select-option value="friend">{{ 'ONBOARDING.FRIEND' | translate }}</ion-select-option>
+                <ion-select-option value="caregiver">{{ 'ONBOARDING.CAREGIVER' | translate }}</ion-select-option>
+              </ion-select>
+            </ion-item>
+            
+            <ion-item *ngIf="providerKind === 'doctor' || providerKind === 'nurse'" class="form-item">
+              <ion-label position="stacked">{{ 'ONBOARDING.HOSPITAL' | translate }}</ion-label>
+              <ion-input [(ngModel)]="hospital"></ion-input>
+            </ion-item>
+          </div>
+        </ion-card-content>
+      </ion-card>
+      
+      <ion-button expand="block" (click)="nextStep()" [disabled]="!firstName || !lastName" class="next-button">
         {{ 'COMMON.NEXT' | translate }}
       </ion-button>
     </div>
 
     <!-- Conditions Step -->
     <div *ngIf="currentStep === 'conditions'" class="step">
-      <h1 *ngIf="role === 'patient'">{{ 'ONBOARDING.CONDITIONS_TITLE' | translate }}</h1>
-      <p *ngIf="role === 'patient'">{{ 'ONBOARDING.CONDITIONS_SUBTITLE' | translate }}</p>
-      
-      <div class="conditions-grid" *ngIf="role === 'patient'">
-        <ion-chip
-          *ngFor="let condition of availableConditions"
-          [color]="conditions.includes(condition) ? 'primary' : 'medium'"
-          (click)="toggleCondition(condition)"
-        >
-          {{ condition }}
-        </ion-chip>
+      <div class="step-header" *ngIf="role === 'patient'">
+        <div class="step-icon-wrapper">
+          <ion-icon name="medical"></ion-icon>
+        </div>
+        <h1>{{ 'ONBOARDING.CONDITIONS_TITLE' | translate }}</h1>
+        <p>{{ 'ONBOARDING.CONDITIONS_SUBTITLE' | translate }}</p>
       </div>
       
-      <ion-button expand="block" (click)="nextStep()" class="ion-margin-top">
+      <ion-card class="conditions-card" *ngIf="role === 'patient'">
+        <ion-card-content>
+          <div class="conditions-grid">
+            <ion-chip
+              *ngFor="let condition of availableConditions"
+              [class.selected]="conditions.includes(condition)"
+              (click)="toggleCondition(condition)"
+              class="condition-chip"
+            >
+              {{ condition }}
+            </ion-chip>
+          </div>
+        </ion-card-content>
+      </ion-card>
+      
+      <ion-button expand="block" (click)="nextStep()" class="next-button">
         {{ 'COMMON.NEXT' | translate }}
       </ion-button>
-      <ion-button expand="block" fill="clear" (click)="skip()" class="ion-margin-top">
+      <ion-button expand="block" fill="clear" (click)="skip()" class="skip-button">
         {{ 'ONBOARDING.SKIP' | translate }}
       </ion-button>
     </div>
 
     <!-- Initial Metrics Step -->
     <div *ngIf="currentStep === 'initial-metrics'" class="step">
-      <h1>{{ 'ONBOARDING.INITIAL_METRICS' | translate }}</h1>
+      <div class="step-header">
+        <div class="step-icon-wrapper">
+          <ion-icon name="pulse"></ion-icon>
+        </div>
+        <h1>{{ 'ONBOARDING.INITIAL_METRICS' | translate }}</h1>
+      </div>
       
-      <ion-item>
-        <ion-label position="stacked">{{ 'ONBOARDING.HEIGHT' | translate }}</ion-label>
-        <ion-input type="number" [(ngModel)]="height" placeholder="cm"></ion-input>
-      </ion-item>
+      <ion-card class="form-card">
+        <ion-card-content>
+          <ion-item class="form-item">
+            <ion-label position="stacked">{{ 'ONBOARDING.HEIGHT' | translate }}</ion-label>
+            <ion-input type="number" [(ngModel)]="height" placeholder="cm"></ion-input>
+          </ion-item>
+          
+          <ion-item class="form-item">
+            <ion-label position="stacked">{{ 'ONBOARDING.WEIGHT' | translate }}</ion-label>
+            <ion-input type="number" [(ngModel)]="weight" placeholder="kg"></ion-input>
+          </ion-item>
+          
+          <ion-item class="form-item">
+            <ion-label position="stacked">{{ 'ONBOARDING.SYSTOLIC' | translate }}</ion-label>
+            <ion-input type="number" [(ngModel)]="systolic"></ion-input>
+          </ion-item>
+          
+          <ion-item class="form-item">
+            <ion-label position="stacked">{{ 'ONBOARDING.DIASTOLIC' | translate }}</ion-label>
+            <ion-input type="number" [(ngModel)]="diastolic"></ion-input>
+          </ion-item>
+        </ion-card-content>
+      </ion-card>
       
-      <ion-item>
-        <ion-label position="stacked">{{ 'ONBOARDING.WEIGHT' | translate }}</ion-label>
-        <ion-input type="number" [(ngModel)]="weight" placeholder="kg"></ion-input>
-      </ion-item>
-      
-      <ion-item>
-        <ion-label position="stacked">{{ 'ONBOARDING.SYSTOLIC' | translate }}</ion-label>
-        <ion-input type="number" [(ngModel)]="systolic"></ion-input>
-      </ion-item>
-      
-      <ion-item>
-        <ion-label position="stacked">{{ 'ONBOARDING.DIASTOLIC' | translate }}</ion-label>
-        <ion-input type="number" [(ngModel)]="diastolic"></ion-input>
-      </ion-item>
-      
-      <ion-button expand="block" (click)="completeOnboarding()" [disabled]="loading" class="ion-margin-top">
+      <ion-button expand="block" (click)="completeOnboarding()" [disabled]="loading" class="next-button">
         <ion-spinner *ngIf="loading" name="crescent"></ion-spinner>
         <span *ngIf="!loading">{{ 'COMMON.SAVE' | translate }}</span>
       </ion-button>
-      <ion-button expand="block" fill="clear" (click)="skip()" [disabled]="loading" class="ion-margin-top">
+      <ion-button expand="block" fill="clear" (click)="skip()" [disabled]="loading" class="skip-button">
         {{ 'ONBOARDING.SKIP' | translate }}
       </ion-button>
     </div>

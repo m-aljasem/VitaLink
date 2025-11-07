@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import {
-  IonContent, IonHeader, IonTitle, IonToolbar, IonCard, IonCardContent, IonCardHeader, IonCardTitle,
-  IonList, IonItem, IonLabel, IonChip, IonText, IonRefresher, IonRefresherContent, IonIcon
+  IonContent, IonCard, IonCardContent, IonCardHeader, IonCardTitle,
+  IonChip, IonText, IonRefresher, IonRefresherContent, IonIcon
 } from '@ionic/angular/standalone';
 import { TranslateModule } from '@ngx-translate/core';
 import { CommonModule } from '@angular/common';
@@ -37,8 +37,8 @@ interface Stats {
   standalone: true,
   imports: [
     CommonModule,
-    IonContent, IonHeader, IonTitle, IonToolbar, IonCard, IonCardContent, IonCardHeader, IonCardTitle,
-    IonList, IonItem, IonLabel, IonChip, IonText, IonRefresher, IonRefresherContent, IonIcon, TranslateModule
+    IonContent, IonCard, IonCardContent, IonCardHeader, IonCardTitle,
+    IonChip, IonText, IonRefresher, IonRefresherContent, IonIcon, TranslateModule
   ],
 })
 export class ProviderHomePage implements OnInit {

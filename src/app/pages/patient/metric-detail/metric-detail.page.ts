@@ -3,16 +3,21 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import {
   IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonInput, IonItem, IonLabel,
-  IonDatetime, IonChip, IonList, IonBackButton, IonButtons, ToastController, IonText, IonCard, IonCardContent, IonIcon, ModalController
+  IonChip, IonButtons, ToastController, IonText, IonCard, IonCardContent, IonIcon, ModalController, AlertController, IonModal
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { pulse, water, heart, thermometer, bandage, scale, timeOutline } from 'ionicons/icons';
-import { TranslateModule } from '@ngx-translate/core';
+import { 
+  pulse, water, heart, thermometer, bandage, scale, timeOutline, arrowBack, arrowForward,
+  addCircle, time, calendarOutline, checkmarkCircle, pricetagOutline, barChart,
+  createOutline, trash
+} from 'ionicons/icons';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../core/auth.service';
 import { ObservationService, MetricType, Observation } from '../../../core/observation.service';
 import { LineChartComponent } from '../../../shared/components/line-chart/line-chart.component';
 import { DatePickerModalComponent } from '../../../shared/components/date-picker-modal/date-picker-modal.component';
+import { I18nService } from '../../../core/i18n.service';
 
 @Component({
   selector: 'app-metric-detail',
@@ -22,7 +27,7 @@ import { DatePickerModalComponent } from '../../../shared/components/date-picker
   imports: [
     CommonModule, FormsModule,
     IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonInput, IonItem, IonLabel,
-    IonDatetime, IonChip, IonList, IonBackButton, IonButtons, IonText, IonCard, IonCardContent, IonIcon, TranslateModule, LineChartComponent
+    IonChip, IonButtons, IonText, IonCard, IonCardContent, IonIcon, IonModal, TranslateModule, LineChartComponent
   ],
 })
 export class MetricDetailPage implements OnInit {
@@ -53,15 +58,48 @@ export class MetricDetailPage implements OnInit {
 
   availableTags: string[] = [];
 
+  // Record detail modal
+  showRecordModal = false;
+  selectedRecord: Observation | null = null;
+  editingRecord: Observation | null = null;
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private authService: AuthService,
     private observationService: ObservationService,
     private toastController: ToastController,
-    private modalController: ModalController
+    private modalController: ModalController,
+    private alertController: AlertController,
+    private i18nService: I18nService
   ) {
-    addIcons({ pulse, water, heart, thermometer, bandage, scale, timeOutline });
+    addIcons({ 
+      pulse, water, heart, thermometer, bandage, scale, timeOutline, arrowBack, arrowForward,
+      addCircle, time, calendarOutline, checkmarkCircle, pricetagOutline, barChart,
+      createOutline, trash
+    });
+  }
+
+  goBack() {
+    this.router.navigate(['/tabs/home']);
+  }
+
+  getBackIcon(): string {
+    const currentLang = this.i18nService.getCurrentLanguage();
+    const rtlLanguages = ['ar', 'fa', 'ur'];
+    return rtlLanguages.includes(currentLang) ? 'arrow-forward' : 'arrow-back';
+  }
+
+  getGradient(): string {
+    const gradients: { [key in MetricType]: string } = {
+      bp: 'linear-gradient(135deg, #EF4444 0%, #DC2626 100%)',
+      glucose: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
+      spo2: 'linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)',
+      hr: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
+      pain: 'linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%)',
+      weight: 'linear-gradient(135deg, #6366F1 0%, #4F46E5 100%)',
+    };
+    return gradients[this.metric] || 'linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)';
   }
 
   getMetricIcon(metric: MetricType): string {
@@ -315,6 +353,85 @@ export class MetricDetailPage implements OnInit {
       this.selectedDateTime = data.selectedDate;
       this.dateSelectionMode = 'custom';
     }
+  }
+
+  showRecordDetail(obs: Observation) {
+    this.selectedRecord = obs;
+    this.showRecordModal = true;
+  }
+
+  async editRecord() {
+    if (!this.selectedRecord) return;
+    
+    this.editingRecord = this.selectedRecord;
+    this.showRecordModal = false;
+    
+    // Populate form with record data
+    if (this.selectedRecord.metric === 'bp') {
+      this.systolic = this.selectedRecord.systolic || null;
+      this.diastolic = this.selectedRecord.diastolic || null;
+    } else {
+      this.numericValue = this.selectedRecord.numeric_value || null;
+    }
+    
+    this.selectedTags = this.selectedRecord.tags || [];
+    this.selectedDateTime = this.selectedRecord.ts;
+    this.dateSelectionMode = 'custom';
+    this.showForm = true;
+    
+    // Scroll to form
+    setTimeout(() => {
+      const formElement = document.querySelector('.entry-form-card');
+      if (formElement) {
+        formElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 100);
+  }
+
+  async deleteRecord() {
+    if (!this.selectedRecord) return;
+
+    const alert = await this.alertController.create({
+      header: 'Delete Record',
+      message: 'Are you sure you want to delete this record?',
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel'
+        },
+        {
+          text: 'Delete',
+          role: 'destructive',
+          handler: async () => {
+            if (this.selectedRecord?.id) {
+              const { error } = await this.observationService.deleteObservation(this.selectedRecord.id);
+              
+              if (error) {
+                const toast = await this.toastController.create({
+                  message: 'Failed to delete record',
+                  duration: 2000,
+                  color: 'danger',
+                });
+                await toast.present();
+              } else {
+                const toast = await this.toastController.create({
+                  message: 'Record deleted successfully',
+                  duration: 2000,
+                  color: 'success',
+                });
+                await toast.present();
+                
+                this.showRecordModal = false;
+                this.selectedRecord = null;
+                await this.loadData();
+              }
+            }
+          }
+        }
+      ]
+    });
+
+    await alert.present();
   }
 }
 

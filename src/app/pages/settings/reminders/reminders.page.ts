@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
   IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonButtons, IonInput, IonItem, IonLabel,
-  IonList, IonCheckbox, IonDatetime, IonIcon, IonText, IonModal, IonCard, IonCardContent, IonToggle, IonChip, ToastController, AlertController
+  IonCheckbox, IonDatetime, IonIcon, IonText, IonModal, IonCard, IonCardContent, IonToggle, IonChip, ToastController, AlertController
 } from '@ionic/angular/standalone';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { CommonModule } from '@angular/common';
@@ -20,7 +20,7 @@ import { Router } from '@angular/router';
   imports: [
     CommonModule, FormsModule,
     IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonButtons, IonInput, IonItem, IonLabel,
-    IonList, IonCheckbox, IonDatetime, IonIcon, IonText, IonModal, IonCard, IonCardContent, IonToggle, IonChip, TranslateModule
+    IonCheckbox, IonDatetime, IonIcon, IonText, IonModal, IonCard, IonCardContent, IonToggle, IonChip, TranslateModule
   ],
 })
 export class RemindersPage implements OnInit {

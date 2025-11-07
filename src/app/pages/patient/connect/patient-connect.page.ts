@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { 
   IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonButtons, IonItem, IonLabel,
-  IonList, IonText, IonToggle, IonModal, IonCard, IonCardContent, IonIcon, ToastController, AlertController
+  IonText, IonToggle, IonModal, IonCard, IonCardContent, IonIcon, ToastController, AlertController
 } from '@ionic/angular/standalone';
 import { TranslateModule } from '@ngx-translate/core';
 import { CommonModule } from '@angular/common';
@@ -25,7 +25,7 @@ import { SixDigitInputComponent } from '../../../shared/components/six-digit-inp
   imports: [
     CommonModule, FormsModule,
     IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonButtons, IonItem, IonLabel,
-    IonList, IonText, IonToggle, IonModal, IonCard, IonCardContent, IonIcon, TranslateModule, SixDigitInputComponent
+    IonText, IonToggle, IonModal, IonCard, IonCardContent, IonIcon, TranslateModule, SixDigitInputComponent
   ],
 })
 export class PatientConnectPage implements OnInit {

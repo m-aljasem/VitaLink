@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import {
-  IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonItem, IonLabel,
-  IonSelect, IonSelectOption, ToastController, IonCard, IonCardContent, IonIcon
+  IonContent, IonButton, ToastController, IonCard, IonCardContent, IonIcon
 } from '@ionic/angular/standalone';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { CommonModule } from '@angular/common';
@@ -19,8 +18,7 @@ import { ProfileService } from '../../../core/profile.service';
   standalone: true,
   imports: [
     CommonModule, FormsModule,
-    IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonItem, IonLabel,
-    IonSelect, IonSelectOption, IonCard, IonCardContent, IonIcon, TranslateModule
+    IonContent, IonButton, IonCard, IonCardContent, IonIcon, TranslateModule
   ],
 })
 export class ModeSwitchPage implements OnInit {
