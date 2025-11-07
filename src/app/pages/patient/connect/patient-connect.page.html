@@ -1,47 +1,91 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>{{ 'CONNECT.TITLE' | translate }}</ion-title>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content [fullscreen]="true" class="ion-padding">
-  <div class="connect-container">
+<ion-content [fullscreen]="true" class="patient-connect-content">
+  <div class="connect-container ion-padding">
     <div class="connect-header">
-      <h2>{{ 'CONNECT.TITLE' | translate }}</h2>
-      <p>{{ 'CONNECT.SUBTITLE' | translate }}</p>
+      <div class="header-icon">
+        <ion-icon name="people"></ion-icon>
+      </div>
+      <h1>{{ 'CONNECT.TITLE' | translate }}</h1>
+      <p class="subtitle">{{ 'CONNECT.SUBTITLE' | translate }}</p>
     </div>
 
-    <ion-button expand="block" (click)="shareViaOS()" class="ion-margin-top">
-      {{ 'CONNECT.SHARE_VIA_OS' | translate }}
-    </ion-button>
+    <div class="action-buttons">
+      <ion-button expand="block" (click)="shareViaOS()" class="share-button">
+        <ion-icon name="share-social" slot="start"></ion-icon>
+        {{ 'CONNECT.SHARE_VIA_OS' | translate }}
+      </ion-button>
 
-    <ion-button expand="block" fill="outline" (click)="showAddProviderModal()" class="ion-margin-top">
-      {{ 'CONNECT.ADD_CARETAKER' | translate }}
-    </ion-button>
+      <ion-button expand="block" (click)="showAddProviderModal()" class="add-button">
+        <ion-icon name="add-circle" slot="start"></ion-icon>
+        {{ 'CONNECT.ADD_CARETAKER' | translate }}
+      </ion-button>
+    </div>
 
-    <div class="providers-list ion-margin-top">
-      <h3>{{ 'CONNECT.MY_PROVIDERS' | translate }}</h3>
+    <div class="providers-section">
+      <div class="section-header">
+        <h2>
+          <ion-icon name="people-outline"></ion-icon>
+          {{ 'CONNECT.MY_PROVIDERS' | translate }}
+        </h2>
+        <div class="provider-count-badge" *ngIf="!loading && providers.length > 0">
+          {{ providers.length }}
+        </div>
+      </div>
       
-      <ion-list *ngIf="providers.length > 0">
-        <ion-item button *ngFor="let provider of providers" (click)="showProviderDetails(provider)">
-          <ion-label>
-            <h3>
-              <span *ngIf="provider.providerProfile?.first_name || provider.providerProfile?.last_name">
-                {{ provider.providerProfile?.first_name }} {{ provider.providerProfile?.last_name }}
-              </span>
-              <span *ngIf="!provider.providerProfile?.first_name && !provider.providerProfile?.last_name">
-                Provider {{ provider.provider_id.substring(0, 8) }}
-              </span>
-            </h3>
-            <p>{{ provider.providerProfile?.provider_kind || 'Provider' }}</p>
-            <p>{{ 'CONNECT.ADDED_DATE' | translate }}: {{ formatDate(provider.created_at) }}</p>
-          </ion-label>
-        </ion-item>
-      </ion-list>
+      <!-- Skeleton Loaders -->
+      <div class="providers-list" *ngIf="loading">
+        <ion-card *ngFor="let i of [1, 2, 3]" class="skeleton-provider-card">
+          <ion-card-content>
+            <div class="skeleton-provider-header">
+              <div class="skeleton-avatar"></div>
+              <div class="skeleton-info">
+                <div class="skeleton-name"></div>
+                <div class="skeleton-type"></div>
+                <div class="skeleton-date"></div>
+              </div>
+              <div class="skeleton-arrow"></div>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </div>
 
-      <ion-text *ngIf="providers.length === 0" color="medium">
-        {{ 'CONNECT.NO_PROVIDERS' | translate }}
-      </ion-text>
+      <!-- Actual Content -->
+      <div class="providers-list" *ngIf="!loading && providers.length > 0">
+        <ion-card *ngFor="let provider of providers" class="provider-card" button (click)="showProviderDetails(provider)">
+          <ion-card-content>
+            <div class="provider-header">
+              <div class="provider-avatar">
+                <ion-icon name="person"></ion-icon>
+              </div>
+              <div class="provider-info">
+                <h3>
+                  <span *ngIf="provider.providerProfile?.first_name || provider.providerProfile?.last_name">
+                    {{ provider.providerProfile?.first_name }} {{ provider.providerProfile?.last_name }}
+                  </span>
+                  <span *ngIf="!provider.providerProfile?.first_name && !provider.providerProfile?.last_name">
+                    Provider {{ provider.provider_id.substring(0, 8) }}
+                  </span>
+                </h3>
+                <p class="provider-type">
+                  <ion-icon name="medical"></ion-icon>
+                  {{ provider.providerProfile?.provider_kind || 'Provider' }}
+                </p>
+                <p class="provider-date">
+                  <ion-icon name="time-outline"></ion-icon>
+                  {{ 'CONNECT.ADDED_DATE' | translate }}: {{ formatDate(provider.created_at) }}
+                </p>
+              </div>
+              <ion-icon name="chevron-forward" class="arrow-icon"></ion-icon>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </div>
+
+      <div class="empty-state" *ngIf="!loading && providers.length === 0">
+        <ion-icon name="people-outline" class="empty-icon"></ion-icon>
+        <ion-text color="medium">
+          {{ 'CONNECT.NO_PROVIDERS' | translate }}
+        </ion-text>
+      </div>
     </div>
   </div>
 
@@ -55,39 +99,58 @@
           </ion-buttons>
         </ion-toolbar>
       </ion-header>
-      <ion-content class="ion-padding">
-        <p>{{ 'CONNECT.ENTER_CODE' | translate }}</p>
+      <ion-content class="ion-padding modal-content">
+        <div class="modal-header-section">
+          <div class="modal-icon-wrapper">
+            <ion-icon name="keypad"></ion-icon>
+          </div>
+          <p class="modal-description">{{ 'CONNECT.ENTER_CODE' | translate }}</p>
+        </div>
         <app-six-digit-input [(code)]="code" (codeComplete)="redeemCode()"></app-six-digit-input>
         
-        <div class="sharing-options ion-margin-top">
-          <h4>{{ 'CONNECT.SHARING_OPTIONS' | translate }}</h4>
-          <ion-item>
-            <ion-label>{{ 'CONNECT.SHARE_BP' | translate }}</ion-label>
-            <ion-toggle [(ngModel)]="newProviderSharing.share_bp"></ion-toggle>
-          </ion-item>
-          <ion-item>
-            <ion-label>{{ 'CONNECT.SHARE_GLUCOSE' | translate }}</ion-label>
-            <ion-toggle [(ngModel)]="newProviderSharing.share_glucose"></ion-toggle>
-          </ion-item>
-          <ion-item>
-            <ion-label>{{ 'CONNECT.SHARE_SPO2' | translate }}</ion-label>
-            <ion-toggle [(ngModel)]="newProviderSharing.share_spo2"></ion-toggle>
-          </ion-item>
-          <ion-item>
-            <ion-label>{{ 'CONNECT.SHARE_HR' | translate }}</ion-label>
-            <ion-toggle [(ngModel)]="newProviderSharing.share_hr"></ion-toggle>
-          </ion-item>
-          <ion-item>
-            <ion-label>{{ 'CONNECT.SHARE_PAIN' | translate }}</ion-label>
-            <ion-toggle [(ngModel)]="newProviderSharing.share_pain"></ion-toggle>
-          </ion-item>
-          <ion-item>
-            <ion-label>{{ 'CONNECT.SHARE_WEIGHT' | translate }}</ion-label>
-            <ion-toggle [(ngModel)]="newProviderSharing.share_weight"></ion-toggle>
-          </ion-item>
-        </div>
+        <ion-card class="sharing-options-card">
+          <ion-card-content>
+            <h4 class="sharing-title">
+              <ion-icon name="share-social-outline"></ion-icon>
+              {{ 'CONNECT.SHARING_OPTIONS' | translate }}
+            </h4>
+            <div class="sharing-grid">
+              <ion-item class="sharing-item">
+                <ion-icon name="pulse" slot="start" class="metric-icon"></ion-icon>
+                <ion-label>{{ 'CONNECT.SHARE_BP' | translate }}</ion-label>
+                <ion-toggle [(ngModel)]="newProviderSharing.share_bp" slot="end"></ion-toggle>
+              </ion-item>
+              <ion-item class="sharing-item">
+                <ion-icon name="water" slot="start" class="metric-icon"></ion-icon>
+                <ion-label>{{ 'CONNECT.SHARE_GLUCOSE' | translate }}</ion-label>
+                <ion-toggle [(ngModel)]="newProviderSharing.share_glucose" slot="end"></ion-toggle>
+              </ion-item>
+              <ion-item class="sharing-item">
+                <ion-icon name="pulse-outline" slot="start" class="metric-icon"></ion-icon>
+                <ion-label>{{ 'CONNECT.SHARE_SPO2' | translate }}</ion-label>
+                <ion-toggle [(ngModel)]="newProviderSharing.share_spo2" slot="end"></ion-toggle>
+              </ion-item>
+              <ion-item class="sharing-item">
+                <ion-icon name="heart" slot="start" class="metric-icon"></ion-icon>
+                <ion-label>{{ 'CONNECT.SHARE_HR' | translate }}</ion-label>
+                <ion-toggle [(ngModel)]="newProviderSharing.share_hr" slot="end"></ion-toggle>
+              </ion-item>
+              <ion-item class="sharing-item">
+                <ion-icon name="medical" slot="start" class="metric-icon"></ion-icon>
+                <ion-label>{{ 'CONNECT.SHARE_PAIN' | translate }}</ion-label>
+                <ion-toggle [(ngModel)]="newProviderSharing.share_pain" slot="end"></ion-toggle>
+              </ion-item>
+              <ion-item class="sharing-item">
+                <ion-icon name="scale" slot="start" class="metric-icon"></ion-icon>
+                <ion-label>{{ 'CONNECT.SHARE_WEIGHT' | translate }}</ion-label>
+                <ion-toggle [(ngModel)]="newProviderSharing.share_weight" slot="end"></ion-toggle>
+              </ion-item>
+            </div>
+          </ion-card-content>
+        </ion-card>
 
-        <ion-button expand="block" (click)="redeemCode()" [disabled]="code.length !== 6" class="ion-margin-top">
+        <ion-button expand="block" (click)="redeemCode()" [disabled]="code.length !== 6" class="confirm-button">
+          <ion-icon name="checkmark-circle" slot="start"></ion-icon>
           {{ 'COMMON.CONFIRM' | translate }}
         </ion-button>
       </ion-content>
@@ -105,56 +168,94 @@
           </ion-buttons>
         </ion-toolbar>
       </ion-header>
-      <ion-content class="ion-padding" *ngIf="selectedProvider">
+      <ion-content class="ion-padding modal-content" *ngIf="selectedProvider">
         <div class="provider-detail">
-          <p><strong>{{ 'ONBOARDING.PROVIDER_KIND' | translate }}:</strong> {{ selectedProvider.providerProfile?.provider_kind }}</p>
-          <p><strong>{{ 'CONNECT.ADDED_DATE' | translate }}:</strong> {{ formatDate(selectedProvider.created_at) }}</p>
+          <ion-card class="provider-info-card">
+            <ion-card-content>
+              <div class="detail-item">
+                <ion-icon name="medical-outline"></ion-icon>
+                <div>
+                  <strong>{{ 'ONBOARDING.PROVIDER_KIND' | translate }}:</strong>
+                  <p>{{ selectedProvider.providerProfile?.provider_kind }}</p>
+                </div>
+              </div>
+              <div class="detail-item">
+                <ion-icon name="calendar-outline"></ion-icon>
+                <div>
+                  <strong>{{ 'CONNECT.ADDED_DATE' | translate }}:</strong>
+                  <p>{{ formatDate(selectedProvider.created_at) }}</p>
+                </div>
+              </div>
+            </ion-card-content>
+          </ion-card>
           
-          <h4 class="ion-margin-top">{{ 'CONNECT.SHARING_OPTIONS' | translate }}</h4>
-          <ion-item>
-            <ion-label>{{ 'CONNECT.SHARE_BP' | translate }}</ion-label>
-            <ion-toggle
-              [checked]="selectedProvider.share_bp"
-              (ionChange)="updateSharing(selectedProvider.id, 'share_bp', $event.detail.checked)"
-            ></ion-toggle>
-          </ion-item>
-          <ion-item>
-            <ion-label>{{ 'CONNECT.SHARE_GLUCOSE' | translate }}</ion-label>
-            <ion-toggle
-              [checked]="selectedProvider.share_glucose"
-              (ionChange)="updateSharing(selectedProvider.id, 'share_glucose', $event.detail.checked)"
-            ></ion-toggle>
-          </ion-item>
-          <ion-item>
-            <ion-label>{{ 'CONNECT.SHARE_SPO2' | translate }}</ion-label>
-            <ion-toggle
-              [checked]="selectedProvider.share_spo2"
-              (ionChange)="updateSharing(selectedProvider.id, 'share_spo2', $event.detail.checked)"
-            ></ion-toggle>
-          </ion-item>
-          <ion-item>
-            <ion-label>{{ 'CONNECT.SHARE_HR' | translate }}</ion-label>
-            <ion-toggle
-              [checked]="selectedProvider.share_hr"
-              (ionChange)="updateSharing(selectedProvider.id, 'share_hr', $event.detail.checked)"
-            ></ion-toggle>
-          </ion-item>
-          <ion-item>
-            <ion-label>{{ 'CONNECT.SHARE_PAIN' | translate }}</ion-label>
-            <ion-toggle
-              [checked]="selectedProvider.share_pain"
-              (ionChange)="updateSharing(selectedProvider.id, 'share_pain', $event.detail.checked)"
-            ></ion-toggle>
-          </ion-item>
-          <ion-item>
-            <ion-label>{{ 'CONNECT.SHARE_WEIGHT' | translate }}</ion-label>
-            <ion-toggle
-              [checked]="selectedProvider.share_weight"
-              (ionChange)="updateSharing(selectedProvider.id, 'share_weight', $event.detail.checked)"
-            ></ion-toggle>
-          </ion-item>
+          <ion-card class="sharing-options-card">
+            <ion-card-content>
+              <h4 class="sharing-title">
+                <ion-icon name="share-social-outline"></ion-icon>
+                {{ 'CONNECT.SHARING_OPTIONS' | translate }}
+              </h4>
+              <div class="sharing-grid">
+                <ion-item class="sharing-item">
+                  <ion-icon name="pulse" slot="start" class="metric-icon"></ion-icon>
+                  <ion-label>{{ 'CONNECT.SHARE_BP' | translate }}</ion-label>
+                  <ion-toggle
+                    [checked]="selectedProvider.share_bp"
+                    (ionChange)="updateSharing(selectedProvider.id, 'share_bp', $event.detail.checked)"
+                    slot="end"
+                  ></ion-toggle>
+                </ion-item>
+                <ion-item class="sharing-item">
+                  <ion-icon name="water" slot="start" class="metric-icon"></ion-icon>
+                  <ion-label>{{ 'CONNECT.SHARE_GLUCOSE' | translate }}</ion-label>
+                  <ion-toggle
+                    [checked]="selectedProvider.share_glucose"
+                    (ionChange)="updateSharing(selectedProvider.id, 'share_glucose', $event.detail.checked)"
+                    slot="end"
+                  ></ion-toggle>
+                </ion-item>
+                <ion-item class="sharing-item">
+                  <ion-icon name="pulse-outline" slot="start" class="metric-icon"></ion-icon>
+                  <ion-label>{{ 'CONNECT.SHARE_SPO2' | translate }}</ion-label>
+                  <ion-toggle
+                    [checked]="selectedProvider.share_spo2"
+                    (ionChange)="updateSharing(selectedProvider.id, 'share_spo2', $event.detail.checked)"
+                    slot="end"
+                  ></ion-toggle>
+                </ion-item>
+                <ion-item class="sharing-item">
+                  <ion-icon name="heart" slot="start" class="metric-icon"></ion-icon>
+                  <ion-label>{{ 'CONNECT.SHARE_HR' | translate }}</ion-label>
+                  <ion-toggle
+                    [checked]="selectedProvider.share_hr"
+                    (ionChange)="updateSharing(selectedProvider.id, 'share_hr', $event.detail.checked)"
+                    slot="end"
+                  ></ion-toggle>
+                </ion-item>
+                <ion-item class="sharing-item">
+                  <ion-icon name="medical" slot="start" class="metric-icon"></ion-icon>
+                  <ion-label>{{ 'CONNECT.SHARE_PAIN' | translate }}</ion-label>
+                  <ion-toggle
+                    [checked]="selectedProvider.share_pain"
+                    (ionChange)="updateSharing(selectedProvider.id, 'share_pain', $event.detail.checked)"
+                    slot="end"
+                  ></ion-toggle>
+                </ion-item>
+                <ion-item class="sharing-item">
+                  <ion-icon name="scale" slot="start" class="metric-icon"></ion-icon>
+                  <ion-label>{{ 'CONNECT.SHARE_WEIGHT' | translate }}</ion-label>
+                  <ion-toggle
+                    [checked]="selectedProvider.share_weight"
+                    (ionChange)="updateSharing(selectedProvider.id, 'share_weight', $event.detail.checked)"
+                    slot="end"
+                  ></ion-toggle>
+                </ion-item>
+              </div>
+            </ion-card-content>
+          </ion-card>
 
-          <ion-button expand="block" color="danger" (click)="revokeAccess(selectedProvider); showProviderDetail = false" class="ion-margin-top">
+          <ion-button expand="block" (click)="revokeAccess(selectedProvider); showProviderDetail = false" class="revoke-button">
+            <ion-icon name="trash" slot="start"></ion-icon>
             {{ 'CONNECT.REVOKE' | translate }}
           </ion-button>
         </div>

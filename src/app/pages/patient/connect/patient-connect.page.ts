@@ -1,11 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { 
   IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonButtons, IonItem, IonLabel,
-  IonList, IonText, IonToggle, IonModal, ToastController, AlertController
+  IonList, IonText, IonToggle, IonModal, IonCard, IonCardContent, IonIcon, ToastController, AlertController
 } from '@ionic/angular/standalone';
 import { TranslateModule } from '@ngx-translate/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { addIcons } from 'ionicons';
+import { 
+  people, peopleOutline, shareSocial, addCircle, person, medical, timeOutline, 
+  chevronForward, keypad, shareSocialOutline, pulse, water, pulseOutline, heart, scale,
+  checkmarkCircle, medicalOutline, calendarOutline, trash
+} from 'ionicons/icons';
 import { AuthService } from '../../../core/auth.service';
 import { SharingService, ProviderLink } from '../../../core/sharing.service';
 import { ProfileService } from '../../../core/profile.service';
@@ -19,11 +25,12 @@ import { SixDigitInputComponent } from '../../../shared/components/six-digit-inp
   imports: [
     CommonModule, FormsModule,
     IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonButtons, IonItem, IonLabel,
-    IonList, IonText, IonToggle, IonModal, TranslateModule, SixDigitInputComponent
+    IonList, IonText, IonToggle, IonModal, IonCard, IonCardContent, IonIcon, TranslateModule, SixDigitInputComponent
   ],
 })
 export class PatientConnectPage implements OnInit {
   providers: (ProviderLink & { providerProfile?: any })[] = [];
+  loading = true;
   code = '';
   showCodeModal = false;
   selectedLink: ProviderLink | null = null;
@@ -53,28 +60,44 @@ export class PatientConnectPage implements OnInit {
     private profileService: ProfileService,
     private toastController: ToastController,
     private alertController: AlertController
-  ) {}
+  ) {
+    addIcons({ 
+      people, peopleOutline, shareSocial, addCircle, person, medical, timeOutline, 
+      chevronForward, keypad, shareSocialOutline, pulse, water, pulseOutline, heart, scale,
+      checkmarkCircle, medicalOutline, calendarOutline, trash
+    });
+  }
 
   async ngOnInit() {
     await this.loadProviders();
   }
 
   async loadProviders() {
-    const user = this.authService.getCurrentUser();
-    if (!user) return;
+    this.loading = true;
+    try {
+      const user = this.authService.getCurrentUser();
+      if (!user) {
+        this.loading = false;
+        return;
+      }
 
-    const { data: links } = await this.sharingService.getPatientLinks(user.id);
-    if (links) {
-      // Load provider profiles
-      this.providers = await Promise.all(
-        links.map(async (link) => {
-          const { data: profile, error } = await this.profileService.getProfile(link.provider_id);
-          if (error) {
-            console.error('Error loading provider profile:', error);
-          }
-          return { ...link, providerProfile: profile || null };
-        })
-      );
+      const { data: links } = await this.sharingService.getPatientLinks(user.id);
+      if (links) {
+        // Load provider profiles
+        this.providers = await Promise.all(
+          links.map(async (link) => {
+            const { data: profile, error } = await this.profileService.getProfile(link.provider_id);
+            if (error) {
+              console.error('Error loading provider profile:', error);
+            }
+            return { ...link, providerProfile: profile || null };
+          })
+        );
+      } else {
+        this.providers = [];
+      }
+    } finally {
+      this.loading = false;
     }
   }
 
