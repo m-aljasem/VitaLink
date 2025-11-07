@@ -81,6 +81,84 @@
     font-weight: 600;
     margin-bottom: 1rem;
   }
+
+  .history-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .history-card {
+    margin: 0;
+    border-radius: 10px;
+    border-left: 3px solid;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12), 0 1px 3px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s, box-shadow 0.2s;
+    background: white;
+    min-height: 90px;
+    display: flex;
+    flex-direction: column;
+
+    &:active {
+      transform: scale(0.98);
+      box-shadow: 0 1px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    ion-card-content {
+      padding: 0.75rem;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      justify-content: space-between;
+    }
+
+    .history-card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+
+      .history-icon {
+        font-size: 1.25rem;
+        flex-shrink: 0;
+      }
+
+      .history-value-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        flex: 1;
+        flex-wrap: wrap;
+
+        .history-value {
+          font-size: 1.25rem;
+          font-weight: 700;
+        }
+
+        .history-tags {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 0.375rem;
+          align-items: center;
+        }
+      }
+    }
+
+    .history-card-footer {
+      .history-time {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        font-size: 0.75rem;
+        color: var(--ion-text-color);
+        opacity: 0.7;
+
+        ion-icon {
+          font-size: 0.875rem;
+        }
+      }
+    }
+  }
 }
 
 .add-record-section {

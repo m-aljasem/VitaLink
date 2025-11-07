@@ -1,10 +1,4 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>{{ 'APP_NAME' | translate }}</ion-title>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content [fullscreen]="true">
+<ion-content [fullscreen]="true" class="provider-content">
   <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
@@ -16,64 +10,174 @@
 
     <!-- Stats Widgets -->
     <div class="stats-grid">
-      <ion-card>
-        <ion-card-header>
-          <ion-card-title>{{ stats.totalPatients }}</ion-card-title>
-        </ion-card-header>
-        <ion-card-content>
-          <p>{{ 'PROVIDER.STATS_PATIENTS' | translate }}</p>
-        </ion-card-content>
-      </ion-card>
+      <!-- Loading Placeholders -->
+      <ng-container *ngIf="loading">
+        <ion-card class="stat-card stat-card-1 skeleton-card">
+          <div class="stat-icon-wrapper skeleton-icon"></div>
+          <ion-card-header>
+            <div class="skeleton-text skeleton-title"></div>
+          </ion-card-header>
+          <ion-card-content>
+            <div class="skeleton-text skeleton-subtitle"></div>
+          </ion-card-content>
+        </ion-card>
+        <ion-card class="stat-card stat-card-2 skeleton-card">
+          <div class="stat-icon-wrapper skeleton-icon"></div>
+          <ion-card-header>
+            <div class="skeleton-text skeleton-title"></div>
+          </ion-card-header>
+          <ion-card-content>
+            <div class="skeleton-text skeleton-subtitle"></div>
+          </ion-card-content>
+        </ion-card>
+        <ion-card class="stat-card stat-card-3 skeleton-card">
+          <div class="stat-icon-wrapper skeleton-icon"></div>
+          <ion-card-header>
+            <div class="skeleton-text skeleton-title"></div>
+          </ion-card-header>
+          <ion-card-content>
+            <div class="skeleton-text skeleton-subtitle"></div>
+          </ion-card-content>
+        </ion-card>
+        <ion-card class="stat-card stat-card-4 skeleton-card">
+          <div class="stat-icon-wrapper skeleton-icon"></div>
+          <ion-card-header>
+            <div class="skeleton-text skeleton-title"></div>
+          </ion-card-header>
+          <ion-card-content>
+            <div class="skeleton-text skeleton-subtitle"></div>
+          </ion-card-content>
+        </ion-card>
+      </ng-container>
 
-      <ion-card>
-        <ion-card-header>
-          <ion-card-title>{{ stats.activeThisWeek }}</ion-card-title>
-        </ion-card-header>
-        <ion-card-content>
-          <p>{{ 'PROVIDER.STATS_ACTIVE' | translate }}</p>
-        </ion-card-content>
-      </ion-card>
+      <!-- Actual Stats -->
+      <ng-container *ngIf="!loading">
+        <ion-card class="stat-card stat-card-1">
+          <div class="stat-icon-wrapper">
+            <ion-icon name="people" class="stat-icon"></ion-icon>
+          </div>
+          <ion-card-header>
+            <ion-card-title>{{ stats.totalPatients }}</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <p>{{ 'PROVIDER.STATS_PATIENTS' | translate }}</p>
+          </ion-card-content>
+        </ion-card>
 
-      <ion-card>
-        <ion-card-header>
-          <ion-card-title>{{ stats.newLinks }}</ion-card-title>
-        </ion-card-header>
-        <ion-card-content>
-          <p>{{ 'PROVIDER.STATS_NEW' | translate }}</p>
-        </ion-card-content>
-      </ion-card>
+        <ion-card class="stat-card stat-card-2">
+          <div class="stat-icon-wrapper">
+            <ion-icon name="pulse" class="stat-icon"></ion-icon>
+          </div>
+          <ion-card-header>
+            <ion-card-title>{{ stats.activeThisWeek }}</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <p>{{ 'PROVIDER.STATS_ACTIVE' | translate }}</p>
+          </ion-card-content>
+        </ion-card>
 
-      <ion-card>
-        <ion-card-header>
-          <ion-card-title>{{ stats.exceptions }}</ion-card-title>
-        </ion-card-header>
-        <ion-card-content>
-          <p>{{ 'PROVIDER.STATS_EXCEPTIONS' | translate }}</p>
-        </ion-card-content>
-      </ion-card>
+        <ion-card class="stat-card stat-card-3">
+          <div class="stat-icon-wrapper">
+            <ion-icon name="add-circle" class="stat-icon"></ion-icon>
+          </div>
+          <ion-card-header>
+            <ion-card-title>{{ stats.newLinks }}</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <p>{{ 'PROVIDER.STATS_NEW' | translate }}</p>
+          </ion-card-content>
+        </ion-card>
+
+        <ion-card class="stat-card stat-card-4">
+          <div class="stat-icon-wrapper">
+            <ion-icon name="warning" class="stat-icon"></ion-icon>
+          </div>
+          <ion-card-header>
+            <ion-card-title>{{ stats.exceptions }}</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <p>{{ 'PROVIDER.STATS_EXCEPTIONS' | translate }}</p>
+          </ion-card-content>
+        </ion-card>
+      </ng-container>
     </div>
 
     <!-- Patients List -->
     <div class="patients-section">
-      <h2>{{ 'PROVIDER.PATIENT_DETAIL' | translate }}</h2>
+      <div class="section-header">
+        <h2>{{ 'PROVIDER.PATIENT_DETAIL' | translate }}</h2>
+        <div class="patient-count-badge" *ngIf="!loading">{{ patients.length }}</div>
+        <div class="patient-count-badge skeleton-badge" *ngIf="loading"></div>
+      </div>
       
-      <ion-list *ngIf="patients.length > 0">
-        <ion-item button *ngFor="let patient of patients" (click)="navigateToPatient(patient.profile.id)">
-          <ion-label>
-            <h3>{{ patient.profile.first_name }} {{ patient.profile.last_name }}</h3>
-            <p>{{ 'PROVIDER.LAST_SEEN' | translate }}: {{ formatDate(patient.lastSeen) }}</p>
+      <!-- Loading Placeholders for Patients -->
+      <div class="patients-list" *ngIf="loading">
+        <ion-card *ngFor="let i of [1,2,3]" class="patient-card skeleton-patient-card">
+          <ion-card-content>
+            <div class="patient-header">
+              <div class="patient-avatar skeleton-avatar"></div>
+              <div class="patient-info" style="flex: 1;">
+                <div class="skeleton-text skeleton-name"></div>
+                <div class="skeleton-text skeleton-date"></div>
+              </div>
+              <div class="skeleton-arrow"></div>
+            </div>
             <div class="shared-metrics">
-              <ion-chip *ngFor="let metric of patient.sharedMetrics" size="small">
+              <div class="skeleton-chip" *ngFor="let j of [1,2,3]"></div>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </div>
+
+      <!-- Actual Patients List -->
+      <div class="patients-list" *ngIf="!loading && patients.length > 0">
+        <ion-card 
+          *ngFor="let patient of patients; let i = index" 
+          class="patient-card"
+          [style.animation-delay]="(i * 0.1) + 's'"
+          (click)="navigateToPatient(patient.profile.id)">
+          <ion-card-content>
+            <div class="patient-header">
+              <div class="patient-avatar">
+                <ion-icon name="person"></ion-icon>
+              </div>
+              <div class="patient-info">
+                <h3>
+                  <span *ngIf="patient.profile.first_name || patient.profile.last_name">
+                    {{ patient.profile.first_name }} {{ patient.profile.last_name }}
+                  </span>
+                  <span *ngIf="!patient.profile.first_name && !patient.profile.last_name">
+                    Patient {{ patient.profile.id.substring(0, 8) }}
+                  </span>
+                </h3>
+                <p class="last-seen">
+                  <ion-icon name="time-outline"></ion-icon>
+                  {{ 'PROVIDER.LAST_SEEN' | translate }}: {{ formatDate(patient.lastSeen) }}
+                </p>
+              </div>
+              <div class="patient-arrow">
+                <ion-icon name="chevron-forward"></ion-icon>
+              </div>
+            </div>
+            <div class="shared-metrics">
+              <ion-chip 
+                *ngFor="let metric of patient.sharedMetrics" 
+                size="small"
+                [class]="'metric-' + metric">
+                <ion-icon [name]="getMetricIcon(metric)"></ion-icon>
                 {{ 'METRICS.' + metric.toUpperCase() | translate }}
               </ion-chip>
             </div>
-          </ion-label>
-        </ion-item>
-      </ion-list>
+          </ion-card-content>
+        </ion-card>
+      </div>
 
-      <ion-text *ngIf="patients.length === 0" color="medium">
-        {{ 'CONNECT.NO_PROVIDERS' | translate }}
-      </ion-text>
+      <div class="empty-state" *ngIf="!loading && patients.length === 0">
+        <ion-icon name="people-outline" class="empty-icon"></ion-icon>
+        <ion-text color="medium">
+          {{ 'CONNECT.NO_PROVIDERS' | translate }}
+        </ion-text>
+      </div>
     </div>
   </div>
 </ion-content>

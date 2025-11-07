@@ -9,29 +9,15 @@ import { map } from 'rxjs/operators';
 import { routes } from './app/app.routes';
 import { AppComponent } from './app/app.component';
 
-// Custom loader to debug the issue
+// Custom loader for translations
 export class CustomTranslateLoader implements TranslateLoader {
-  constructor(private http: HttpClient) {
-    console.log('CustomTranslateLoader constructor called');
-  }
+  constructor(private http: HttpClient) {}
 
   getTranslation(lang: string): Observable<any> {
     const url = `./assets/i18n/${lang}.json`;
-    console.log('🔍 CustomTranslateLoader.getTranslation called for lang:', lang);
-    console.log('🔍 Loading translations from URL:', url);
     
     return this.http.get<any>(url, { responseType: 'json' }).pipe(
       map((response: any) => {
-        console.log('✅ Raw HTTP response received:', response);
-        console.log('✅ Response type:', typeof response);
-        console.log('✅ Response is array?', Array.isArray(response));
-        console.log('✅ Response keys count:', Object.keys(response || {}).length);
-        console.log('✅ Response keys:', Object.keys(response || {}));
-        
-        if (!response || Object.keys(response).length === 0) {
-          console.error('❌ WARNING: Response is empty!');
-        }
-        
         return response || {};
       })
     );

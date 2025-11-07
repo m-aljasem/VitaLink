@@ -1,71 +1,152 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>{{ 'SETTINGS.TITLE' | translate }}</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content [fullscreen]="true" class="settings-content">
+  <div class="settings-container ion-padding">
+    <div class="settings-header">
+      <h1>{{ 'SETTINGS.TITLE' | translate }}</h1>
+      <p class="subtitle">Manage your preferences and account</p>
+    </div>
 
-<ion-content [fullscreen]="true">
-  <ion-list>
-    <ion-item button routerLink="/tabs/settings/profile">
-      <ion-label>
-        <h2>{{ 'SETTINGS.PROFILE' | translate }}</h2>
-      </ion-label>
-    </ion-item>
+    <!-- Account Section -->
+    <div class="settings-section">
+      <h2 class="section-title">Account</h2>
+      <ion-card class="settings-card" button routerLink="profile">
+        <ion-card-content>
+          <div class="setting-item">
+            <div class="setting-icon-wrapper icon-profile">
+              <ion-icon name="person"></ion-icon>
+            </div>
+            <div class="setting-content">
+              <h3>{{ 'SETTINGS.PROFILE' | translate }}</h3>
+              <p>Manage your personal information</p>
+            </div>
+            <ion-icon name="chevron-forward" class="arrow-icon"></ion-icon>
+          </div>
+        </ion-card-content>
+      </ion-card>
 
-    <ion-item button routerLink="/tabs/settings/reminders">
-      <ion-label>
-        <h2>{{ 'SETTINGS.REMINDERS' | translate }}</h2>
-      </ion-label>
-    </ion-item>
+      <ion-card class="settings-card" button routerLink="reminders">
+        <ion-card-content>
+          <div class="setting-item">
+            <div class="setting-icon-wrapper icon-reminders">
+              <ion-icon name="notifications"></ion-icon>
+            </div>
+            <div class="setting-content">
+              <h3>{{ 'SETTINGS.REMINDERS' | translate }}</h3>
+              <p>Set up health reminders</p>
+            </div>
+            <ion-icon name="chevron-forward" class="arrow-icon"></ion-icon>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
 
-    <ion-item>
-      <ion-label>
-        <h2>{{ 'SETTINGS.LANGUAGE' | translate }}</h2>
-      </ion-label>
-      <ion-select [(ngModel)]="currentLanguage" (ionChange)="changeLanguage($event.detail.value)">
-        <ion-select-option value="en">English</ion-select-option>
-        <ion-select-option value="es">Español</ion-select-option>
-        <ion-select-option value="fr">Français</ion-select-option>
-        <ion-select-option value="de">Deutsch</ion-select-option>
-        <ion-select-option value="ar">العربية</ion-select-option>
-        <ion-select-option value="fa">فارسی</ion-select-option>
-        <ion-select-option value="ur">اردو</ion-select-option>
-      </ion-select>
-    </ion-item>
+    <!-- Preferences Section -->
+    <div class="settings-section">
+      <h2 class="section-title">Preferences</h2>
+      <ion-card class="settings-card">
+        <ion-card-content>
+          <div class="setting-item">
+            <div class="setting-icon-wrapper icon-language">
+              <ion-icon name="language"></ion-icon>
+            </div>
+            <div class="setting-content">
+              <h3>{{ 'SETTINGS.LANGUAGE' | translate }}</h3>
+              <ion-select 
+                [(ngModel)]="currentLanguage" 
+                (ionChange)="changeLanguage($event.detail.value)"
+                class="language-select">
+                <ion-select-option value="en">English</ion-select-option>
+                <ion-select-option value="es">Español</ion-select-option>
+                <ion-select-option value="fr">Français</ion-select-option>
+                <ion-select-option value="de">Deutsch</ion-select-option>
+                <ion-select-option value="ar">العربية</ion-select-option>
+                <ion-select-option value="fa">فارسی</ion-select-option>
+                <ion-select-option value="ur">اردو</ion-select-option>
+                <ion-select-option value="zh">中文</ion-select-option>
+                <ion-select-option value="ja">日本語</ion-select-option>
+              </ion-select>
+            </div>
+          </div>
+        </ion-card-content>
+      </ion-card>
 
-    <ion-item button routerLink="/tabs/settings/mode-switch">
-      <ion-label>
-        <h2>{{ 'SETTINGS.SWITCH_MODE' | translate }}</h2>
-      </ion-label>
-    </ion-item>
+      <ion-card class="settings-card" button routerLink="mode-switch">
+        <ion-card-content>
+          <div class="setting-item">
+            <div class="setting-icon-wrapper icon-mode">
+              <ion-icon name="swap-horizontal"></ion-icon>
+            </div>
+            <div class="setting-content">
+              <h3>{{ 'SETTINGS.SWITCH_MODE' | translate }}</h3>
+              <p>Switch between patient and provider mode</p>
+            </div>
+            <ion-icon name="chevron-forward" class="arrow-icon"></ion-icon>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
 
-    <ion-item button routerLink="/tabs/settings/about">
-      <ion-label>
-        <h2>{{ 'SETTINGS.ABOUT' | translate }}</h2>
-      </ion-label>
-    </ion-item>
+    <!-- Data Section -->
+    <div class="settings-section">
+      <h2 class="section-title">Data</h2>
+      <ion-card class="settings-card">
+        <ion-card-content>
+          <div class="setting-item">
+            <div class="setting-icon-wrapper icon-export">
+              <ion-icon name="download"></ion-icon>
+            </div>
+            <div class="setting-content">
+              <h3>{{ 'SETTINGS.EXPORT_DATA' | translate }}</h3>
+              <div class="export-buttons">
+                <ion-button fill="outline" size="small" (click)="exportCSV()">
+                  <ion-icon name="document-text" slot="start"></ion-icon>
+                  {{ 'SETTINGS.EXPORT_CSV' | translate }}
+                </ion-button>
+                <ion-button fill="outline" size="small" (click)="exportJSON()">
+                  <ion-icon name="code" slot="start"></ion-icon>
+                  {{ 'SETTINGS.EXPORT_JSON' | translate }}
+                </ion-button>
+              </div>
+            </div>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
 
-    <ion-item>
-      <ion-label>
-        <h2>{{ 'SETTINGS.EXPORT_DATA' | translate }}</h2>
-      </ion-label>
-    </ion-item>
-    <ion-item button (click)="exportCSV()">
-      <ion-label>
-        <p>{{ 'SETTINGS.EXPORT_CSV' | translate }}</p>
-      </ion-label>
-    </ion-item>
-    <ion-item button (click)="exportJSON()">
-      <ion-label>
-        <p>{{ 'SETTINGS.EXPORT_JSON' | translate }}</p>
-      </ion-label>
-    </ion-item>
+    <!-- About Section -->
+    <div class="settings-section">
+      <ion-card class="settings-card" button routerLink="about">
+        <ion-card-content>
+          <div class="setting-item">
+            <div class="setting-icon-wrapper icon-about">
+              <ion-icon name="information-circle"></ion-icon>
+            </div>
+            <div class="setting-content">
+              <h3>{{ 'SETTINGS.ABOUT' | translate }}</h3>
+              <p>App version and information</p>
+            </div>
+            <ion-icon name="chevron-forward" class="arrow-icon"></ion-icon>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
 
-    <ion-item button (click)="logout()">
-      <ion-label>
-        <h2>{{ 'SETTINGS.LOGOUT' | translate }}</h2>
-      </ion-label>
-    </ion-item>
-  </ion-list>
+    <!-- Logout Section -->
+    <div class="settings-section">
+      <ion-card class="settings-card logout-card" button (click)="logout()">
+        <ion-card-content>
+          <div class="setting-item">
+            <div class="setting-icon-wrapper icon-logout">
+              <ion-icon name="log-out"></ion-icon>
+            </div>
+            <div class="setting-content">
+              <h3>{{ 'SETTINGS.LOGOUT' | translate }}</h3>
+              <p>Sign out of your account</p>
+            </div>
+            <ion-icon name="chevron-forward" class="arrow-icon"></ion-icon>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+  </div>
 </ion-content>
 

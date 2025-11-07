@@ -68,8 +68,11 @@ export class PatientConnectPage implements OnInit {
       // Load provider profiles
       this.providers = await Promise.all(
         links.map(async (link) => {
-          const { data: profile } = await this.profileService.getProfile(link.provider_id);
-          return { ...link, providerProfile: profile };
+          const { data: profile, error } = await this.profileService.getProfile(link.provider_id);
+          if (error) {
+            console.error('Error loading provider profile:', error);
+          }
+          return { ...link, providerProfile: profile || null };
         })
       );
     }

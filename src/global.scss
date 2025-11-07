@@ -28,3 +28,95 @@
 /* Tailwind CSS is handled by PostCSS - no need to import here */
 
 /* Dark mode disabled - light mode only */
+
+/* Global Input Field Styling */
+ion-item {
+  --background: #ffffff;
+  --border-width: 1px;
+  --border-style: solid;
+  --border-color: #d1d5db;
+  --border-radius: 12px;
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --inner-padding-end: 0;
+  margin-bottom: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  
+  &.item-has-focus {
+    --border-color: var(--ion-color-primary);
+    --border-width: 2px;
+    box-shadow: 0 2px 8px rgba(var(--ion-color-primary-rgb), 0.2);
+  }
+  
+  ion-input {
+    --color: var(--ion-text-color);
+    --placeholder-color: #9ca3af;
+    --placeholder-opacity: 1;
+    font-size: 1rem;
+    font-weight: 400;
+  }
+  
+  ion-label {
+    --color: var(--ion-text-color);
+    font-weight: 500;
+    font-size: 0.875rem;
+    margin-bottom: 4px;
+  }
+  
+  ion-select {
+    --color: var(--ion-text-color);
+    font-size: 1rem;
+  }
+  
+  ion-textarea {
+    --color: var(--ion-text-color);
+    --placeholder-color: #9ca3af;
+    --placeholder-opacity: 1;
+    font-size: 1rem;
+  }
+}
+
+/* Ensure inputs are visible even when not in items */
+ion-input {
+  --background: #ffffff;
+  --color: var(--ion-text-color);
+  --placeholder-color: #9ca3af;
+  --placeholder-opacity: 1;
+  --border-width: 1px;
+  --border-style: solid;
+  --border-color: #d1d5db;
+  --border-radius: 12px;
+  --padding-start: 12px;
+  --padding-end: 12px;
+  --padding-top: 12px;
+  --padding-bottom: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  
+  &.input-has-focus {
+    --border-color: var(--ion-color-primary);
+    --border-width: 2px;
+    box-shadow: 0 2px 8px rgba(var(--ion-color-primary-rgb), 0.2);
+  }
+}
+
+ion-textarea {
+  --background: #ffffff;
+  --color: var(--ion-text-color);
+  --placeholder-color: #9ca3af;
+  --placeholder-opacity: 1;
+  --border-width: 1px;
+  --border-style: solid;
+  --border-color: #d1d5db;
+  --border-radius: 12px;
+  --padding-start: 12px;
+  --padding-end: 12px;
+  --padding-top: 12px;
+  --padding-bottom: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  
+  &.textarea-has-focus {
+    --border-color: var(--ion-color-primary);
+    --border-width: 2px;
+    box-shadow: 0 2px 8px rgba(var(--ion-color-primary-rgb), 0.2);
+  }
+}

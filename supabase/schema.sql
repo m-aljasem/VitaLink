@@ -101,6 +101,20 @@ alter table public.audit_views enable row level security;
 create policy "own profile" on public.profiles for select using (id = auth.uid());
 create policy "update own profile" on public.profiles for update using (id = auth.uid());
 create policy "insert own profile" on public.profiles for insert with check (id = auth.uid());
+-- Allow providers to see patient profiles when they have a link
+create policy "providers see linked patients" on public.profiles for select using (
+  exists (
+    select 1 from public.provider_links pl
+    where pl.provider_id = auth.uid() and pl.patient_id = profiles.id
+  )
+);
+-- Allow patients to see provider profiles when they have a link
+create policy "patients see linked providers" on public.profiles for select using (
+  exists (
+    select 1 from public.provider_links pl
+    where pl.patient_id = auth.uid() and pl.provider_id = profiles.id
+  )
+);
 
 create policy "own observations" on public.observations for select using (user_id = auth.uid());
 create policy "insert own observations" on public.observations for insert with check (user_id = auth.uid());
@@ -126,6 +140,7 @@ create policy "provider can see shared observations" on public.observations for 
 create policy "providers own links" on public.provider_links for select using (provider_id = auth.uid());
 create policy "providers create links" on public.provider_links for insert with check (provider_id = auth.uid());
 create policy "patients see who can access" on public.provider_links for select using (patient_id = auth.uid());
+create policy "patients create links" on public.provider_links for insert with check (patient_id = auth.uid());
 create policy "patient update sharing toggles" on public.provider_links for update using (patient_id = auth.uid());
 create policy "provider or patient delete links" on public.provider_links for delete using (provider_id = auth.uid() or patient_id = auth.uid());
 

@@ -94,15 +94,31 @@
     <!-- History -->
     <div class="history-section">
       <h2>{{ 'METRICS.HISTORY' | translate }}</h2>
-      <ion-list>
-        <ion-item *ngFor="let obs of observations">
-          <ion-label>
-            <h3>{{ formatValue(obs) }}</h3>
-            <p>{{ formatTime(obs.ts) }}</p>
-            <p *ngIf="obs.tags && obs.tags.length > 0">{{ obs.tags.join(', ') }}</p>
-          </ion-label>
-        </ion-item>
-      </ion-list>
+      <div class="history-cards">
+        <ion-card *ngFor="let obs of observations" class="history-card" [style.border-left-color]="chartColor">
+          <ion-card-content>
+            <div class="history-card-header">
+              <ion-icon [name]="getMetricIcon(obs.metric)" [style.color]="chartColor" class="history-icon"></ion-icon>
+              <div class="history-value-wrapper">
+                <div class="history-value" [style.color]="chartColor">
+                  {{ formatValue(obs) }}
+                </div>
+                <div *ngIf="obs.tags && obs.tags.length > 0" class="history-tags">
+                  <ion-chip *ngFor="let tag of obs.tags" size="small" color="primary">
+                    {{ tag | translate }}
+                  </ion-chip>
+                </div>
+              </div>
+            </div>
+            <div class="history-card-footer">
+              <ion-text class="history-time">
+                <ion-icon name="time-outline" size="small"></ion-icon>
+                {{ formatTime(obs.ts) }}
+              </ion-text>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </div>
     </div>
   </div>
 </ion-content>

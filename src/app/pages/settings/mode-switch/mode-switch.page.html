@@ -1,22 +1,49 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>{{ 'SETTINGS.SWITCH_MODE' | translate }}</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content [fullscreen]="true" class="mode-switch-content">
+  <div class="mode-switch-container ion-padding">
+    <div class="back-button-wrapper">
+      <ion-button fill="clear" (click)="goBack()" class="back-button">
+        <ion-icon name="arrow-back" slot="start"></ion-icon>
+        Back
+      </ion-button>
+    </div>
+    <div class="mode-switch-header">
+      <div class="header-icon">
+        <ion-icon name="swap-horizontal"></ion-icon>
+      </div>
+      <h1>{{ 'SETTINGS.SWITCH_MODE' | translate }}</h1>
+      <p class="subtitle">{{ 'SETTINGS.SWITCH_MODE_DESC' | translate }}</p>
+    </div>
 
-<ion-content [fullscreen]="true" class="ion-padding">
-  <div class="mode-switch-container">
-    <p>{{ 'SETTINGS.SWITCH_MODE_DESC' | translate }}</p>
+    <ion-card class="mode-card">
+      <ion-card-content>
+        <div class="mode-selection">
+          <div 
+            class="mode-option" 
+            [class.selected]="currentRole === 'patient'"
+            (click)="currentRole = 'patient'">
+            <div class="mode-icon-wrapper">
+              <ion-icon name="person"></ion-icon>
+            </div>
+            <h3>{{ 'ONBOARDING.PATIENT' | translate }}</h3>
+            <p>Track your health metrics</p>
+          </div>
 
-    <ion-item>
-      <ion-label>{{ 'SETTINGS.SWITCH_MODE' | translate }}</ion-label>
-      <ion-select [(ngModel)]="currentRole">
-        <ion-select-option value="patient">{{ 'ONBOARDING.PATIENT' | translate }}</ion-select-option>
-        <ion-select-option value="provider">{{ 'ONBOARDING.PROVIDER' | translate }}</ion-select-option>
-      </ion-select>
-    </ion-item>
+          <div 
+            class="mode-option" 
+            [class.selected]="currentRole === 'provider'"
+            (click)="currentRole = 'provider'">
+            <div class="mode-icon-wrapper">
+              <ion-icon name="people"></ion-icon>
+            </div>
+            <h3>{{ 'ONBOARDING.PROVIDER' | translate }}</h3>
+            <p>Monitor your patients</p>
+          </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
 
-    <ion-button expand="block" (click)="switchRole()" class="ion-margin-top">
+    <ion-button expand="block" (click)="switchRole()" class="save-button">
+      <ion-icon name="checkmark-circle" slot="start"></ion-icon>
       {{ 'COMMON.SAVE' | translate }}
     </ion-button>
   </div>

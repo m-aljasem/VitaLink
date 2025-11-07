@@ -1,16 +1,18 @@
 <ion-tabs>
-  <ion-tab-bar slot="bottom">
-    <ion-tab-button [tab]="profile?.role === 'provider' ? 'provider-home' : 'home'">
-      <ion-icon name="home"></ion-icon>
-      <ion-label>{{ 'HOME.TITLE' | translate }}</ion-label>
-    </ion-tab-button>
-
-    <ion-tab-button [tab]="profile?.role === 'provider' ? 'provider-connect' : 'connect'">
-      <ion-icon name="people"></ion-icon>
+  <ion-tab-bar slot="bottom" class="custom-tab-bar">
+    <div class="sliding-background"></div>
+    
+    <ion-tab-button [tab]="profile?.role === 'provider' ? 'provider-connect' : 'connect'" class="tab-button-connect">
+      <ion-icon name="link"></ion-icon>
       <ion-label>{{ 'CONNECT.TITLE' | translate }}</ion-label>
     </ion-tab-button>
 
-    <ion-tab-button tab="settings">
+    <ion-tab-button [tab]="profile?.role === 'provider' ? 'provider-home' : 'home'" class="tab-button-home">
+      <ion-icon name="pulse"></ion-icon>
+      <ion-label>{{ 'HOME.TITLE' | translate }}</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button tab="settings" class="tab-button-settings">
       <ion-icon name="settings"></ion-icon>
       <ion-label>{{ 'SETTINGS.TITLE' | translate }}</ion-label>
     </ion-tab-button>

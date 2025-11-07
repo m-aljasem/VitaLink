@@ -49,6 +49,22 @@ export const routes: Routes = [
         loadComponent: () => import('./pages/settings/settings.page').then((m) => m.SettingsPage),
       },
       {
+        path: 'settings/profile',
+        loadComponent: () => import('./pages/settings/profile/profile.page').then((m) => m.ProfilePage),
+      },
+      {
+        path: 'settings/reminders',
+        loadComponent: () => import('./pages/settings/reminders/reminders.page').then((m) => m.RemindersPage),
+      },
+      {
+        path: 'settings/about',
+        loadComponent: () => import('./pages/settings/about/about.page').then((m) => m.AboutPage),
+      },
+      {
+        path: 'settings/mode-switch',
+        loadComponent: () => import('./pages/settings/mode-switch/mode-switch.page').then((m) => m.ModeSwitchPage),
+      },
+      {
         path: '',
         redirectTo: 'home',
         pathMatch: 'full',
@@ -58,26 +74,6 @@ export const routes: Routes = [
   {
     path: 'provider/patient/:id',
     loadComponent: () => import('./pages/provider/patient-detail/provider-patient-detail.page').then((m) => m.ProviderPatientDetailPage),
-    canActivate: [sessionGuard],
-  },
-  {
-    path: 'tabs/settings/profile',
-    loadComponent: () => import('./pages/settings/profile/profile.page').then((m) => m.ProfilePage),
-    canActivate: [sessionGuard],
-  },
-  {
-    path: 'tabs/settings/reminders',
-    loadComponent: () => import('./pages/settings/reminders/reminders.page').then((m) => m.RemindersPage),
-    canActivate: [sessionGuard],
-  },
-  {
-    path: 'tabs/settings/about',
-    loadComponent: () => import('./pages/settings/about/about.page').then((m) => m.AboutPage),
-    canActivate: [sessionGuard],
-  },
-  {
-    path: 'tabs/settings/mode-switch',
-    loadComponent: () => import('./pages/settings/mode-switch/mode-switch.page').then((m) => m.ModeSwitchPage),
     canActivate: [sessionGuard],
   },
   {

@@ -160,7 +160,29 @@
     "EXPORT_JSON": "Export as JSON",
     "EXPORT_SUCCESS": "Export successful",
     "EXPORT_ERROR": "Export failed",
-    "SWITCH_MODE_DESC": "Switch between Patient and Provider mode"
+    "SWITCH_MODE_DESC": "Switch between Patient and Provider mode",
+    "NO_REMINDERS": "No reminders yet",
+    "DELETE_REMINDER_TITLE": "Delete Reminder",
+    "DELETE_REMINDER_MESSAGE": "Are you sure you want to delete this reminder?",
+    "FILL_ALL_FIELDS": "Please fill all fields",
+    "CREATE_REMINDER_ERROR": "Failed to create reminder",
+    "SWITCH_ROLE_ERROR": "Failed to switch role",
+    "SWITCH_ROLE_SUCCESS": "Role switched successfully",
+    "UPDATE_PROFILE_ERROR": "Failed to update profile",
+    "UPDATE_PROFILE_SUCCESS": "Profile updated"
+  },
+  "ABOUT": {
+    "VERSION": "Version",
+    "ABOUT_TITLE": "About VitaLink",
+    "ABOUT_DESC": "VitaLink is a patient-generated health data tracker that allows you to monitor your health metrics and share them securely with your care providers.",
+    "FEATURES_TITLE": "Features",
+    "FEATURE_TRACK": "Track multiple health metrics",
+    "FEATURE_SHARE": "Share data with care providers",
+    "FEATURE_CHARTS": "View trends and charts",
+    "FEATURE_REMINDERS": "Set reminders",
+    "FEATURE_EXPORT": "Export your data",
+    "PRIVACY_TITLE": "Privacy",
+    "PRIVACY_DESC": "Your data is encrypted and stored securely. You control who can see your information through granular sharing settings."
   },
   "PROVIDER": {
     "STATS_PATIENTS": "Total Patients",

@@ -32,15 +32,11 @@ ion-content {
 
   ion-item {
     width: 100%;
-    --padding-start: 0 !important;
-    --padding-end: 0 !important;
+    --padding-start: 16px !important;
+    --padding-end: 16px !important;
     --inner-padding-start: 0 !important;
     --inner-padding-end: 0 !important;
-    --inner-padding-top: 0 !important;
-    --inner-padding-bottom: 0 !important;
     margin-inline: 0 !important;
-    padding-inline-start: 0 !important;
-    padding-inline-end: 0 !important;
     
     ion-label {
       margin-inline-start: 0 !important;

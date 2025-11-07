@@ -1,11 +1,13 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>{{ 'APP_NAME' | translate }}</ion-title>
-  </ion-toolbar>
-</ion-header>
+
 
 <ion-content [fullscreen]="true" class="ion-padding">
   <div class="auth-container">
+    <!-- Logo -->
+    <div class="app-logo">
+      <span class="logo-emoji">🍏</span>
+    </div>
+
+    <!-- Welcome Text - Centered -->
     <div class="auth-header">
       <h1>{{ 'AUTH.TITLE' | translate }}</h1>
       <p>{{ 'AUTH.SUBTITLE' | translate }}</p>
@@ -31,6 +33,22 @@
         <ion-spinner *ngIf="loading" name="crescent"></ion-spinner>
         <span *ngIf="!loading">{{ 'AUTH.REQUEST_CODE' | translate }}</span>
       </ion-button>
+    </div>
+
+    <!-- Language Picker -->
+    <div class="language-picker">
+      <h3 class="language-title">{{ 'SETTINGS.LANGUAGE' | translate }}</h3>
+      <div class="language-buttons">
+        <ion-button
+          *ngFor="let lang of languages"
+          [color]="currentLanguage === lang.code ? 'primary' : 'medium'"
+          [fill]="currentLanguage === lang.code ? 'solid' : 'outline'"
+          (click)="changeLanguage(lang.code)"
+          class="language-button"
+        >
+          {{ lang.name }}
+        </ion-button>
+      </div>
     </div>
   </div>
 </ion-content>

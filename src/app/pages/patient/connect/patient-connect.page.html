@@ -25,8 +25,15 @@
       <ion-list *ngIf="providers.length > 0">
         <ion-item button *ngFor="let provider of providers" (click)="showProviderDetails(provider)">
           <ion-label>
-            <h3>{{ provider.providerProfile?.first_name }} {{ provider.providerProfile?.last_name }}</h3>
-            <p>{{ provider.providerProfile?.provider_kind }}</p>
+            <h3>
+              <span *ngIf="provider.providerProfile?.first_name || provider.providerProfile?.last_name">
+                {{ provider.providerProfile?.first_name }} {{ provider.providerProfile?.last_name }}
+              </span>
+              <span *ngIf="!provider.providerProfile?.first_name && !provider.providerProfile?.last_name">
+                Provider {{ provider.provider_id.substring(0, 8) }}
+              </span>
+            </h3>
+            <p>{{ provider.providerProfile?.provider_kind || 'Provider' }}</p>
             <p>{{ 'CONNECT.ADDED_DATE' | translate }}: {{ formatDate(provider.created_at) }}</p>
           </ion-label>
         </ion-item>

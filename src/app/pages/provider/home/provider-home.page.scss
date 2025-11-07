@@ -1,3 +1,7 @@
+.provider-content {
+  --background: linear-gradient(180deg, #f0f4ff 0%, #ffffff 100%);
+}
+
 .provider-home-container {
   max-width: 1200px;
   margin: 0 auto;
@@ -13,51 +17,537 @@
   }
 }
 
+// Stats Grid
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 1rem;
   margin-bottom: 2rem;
 
-  ion-card {
+  .stat-card {
     margin: 0;
-    border-radius: 16px;
+    border-radius: 20px;
+    overflow: hidden;
+    position: relative;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: none;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+
+    &:active {
+      transform: scale(0.98);
+    }
+
+    .stat-icon-wrapper {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0.2;
+
+      .stat-icon {
+        font-size: 2rem;
+        color: white;
+      }
+    }
 
     ion-card-header {
-      padding-bottom: 0.5rem;
+      padding: 1.5rem 1rem 0.5rem 1rem;
+      position: relative;
+      z-index: 1;
 
       ion-card-title {
-        font-size: 2rem;
-        font-weight: 600;
-        color: var(--ion-color-primary);
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: white;
+        margin: 0;
       }
     }
 
     ion-card-content {
-      padding-top: 0;
+      padding: 0 1rem 1.5rem 1rem;
+      position: relative;
+      z-index: 1;
 
       p {
         margin: 0;
         font-size: 0.875rem;
-        color: var(--ion-text-color);
-        opacity: 0.7;
+        color: rgba(255, 255, 255, 0.9);
+        font-weight: 500;
       }
+    }
+
+    // Colorful gradients for each card
+    &.stat-card-1 {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    &.stat-card-2 {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    }
+
+    &.stat-card-3 {
+      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    }
+
+    &.stat-card-4 {
+      background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
     }
   }
 }
 
+// Patients Section
 .patients-section {
-  h2 {
-    font-size: 1.25rem;
-    font-weight: 600;
-    margin-bottom: 1rem;
+  margin-top: 2rem;
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin: 0;
+      color: var(--ion-color-dark);
+    }
+
+    .patient-count-badge {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 0.875rem;
+      box-shadow: 0 4px 10px rgba(102, 126, 234, 0.3);
+    }
+  }
+
+  .patients-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .patient-card {
+    margin: 0;
+    border-radius: 16px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    border: 1px solid rgba(102, 126, 234, 0.1);
+    animation: slideInUp 0.5s ease-out backwards;
+    cursor: pointer;
+
+    &:active {
+      transform: scale(0.98);
+    }
+
+    &:hover {
+      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.2);
+      transform: translateY(-2px);
+    }
+
+    ion-card-content {
+      padding: 1.25rem;
+    }
+
+    .patient-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+
+      .patient-avatar {
+        width: 56px;
+        height: 56px;
+        border-radius: 16px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        box-shadow: 0 4px 10px rgba(102, 126, 234, 0.3);
+
+        ion-icon {
+          font-size: 1.75rem;
+          color: white;
+        }
+      }
+
+      .patient-info {
+        flex: 1;
+        min-width: 0;
+
+        h3 {
+          font-size: 1.125rem;
+          font-weight: 600;
+          margin: 0 0 0.25rem 0;
+          color: var(--ion-color-dark);
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        .last-seen {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          margin: 0;
+          font-size: 0.875rem;
+          color: var(--ion-color-medium);
+          font-weight: 400;
+
+          ion-icon {
+            font-size: 1rem;
+          }
+        }
+      }
+
+      .patient-arrow {
+        color: var(--ion-color-medium);
+        font-size: 1.25rem;
+      }
+    }
+
+    .shared-metrics {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+
+      ion-chip {
+        margin: 0;
+        --background: rgba(102, 126, 234, 0.1);
+        --color: #667eea;
+        font-weight: 500;
+        font-size: 0.75rem;
+        height: 28px;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+
+        ion-icon {
+          font-size: 0.875rem;
+        }
+
+        &.metric-bp {
+          --background: rgba(245, 87, 108, 0.1);
+          --color: #f5576c;
+        }
+
+        &.metric-glucose {
+          --background: rgba(79, 172, 254, 0.1);
+          --color: #4facfe;
+        }
+
+        &.metric-spo2 {
+          --background: rgba(67, 233, 123, 0.1);
+          --color: #43e97b;
+        }
+
+        &.metric-hr {
+          --background: rgba(245, 87, 108, 0.1);
+          --color: #f5576c;
+        }
+
+        &.metric-pain {
+          --background: rgba(255, 193, 7, 0.1);
+          --color: #ffc107;
+        }
+
+        &.metric-weight {
+          --background: rgba(118, 75, 162, 0.1);
+          --color: #764ba2;
+        }
+      }
+    }
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+
+    .empty-icon {
+      font-size: 4rem;
+      color: var(--ion-color-medium);
+      margin-bottom: 1rem;
+      opacity: 0.5;
+    }
+
+    ion-text {
+      display: block;
+      font-size: 1rem;
+    }
   }
 }
 
-.shared-metrics {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.25rem;
-  margin-top: 0.5rem;
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
+// Skeleton Loading Styles
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.skeleton-card {
+  background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%) !important;
+  position: relative;
+  overflow: hidden;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.3) 50%,
+      transparent 100%
+    );
+    background-size: 1000px 100%;
+    animation: shimmer 2s infinite;
+  }
+
+  .skeleton-icon {
+    background: rgba(255, 255, 255, 0.3) !important;
+    border-radius: 12px;
+  }
+
+  .skeleton-text {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 8px;
+    height: 20px;
+    margin: 0.5rem 0;
+
+    &.skeleton-title {
+      height: 32px;
+      width: 60px;
+    }
+
+    &.skeleton-subtitle {
+      height: 16px;
+      width: 80px;
+    }
+  }
+}
+
+.skeleton-badge {
+  background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%) !important;
+  width: 40px;
+  height: 28px;
+  border-radius: 20px;
+  position: relative;
+  overflow: hidden;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.3) 50%,
+      transparent 100%
+    );
+    background-size: 1000px 100%;
+    animation: shimmer 2s infinite;
+  }
+}
+
+.skeleton-patient-card {
+  background: #ffffff !important;
+  border: 1px solid #e5e7eb !important;
+  position: relative;
+  overflow: hidden;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(102, 126, 234, 0.05) 50%,
+      transparent 100%
+    );
+    background-size: 1000px 100%;
+    animation: shimmer 2s infinite;
+  }
+
+  .skeleton-avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);
+    position: relative;
+    overflow: hidden;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.3) 50%,
+        transparent 100%
+      );
+      background-size: 1000px 100%;
+      animation: shimmer 2s infinite;
+    }
+  }
+
+  .skeleton-name {
+    height: 20px;
+    width: 120px;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);
+    border-radius: 8px;
+    position: relative;
+    overflow: hidden;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.3) 50%,
+        transparent 100%
+      );
+      background-size: 1000px 100%;
+      animation: shimmer 2s infinite;
+    }
+  }
+
+  .skeleton-date {
+    height: 16px;
+    width: 100px;
+    background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);
+    border-radius: 8px;
+    position: relative;
+    overflow: hidden;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.3) 50%,
+        transparent 100%
+      );
+      background-size: 1000px 100%;
+      animation: shimmer 2s infinite;
+    }
+  }
+
+  .skeleton-arrow {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);
+    position: relative;
+    overflow: hidden;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.3) 50%,
+        transparent 100%
+      );
+      background-size: 1000px 100%;
+      animation: shimmer 2s infinite;
+    }
+  }
+
+  .skeleton-chip {
+    width: 60px;
+    height: 28px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);
+    position: relative;
+    overflow: hidden;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.3) 50%,
+        transparent 100%
+      );
+      background-size: 1000px 100%;
+      animation: shimmer 2s infinite;
+    }
+  }
+}
+
+// Responsive design
+@media (min-width: 768px) {
+  .stats-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .provider-home-container {
+    padding: 2rem;
+  }
+
+  .hero-section {
+    padding: 3rem;
+
+    .greeting h1 {
+      font-size: 2.5rem;
+    }
+  }
+}

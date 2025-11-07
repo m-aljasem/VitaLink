@@ -1,10 +1,12 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import {
-  IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonCard, IonCardContent,
-  IonList, IonItem, IonLabel, IonText, ToastController, AlertController
+  IonContent, IonButton, IonCard, IonCardContent,
+  IonText, ToastController, AlertController, IonIcon, IonSpinner
 } from '@ionic/angular/standalone';
 import { TranslateModule } from '@ngx-translate/core';
 import { CommonModule } from '@angular/common';
+import { addIcons } from 'ionicons';
+import { qrCode, share, people, peopleOutline, person, timeOutline, closeCircle } from 'ionicons/icons';
 import { AuthService } from '../../../core/auth.service';
 import { SharingService, ProviderLink, LinkToken } from '../../../core/sharing.service';
 import { ProfileService } from '../../../core/profile.service';
@@ -16,8 +18,8 @@ import { ProfileService } from '../../../core/profile.service';
   standalone: true,
   imports: [
     CommonModule,
-    IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonCard, IonCardContent,
-    IonList, IonItem, IonLabel, IonText, TranslateModule
+    IonContent, IonButton, IonCard, IonCardContent,
+    IonText, IonIcon, IonSpinner, TranslateModule
   ],
 })
 export class ProviderConnectPage implements OnInit, OnDestroy {
@@ -25,6 +27,8 @@ export class ProviderConnectPage implements OnInit, OnDestroy {
   currentToken: LinkToken | null = null;
   tokenExpiryTimer: any;
   timeRemaining = 0;
+  loading = true;
+  generatingCode = false;
 
   constructor(
     private authService: AuthService,
@@ -32,7 +36,9 @@ export class ProviderConnectPage implements OnInit, OnDestroy {
     private profileService: ProfileService,
     private toastController: ToastController,
     private alertController: AlertController
-  ) {}
+  ) {
+    addIcons({ qrCode, share, people, peopleOutline, person, timeOutline, closeCircle });
+  }
 
   async ngOnInit() {
     await this.loadPatients();
@@ -45,40 +51,63 @@ export class ProviderConnectPage implements OnInit, OnDestroy {
   }
 
   async loadPatients() {
+    this.loading = true;
     const user = this.authService.getCurrentUser();
-    if (!user) return;
+    if (!user) {
+      this.loading = false;
+      return;
+    }
 
     const { data: links } = await this.sharingService.getProviderLinks(user.id);
     if (links) {
       this.patients = await Promise.all(
         links.map(async (link) => {
-          const { data: profile } = await this.profileService.getProfile(link.patient_id);
-          return { ...link, patientProfile: profile };
+          const { data: profile, error } = await this.profileService.getProfile(link.patient_id);
+          if (error) {
+            console.error('Error loading patient profile:', error);
+          }
+          return { ...link, patientProfile: profile || null };
         })
       );
     }
+    this.loading = false;
   }
 
   async generateCode() {
     const user = this.authService.getCurrentUser();
     if (!user) return;
 
-    const { data: token, error } = await this.sharingService.createToken(user.id);
+    this.generatingCode = true;
     
-    if (error) {
-      const toast = await this.toastController.create({
-        message: 'Failed to generate code',
-        duration: 2000,
-        color: 'danger',
-      });
-      await toast.present();
-      return;
-    }
+    try {
+      const { data: token, error } = await this.sharingService.createToken(user.id);
+      
+      if (error) {
+        const toast = await this.toastController.create({
+          message: 'Failed to generate code',
+          duration: 2000,
+          color: 'danger',
+        });
+        await toast.present();
+        return;
+      }
 
-    this.currentToken = token || null;
-    if (this.currentToken) {
-      this.startExpiryTimer();
+      this.currentToken = token || null;
+      if (this.currentToken) {
+        this.startExpiryTimer();
+      }
+    } finally {
+      this.generatingCode = false;
     }
+  }
+
+  cancelToken() {
+    if (this.tokenExpiryTimer) {
+      clearInterval(this.tokenExpiryTimer);
+      this.tokenExpiryTimer = null;
+    }
+    this.currentToken = null;
+    this.timeRemaining = 0;
   }
 
   startExpiryTimer() {

@@ -45,7 +45,6 @@ export class AuthService {
       }
     } catch (error) {
       // Handle NavigatorLockAcquireTimeoutError gracefully
-      console.warn('Failed to initialize session (lock timeout):', error);
       // Try to get session without lock after a short delay
       setTimeout(async () => {
         try {
@@ -56,7 +55,7 @@ export class AuthService {
             await this.loadProfile(session.user.id);
           }
         } catch (retryError) {
-          console.error('Retry session initialization failed:', retryError);
+          // Silently handle retry errors
         }
       }, 100);
     }

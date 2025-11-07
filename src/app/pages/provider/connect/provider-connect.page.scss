@@ -1,54 +1,547 @@
+.provider-connect-content {
+  --background: linear-gradient(180deg, #f0f4ff 0%, #ffffff 100%);
+}
+
 .provider-connect-container {
   max-width: 600px;
   margin: 0 auto;
+  padding-bottom: 2rem;
 }
 
+// Header Section
 .connect-header {
+  text-align: center;
   margin-bottom: 2rem;
+  padding-top: 1rem;
 
-  h2 {
-    font-size: 1.5rem;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
+  .header-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 1.5rem;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 20px rgba(245, 87, 108, 0.3);
+
+    ion-icon {
+      font-size: 2.5rem;
+      color: white;
+    }
   }
 
-  p {
-    color: var(--ion-text-color);
-    opacity: 0.7;
+  h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0 0 0.5rem 0;
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .subtitle {
+    font-size: 1rem;
+    color: var(--ion-color-medium);
+    margin: 0;
+    font-weight: 400;
   }
 }
 
+// Generate Button
+.generate-button {
+  --background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  --color: white;
+  --border-radius: 16px;
+  --padding-top: 16px;
+  --padding-bottom: 16px;
+  font-weight: 600;
+  font-size: 1rem;
+  box-shadow: 0 4px 15px rgba(245, 87, 108, 0.3);
+  margin-bottom: 1.5rem;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+
+  &:active:not([disabled]) {
+    transform: scale(0.98);
+  }
+
+  &[disabled] {
+    opacity: 0.6;
+  }
+
+  ion-icon {
+    font-size: 1.25rem;
+  }
+
+  ion-spinner {
+    width: 1.25rem;
+    height: 1.25rem;
+    --color: white;
+  }
+
+  // Pulse animation when generating
+  &.generating {
+    animation: pulse 1.5s ease-in-out infinite;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    box-shadow: 0 4px 15px rgba(245, 87, 108, 0.3);
+  }
+  50% {
+    box-shadow: 0 4px 25px rgba(245, 87, 108, 0.5);
+  }
+}
+
+// Token Card
 .token-card {
-  margin-top: 1.5rem;
-  border-radius: 16px;
+  margin: 0 0 2rem 0;
+  border-radius: 20px;
+  box-shadow: 0 8px 25px rgba(245, 87, 108, 0.15);
+  border: 1px solid rgba(245, 87, 108, 0.2);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.98) 100%);
+  overflow: hidden;
+  animation: slideInDown 0.5s ease-out;
+
+  ion-card-content {
+    padding: 2rem;
+  }
+
+  .token-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+
+    .token-icon-wrapper {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(245, 87, 108, 0.3);
+
+      ion-icon {
+        font-size: 1.5rem;
+        color: white;
+      }
+    }
+
+    h3 {
+      font-size: 1.125rem;
+      font-weight: 600;
+      margin: 0;
+      color: var(--ion-color-dark);
+    }
+  }
 
   .token-display {
     text-align: center;
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
+    padding: 1.5rem;
+    background: linear-gradient(135deg, rgba(245, 87, 108, 0.05) 0%, rgba(240, 147, 251, 0.05) 100%);
+    border-radius: 16px;
 
-    h3 {
-      font-size: 2.5rem;
-      font-weight: 600;
+    .token-code {
+      font-size: 3rem;
+      font-weight: 700;
       letter-spacing: 0.5rem;
-      color: var(--ion-color-primary);
-      margin: 0;
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 1rem;
+      font-family: 'Courier New', monospace;
     }
 
-    p {
-      margin-top: 0.5rem;
-      color: var(--ion-text-color);
-      opacity: 0.7;
+    .token-expiry {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      color: var(--ion-color-medium);
+      font-size: 0.875rem;
+      font-weight: 500;
+
+      ion-icon {
+        font-size: 1rem;
+      }
+    }
+  }
+
+  .share-button {
+    --border-color: #f5576c;
+    --color: #f5576c;
+    --border-radius: 12px;
+    --border-width: 2px;
+    font-weight: 500;
+    margin-bottom: 0.75rem;
+
+    ion-icon {
+      font-size: 1.125rem;
+    }
+  }
+
+  .cancel-button {
+    --color: #9ca3af;
+    --border-radius: 12px;
+    font-weight: 500;
+    margin-top: 0;
+
+    ion-icon {
+      font-size: 1.125rem;
+      color: #9ca3af;
+    }
+
+    &:active {
+      --color: #f5576c;
+      
+      ion-icon {
+        color: #f5576c;
+      }
     }
   }
 }
 
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Patients Section
 .patients-section {
   margin-top: 2rem;
 
-  h3 {
-    font-size: 1.25rem;
-    font-weight: 600;
-    margin-bottom: 1rem;
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin: 0;
+      color: var(--ion-color-dark);
+    }
+
+    .patient-count-badge {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 0.875rem;
+      box-shadow: 0 4px 10px rgba(245, 87, 108, 0.3);
+    }
+  }
+
+  .patients-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .patient-card {
+    margin: 0;
+    border-radius: 16px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(245, 87, 108, 0.1);
+    transition: all 0.3s ease;
+    animation: slideInUp 0.5s ease-out backwards;
+
+    @for $i from 1 through 10 {
+      &:nth-child(#{$i}) {
+        animation-delay: #{$i * 0.1}s;
+      }
+    }
+
+    &:active {
+      transform: scale(0.98);
+    }
+
+    ion-card-content {
+      padding: 1.25rem;
+    }
+
+    .patient-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+
+      .patient-avatar {
+        width: 56px;
+        height: 56px;
+        border-radius: 16px;
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        box-shadow: 0 4px 10px rgba(245, 87, 108, 0.3);
+
+        ion-icon {
+          font-size: 1.75rem;
+          color: white;
+        }
+      }
+
+      .patient-info {
+        flex: 1;
+        min-width: 0;
+
+        h3 {
+          font-size: 1.125rem;
+          font-weight: 600;
+          margin: 0 0 0.25rem 0;
+          color: var(--ion-color-dark);
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        .connected-date {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          margin: 0;
+          font-size: 0.875rem;
+          color: var(--ion-color-medium);
+          font-weight: 400;
+
+          ion-icon {
+            font-size: 1rem;
+          }
+        }
+      }
+
+      .remove-button {
+        --color: #f5576c;
+        --padding-start: 8px;
+        --padding-end: 8px;
+        margin: 0;
+        flex-shrink: 0;
+
+        ion-icon {
+          font-size: 1.5rem;
+        }
+      }
+    }
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+
+    .empty-icon {
+      font-size: 4rem;
+      color: var(--ion-color-medium);
+      margin-bottom: 1rem;
+      opacity: 0.5;
+    }
+
+    ion-text {
+      display: block;
+      font-size: 1rem;
+    }
   }
 }
 
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Skeleton Loading Styles
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.skeleton-badge {
+  background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%) !important;
+  width: 40px;
+  height: 28px;
+  border-radius: 20px;
+  position: relative;
+  overflow: hidden;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.3) 50%,
+      transparent 100%
+    );
+    background-size: 1000px 100%;
+    animation: shimmer 2s infinite;
+  }
+}
+
+.skeleton-patient-card {
+  background: #ffffff !important;
+  border: 1px solid #e5e7eb !important;
+  position: relative;
+  overflow: hidden;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(245, 87, 108, 0.05) 50%,
+      transparent 100%
+    );
+    background-size: 1000px 100%;
+    animation: shimmer 2s infinite;
+  }
+
+  .skeleton-avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);
+    position: relative;
+    overflow: hidden;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.3) 50%,
+        transparent 100%
+      );
+      background-size: 1000px 100%;
+      animation: shimmer 2s infinite;
+    }
+  }
+
+  .skeleton-name {
+    height: 20px;
+    width: 120px;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);
+    border-radius: 8px;
+    position: relative;
+    overflow: hidden;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.3) 50%,
+        transparent 100%
+      );
+      background-size: 1000px 100%;
+      animation: shimmer 2s infinite;
+    }
+  }
+
+  .skeleton-date {
+    height: 16px;
+    width: 100px;
+    background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);
+    border-radius: 8px;
+    position: relative;
+    overflow: hidden;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.3) 50%,
+        transparent 100%
+      );
+      background-size: 1000px 100%;
+      animation: shimmer 2s infinite;
+    }
+  }
+
+  .skeleton-remove {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);
+    position: relative;
+    overflow: hidden;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.3) 50%,
+        transparent 100%
+      );
+      background-size: 1000px 100%;
+      animation: shimmer 2s infinite;
+    }
+  }
+}
+
+// Responsive design
+@media (min-width: 768px) {
+  .provider-connect-container {
+    padding: 2rem;
+  }
+
+  .connect-header h1 {
+    font-size: 2.5rem;
+  }
+}

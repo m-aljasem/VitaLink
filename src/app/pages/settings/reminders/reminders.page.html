@@ -1,36 +1,64 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>{{ 'SETTINGS.REMINDERS' | translate }}</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content [fullscreen]="true" class="reminders-content">
+  <div class="reminders-container ion-padding">
+    <div class="back-button-wrapper">
+      <ion-button fill="clear" (click)="goBack()" class="back-button">
+        <ion-icon name="arrow-back" slot="start"></ion-icon>
+        Back
+      </ion-button>
+    </div>
+    <div class="reminders-header">
+      <div class="header-icon">
+        <ion-icon name="notifications"></ion-icon>
+      </div>
+      <h1>{{ 'SETTINGS.REMINDERS' | translate }}</h1>
+      <p class="subtitle">Set up health reminders and notifications</p>
+    </div>
 
-<ion-content [fullscreen]="true" class="ion-padding">
-  <div class="reminders-container">
-    <ion-button expand="block" (click)="showAddModal = true">
-      <ion-icon name="add" slot="start"></ion-icon>
+    <ion-button expand="block" (click)="showAddModal = true" class="add-button">
+      <ion-icon name="add-circle" slot="start"></ion-icon>
       {{ 'SETTINGS.ADD_REMINDER' | translate }}
     </ion-button>
 
-    <ion-list *ngIf="reminders.length > 0" class="ion-margin-top">
-      <ion-item *ngFor="let reminder of reminders">
-        <ion-label>
-          <h3>{{ reminder.title }}</h3>
-          <p>{{ reminder.local_time }} - {{ reminder.days?.join(', ') }}</p>
-        </ion-label>
-        <ion-checkbox
-          [checked]="reminder.enabled"
-          (ionChange)="toggleReminder(reminder)"
-          slot="end"
-        ></ion-checkbox>
-        <ion-button fill="clear" slot="end" (click)="deleteReminder(reminder)">
-          <ion-icon name="trash" color="danger"></ion-icon>
-        </ion-button>
-      </ion-item>
-    </ion-list>
+    <div class="reminders-list" *ngIf="reminders.length > 0">
+      <ion-card *ngFor="let reminder of reminders" class="reminder-card">
+        <ion-card-content>
+          <div class="reminder-header">
+            <div class="reminder-icon-wrapper">
+              <ion-icon name="time"></ion-icon>
+            </div>
+            <div class="reminder-info">
+              <h3>{{ reminder.title }}</h3>
+              <p class="reminder-time">
+                <ion-icon name="time-outline"></ion-icon>
+                {{ reminder.local_time }}
+              </p>
+              <div class="reminder-days">
+                <ion-chip *ngFor="let day of reminder.days" size="small" class="day-chip">
+                  {{ day }}
+                </ion-chip>
+              </div>
+            </div>
+            <div class="reminder-actions">
+              <ion-toggle
+                [checked]="reminder.enabled"
+                (ionChange)="toggleReminder(reminder)"
+                class="reminder-toggle"
+              ></ion-toggle>
+              <ion-button fill="clear" class="delete-button" (click)="deleteReminder(reminder)">
+                <ion-icon name="trash"></ion-icon>
+              </ion-button>
+            </div>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
 
-    <ion-text *ngIf="reminders.length === 0" color="medium" class="ion-margin-top">
-      No reminders yet
-    </ion-text>
+    <div class="empty-state" *ngIf="reminders.length === 0">
+      <ion-icon name="notifications-outline" class="empty-icon"></ion-icon>
+      <ion-text color="medium">
+        {{ 'SETTINGS.NO_REMINDERS' | translate }}
+      </ion-text>
+    </div>
   </div>
 
   <!-- Add Reminder Modal -->

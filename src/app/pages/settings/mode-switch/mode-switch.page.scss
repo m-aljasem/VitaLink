@@ -1,5 +1,205 @@
-.mode-switch-container {
-  max-width: 600px;
-  margin: 0 auto;
+.mode-switch-content {
+  --background: linear-gradient(180deg, #f0f4ff 0%, #ffffff 100%);
 }
 
+.mode-switch-container {
+  max-width: 700px;
+  margin: 0 auto;
+  padding-bottom: 2rem;
+}
+
+.back-button-wrapper {
+  margin-bottom: 1rem;
+  padding-top: 0.5rem;
+
+  .back-button {
+    --color: var(--ion-color-primary);
+    --padding-start: 0;
+    --padding-end: 0;
+    font-weight: 500;
+    margin: 0;
+
+    ion-icon {
+      font-size: 1.25rem;
+    }
+  }
+}
+
+.mode-switch-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding-top: 1rem;
+
+  .header-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 1.5rem;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 20px rgba(67, 233, 123, 0.3);
+
+    ion-icon {
+      font-size: 2.5rem;
+      color: white;
+    }
+  }
+
+  h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0 0 0.5rem 0;
+    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .subtitle {
+    font-size: 1rem;
+    color: var(--ion-color-medium);
+    margin: 0;
+    font-weight: 400;
+  }
+}
+
+.mode-card {
+  margin: 0 0 2rem 0;
+  border-radius: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(67, 233, 123, 0.1);
+  overflow: hidden;
+
+  ion-card-content {
+    padding: 1.5rem;
+  }
+
+  .mode-selection {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+
+    .mode-option {
+      padding: 1.5rem;
+      border-radius: 16px;
+      border: 2px solid #e5e7eb;
+      background: #ffffff;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, rgba(67, 233, 123, 0.05) 0%, rgba(56, 249, 215, 0.05) 100%);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+
+      &:active {
+        transform: scale(0.98);
+      }
+
+      .mode-icon-wrapper {
+        width: 64px;
+        height: 64px;
+        margin: 0 auto 1rem;
+        border-radius: 16px;
+        background: linear-gradient(135deg, rgba(67, 233, 123, 0.1) 0%, rgba(56, 249, 215, 0.1) 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+
+        ion-icon {
+          font-size: 2rem;
+          color: #43e97b;
+          transition: all 0.3s ease;
+        }
+      }
+
+      h3 {
+        font-size: 1.125rem;
+        font-weight: 600;
+        margin: 0 0 0.5rem 0;
+        color: var(--ion-color-dark);
+      }
+
+      p {
+        font-size: 0.875rem;
+        color: var(--ion-color-medium);
+        margin: 0;
+      }
+
+      &.selected {
+        border-color: #43e97b;
+        background: linear-gradient(135deg, rgba(67, 233, 123, 0.1) 0%, rgba(56, 249, 215, 0.1) 100%);
+        box-shadow: 0 4px 15px rgba(67, 233, 123, 0.2);
+        transform: translateY(-2px);
+
+        &::before {
+          opacity: 1;
+        }
+
+        .mode-icon-wrapper {
+          background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+          box-shadow: 0 4px 12px rgba(67, 233, 123, 0.3);
+
+          ion-icon {
+            color: white;
+            transform: scale(1.1);
+          }
+        }
+
+        h3 {
+          color: #43e97b;
+        }
+      }
+    }
+  }
+}
+
+.save-button {
+  --background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+  --color: white;
+  --border-radius: 16px;
+  --padding-top: 16px;
+  --padding-bottom: 16px;
+  font-weight: 600;
+  font-size: 1rem;
+  box-shadow: 0 4px 15px rgba(67, 233, 123, 0.3);
+  transition: all 0.3s ease;
+
+  &:active {
+    transform: scale(0.98);
+  }
+
+  ion-icon {
+    font-size: 1.25rem;
+  }
+}
+
+// Responsive design
+@media (min-width: 768px) {
+  .mode-switch-container {
+    padding: 2rem;
+  }
+
+  .mode-switch-header h1 {
+    font-size: 2.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .mode-selection {
+    grid-template-columns: 1fr !important;
+  }
+}

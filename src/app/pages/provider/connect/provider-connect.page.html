@@ -1,52 +1,125 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>{{ 'CONNECT.TITLE' | translate }}</ion-title>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content [fullscreen]="true" class="ion-padding">
-  <div class="provider-connect-container">
+<ion-content [fullscreen]="true" class="provider-connect-content">
+  <div class="provider-connect-container ion-padding">
+    <!-- Header Section -->
     <div class="connect-header">
-      <h2>{{ 'CONNECT.PROVIDER_GENERATE' | translate }}</h2>
-      <p>{{ 'CONNECT.SUBTITLE' | translate }}</p>
+      <div class="header-icon">
+        <ion-icon name="people"></ion-icon>
+      </div>
+      <h1>{{ 'CONNECT.PROVIDER_GENERATE' | translate }}</h1>
+      <p class="subtitle">Connect with patients to receive their health data</p>
     </div>
 
-    <ion-button expand="block" (click)="generateCode()" class="ion-margin-top">
-      {{ 'CONNECT.PROVIDER_GENERATE' | translate }}
+    <!-- Generate Code Button -->
+    <ion-button 
+      expand="block" 
+      (click)="generateCode()" 
+      class="generate-button"
+      [class.generating]="generatingCode"
+      [disabled]="!!currentToken || generatingCode">
+      <ion-icon name="qr-code" slot="start" *ngIf="!generatingCode"></ion-icon>
+      <ion-spinner name="crescent" *ngIf="generatingCode" slot="start"></ion-spinner>
+      <span *ngIf="!generatingCode">{{ 'CONNECT.PROVIDER_GENERATE' | translate }}</span>
+      <span *ngIf="generatingCode">Generating...</span>
     </ion-button>
 
     <!-- Current Token Display -->
     <ion-card *ngIf="currentToken" class="token-card">
       <ion-card-content>
-        <div class="token-display">
-          <h3>{{ currentToken.code }}</h3>
-          <p>{{ 'CONNECT.PROVIDER_EXPIRES' | translate }}: {{ formatTimeRemaining(timeRemaining) }}</p>
+        <div class="token-header">
+          <div class="token-icon-wrapper">
+            <ion-icon name="qr-code"></ion-icon>
+          </div>
+          <h3>Connection Code</h3>
         </div>
-        <ion-button expand="block" fill="outline" (click)="shareViaOS()" class="ion-margin-top">
+        <div class="token-display">
+          <div class="token-code">{{ currentToken.code }}</div>
+          <div class="token-expiry">
+            <ion-icon name="time-outline"></ion-icon>
+            <span>{{ 'CONNECT.PROVIDER_EXPIRES' | translate }}: {{ formatTimeRemaining(timeRemaining) }}</span>
+          </div>
+        </div>
+        <ion-button 
+          expand="block" 
+          fill="outline" 
+          (click)="shareViaOS()" 
+          class="share-button">
+          <ion-icon name="share" slot="start"></ion-icon>
           {{ 'CONNECT.SHARE_VIA_OS' | translate }}
+        </ion-button>
+        <ion-button 
+          expand="block" 
+          fill="clear" 
+          (click)="cancelToken()" 
+          class="cancel-button">
+          <ion-icon name="close-circle" slot="start"></ion-icon>
+          Cancel Code
         </ion-button>
       </ion-card-content>
     </ion-card>
 
     <!-- Patients List -->
-    <div class="patients-section ion-margin-top">
-      <h3>{{ 'CONNECT.PROVIDER_MY_PATIENTS' | translate }}</h3>
+    <div class="patients-section">
+      <div class="section-header">
+        <h2>{{ 'CONNECT.PROVIDER_MY_PATIENTS' | translate }}</h2>
+        <div class="patient-count-badge" *ngIf="!loading">{{ patients.length }}</div>
+        <div class="patient-count-badge skeleton-badge" *ngIf="loading"></div>
+      </div>
       
-      <ion-list *ngIf="patients.length > 0">
-        <ion-item *ngFor="let patient of patients">
-          <ion-label>
-            <h3>{{ patient.patientProfile?.first_name }} {{ patient.patientProfile?.last_name }}</h3>
-            <p>Connected: {{ formatDate(patient.created_at) }}</p>
-          </ion-label>
-          <ion-button fill="clear" slot="end" (click)="removePatient(patient)">
-            {{ 'CONNECT.PROVIDER_REMOVE' | translate }}
-          </ion-button>
-        </ion-item>
-      </ion-list>
+      <!-- Loading Skeleton -->
+      <div class="patients-list" *ngIf="loading">
+        <ion-card *ngFor="let i of [1,2,3]" class="patient-card skeleton-patient-card">
+          <ion-card-content>
+            <div class="patient-header">
+              <div class="patient-avatar skeleton-avatar"></div>
+              <div class="patient-info" style="flex: 1;">
+                <div class="skeleton-text skeleton-name"></div>
+                <div class="skeleton-text skeleton-date"></div>
+              </div>
+              <div class="skeleton-remove"></div>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </div>
 
-      <ion-text *ngIf="patients.length === 0" color="medium">
-        {{ 'CONNECT.PROVIDER_NO_PATIENTS' | translate }}
-      </ion-text>
+      <!-- Actual Patients List -->
+      <div class="patients-list" *ngIf="!loading && patients.length > 0">
+        <ion-card *ngFor="let patient of patients" class="patient-card">
+          <ion-card-content>
+            <div class="patient-header">
+              <div class="patient-avatar">
+                <ion-icon name="person"></ion-icon>
+              </div>
+              <div class="patient-info">
+                <h3>
+                  <span *ngIf="patient.patientProfile?.first_name || patient.patientProfile?.last_name">
+                    {{ patient.patientProfile?.first_name }} {{ patient.patientProfile?.last_name }}
+                  </span>
+                  <span *ngIf="!patient.patientProfile?.first_name && !patient.patientProfile?.last_name">
+                    Patient {{ patient.patient_id.substring(0, 8) }}
+                  </span>
+                </h3>
+                <p class="connected-date">
+                  <ion-icon name="time-outline"></ion-icon>
+                  Connected: {{ formatDate(patient.created_at) }}
+                </p>
+              </div>
+              <ion-button 
+                fill="clear" 
+                class="remove-button"
+                (click)="removePatient(patient)">
+                <ion-icon name="close-circle"></ion-icon>
+              </ion-button>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </div>
+
+      <div class="empty-state" *ngIf="!loading && patients.length === 0">
+        <ion-icon name="people-outline" class="empty-icon"></ion-icon>
+        <ion-text color="medium">
+          {{ 'CONNECT.PROVIDER_NO_PATIENTS' | translate }}
+        </ion-text>
+      </div>
     </div>
   </div>
 </ion-content>

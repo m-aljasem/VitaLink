@@ -1,12 +1,18 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import {
   IonContent, IonHeader, IonTitle, IonToolbar, IonList, IonItem, IonLabel,
-  IonSelect, IonSelectOption, ToastController, AlertController
+  IonSelect, IonSelectOption, ToastController, AlertController, IonCard, IonCardContent,
+  IonIcon, IonButton
 } from '@ionic/angular/standalone';
 import { TranslateModule } from '@ngx-translate/core';
 import { CommonModule } from '@angular/common';
+import { addIcons } from 'ionicons';
+import {
+  person, notifications, language, swapHorizontal, download, documentText, code,
+  informationCircle, logOutOutline, chevronForward
+} from 'ionicons/icons';
 import { AuthService, Profile } from '../../core/auth.service';
 import { ProfileService } from '../../core/profile.service';
 import { I18nService } from '../../core/i18n.service';
@@ -19,9 +25,9 @@ import { ReminderService } from '../../core/reminder.service';
   styleUrls: ['./settings.page.scss'],
   standalone: true,
   imports: [
-    CommonModule, FormsModule,
+    CommonModule, FormsModule, RouterLink,
     IonContent, IonHeader, IonTitle, IonToolbar, IonList, IonItem, IonLabel,
-    IonSelect, IonSelectOption, TranslateModule
+    IonSelect, IonSelectOption, IonCard, IonCardContent, IonIcon, IonButton, TranslateModule
   ],
 })
 export class SettingsPage implements OnInit {
@@ -37,7 +43,12 @@ export class SettingsPage implements OnInit {
     private router: Router,
     private toastController: ToastController,
     private alertController: AlertController
-  ) {}
+  ) {
+    addIcons({
+      person, notifications, language, swapHorizontal, download, documentText, code,
+      informationCircle, 'log-out': logOutOutline, chevronForward
+    });
+  }
 
   async ngOnInit() {
     this.profile = await this.authService.getCurrentProfile();

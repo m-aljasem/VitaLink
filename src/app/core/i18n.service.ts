@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject } from 'rxjs';
 
-export type SupportedLanguage = 'en' | 'es' | 'fr' | 'de' | 'ar' | 'fa' | 'ur';
+export type SupportedLanguage = 'en' | 'es' | 'fr' | 'de' | 'ar' | 'fa' | 'ur' | 'zh' | 'ja';
 
 @Injectable({
   providedIn: 'root',

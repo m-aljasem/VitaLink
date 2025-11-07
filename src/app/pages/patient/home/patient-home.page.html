@@ -28,18 +28,32 @@
 
     <div class="recent-activity" *ngIf="!loading">
       <h2>{{ 'HOME.RECENT_ACTIVITY' | translate }}</h2>
-      <ion-list *ngIf="recentActivity.length > 0">
-        <ion-item *ngFor="let activity of recentActivity">
-          <ion-icon [name]="getMetricIcon(activity.metric)" [color]="metricColors[activity.metric]" slot="start"></ion-icon>
-          <ion-label>
-            <h3>{{ 'METRICS.' + activity.metric.toUpperCase() | translate }}</h3>
-            <p>{{ formatMetricValue(activity) }} • {{ formatTime(activity.ts) }}</p>
-            <p *ngIf="activity.tags && activity.tags.length > 0" class="tags">
-              <ion-chip *ngFor="let tag of activity.tags" size="small">{{ tag | translate }}</ion-chip>
-            </p>
-          </ion-label>
-        </ion-item>
-      </ion-list>
+      <div class="activity-cards" *ngIf="recentActivity.length > 0">
+        <ion-card *ngFor="let activity of recentActivity" class="activity-card" [style.border-left-color]="getMetricColor(activity.metric)">
+          <ion-card-content>
+            <div class="activity-card-header">
+              <ion-icon [name]="getMetricIcon(activity.metric)" [style.color]="getMetricColor(activity.metric)" class="activity-icon"></ion-icon>
+              <div class="activity-title">{{ 'METRICS.' + activity.metric.toUpperCase() | translate }}</div>
+            </div>
+            <div class="activity-value-wrapper">
+              <div class="activity-value" [style.color]="getMetricColor(activity.metric)">
+                {{ formatMetricValue(activity) }}
+              </div>
+              <div *ngIf="activity.tags && activity.tags.length > 0" class="activity-tags">
+                <ion-chip *ngFor="let tag of activity.tags" size="small" [color]="getTagColor(activity.metric)">
+                  {{ tag | translate }}
+                </ion-chip>
+              </div>
+            </div>
+            <div class="activity-card-footer">
+              <ion-text class="activity-time">
+                <ion-icon name="time-outline" size="small"></ion-icon>
+                {{ formatTime(activity.ts) }}
+              </ion-text>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </div>
       <ion-text *ngIf="recentActivity.length === 0" color="medium">
         {{ 'HOME.NO_ACTIVITY' | translate }}
       </ion-text>

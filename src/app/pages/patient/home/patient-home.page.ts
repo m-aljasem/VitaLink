@@ -1,7 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ViewWillEnter } from '@ionic/angular';
+import { Router, NavigationEnd } from '@angular/router';
+import { filter, takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 import { 
   IonContent, IonRefresher, IonRefresherContent,
-  IonList, IonItem, IonLabel, IonIcon, IonText, IonChip
+  IonList, IonItem, IonLabel, IonIcon, IonText, IonChip, IonCard, IonCardContent
 } from '@ionic/angular/standalone';
 import { TranslateModule } from '@ngx-translate/core';
 import { AuthService, Profile } from '../../../core/auth.service';
@@ -9,7 +13,7 @@ import { ObservationService, MetricType, Observation } from '../../../core/obser
 import { MetricCardComponent } from '../../../shared/components/metric-card/metric-card.component';
 import { CommonModule } from '@angular/common';
 import { addIcons } from 'ionicons';
-import { heart, water, pulse, thermometer, bandage, scale } from 'ionicons/icons';
+import { heart, water, pulse, thermometer, bandage, scale, timeOutline } from 'ionicons/icons';
 
 interface MetricData {
   metric: MetricType;
@@ -28,15 +32,16 @@ interface MetricData {
   imports: [
     CommonModule,
     IonContent, IonRefresher, IonRefresherContent,
-    IonList, IonItem, IonLabel, IonIcon, IonText, IonChip, TranslateModule, MetricCardComponent
+    IonIcon, IonText, IonChip, IonCard, IonCardContent, TranslateModule, MetricCardComponent
   ],
 })
-export class PatientHomePage implements OnInit {
+export class PatientHomePage implements OnInit, ViewWillEnter, OnDestroy {
   profile: Profile | null = null;
   greeting = '';
   metrics: MetricData[] = [];
   recentActivity: Observation[] = [];
   loading = true;
+  private destroy$ = new Subject<void>();
 
   metricColors: { [key in MetricType]: string } = {
     bp: '#EF4444',
@@ -49,13 +54,43 @@ export class PatientHomePage implements OnInit {
 
   constructor(
     private authService: AuthService,
-    private observationService: ObservationService
+    private observationService: ObservationService,
+    private router: Router
   ) {
-    addIcons({ heart, water, pulse, thermometer, bandage, scale });
+    addIcons({ heart, water, pulse, thermometer, bandage, scale, timeOutline });
+    
+    // Listen for navigation events to refresh data when returning to this page
+    this.router.events
+      .pipe(
+        filter(event => event instanceof NavigationEnd),
+        takeUntil(this.destroy$)
+      )
+      .subscribe((event: any) => {
+        const url = event.url || event.urlAfterRedirects || '';
+        // Check if we're navigating to the home tab
+        if (url.includes('/tabs/home') || url.endsWith('/home') || url === '/tabs/home') {
+          // Small delay to ensure the view is ready
+          setTimeout(() => {
+            this.loadData(false);
+          }, 100);
+        }
+      });
   }
 
-  getMetricIcon(metric: MetricType): string {
-    const icons: { [key in MetricType]: string } = {
+  getTagColor(metric: string): 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'danger' {
+    const colorMap: { [key: string]: 'primary' | 'secondary' | 'tertiary' | 'success' | 'warning' | 'danger' } = {
+      bp: 'danger',
+      glucose: 'warning',
+      spo2: 'primary',
+      hr: 'success',
+      pain: 'tertiary',
+      weight: 'primary',
+    };
+    return colorMap[metric] || 'primary';
+  }
+
+  getMetricIcon(metric: string): string {
+    const icons: { [key: string]: string } = {
       bp: 'pulse',
       glucose: 'water',
       spo2: 'heart',
@@ -63,13 +98,27 @@ export class PatientHomePage implements OnInit {
       pain: 'bandage',
       weight: 'scale',
     };
-    return icons[metric];
+    return icons[metric] || 'pulse';
+  }
+
+  getMetricColor(metric: string): string {
+    return this.metricColors[metric as MetricType] || '#3B82F6';
   }
 
   async ngOnInit() {
     this.profile = await this.authService.getCurrentProfile();
     this.updateGreeting();
     await this.loadData();
+  }
+
+  async ionViewWillEnter() {
+    // Refresh data when returning to this page (without showing loading skeleton)
+    await this.loadData(false);
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   updateGreeting() {
@@ -85,15 +134,17 @@ export class PatientHomePage implements OnInit {
     }
   }
 
-  async loadData() {
+  async loadData(showLoading: boolean = true) {
     const user = this.authService.getCurrentUser();
     if (!user) {
       this.loading = false;
       return;
     }
 
-    this.loading = true;
-    this.metrics = [];
+    if (showLoading) {
+      this.loading = true;
+      this.metrics = [];
+    }
     const metricTypes: MetricType[] = ['bp', 'glucose', 'spo2', 'hr', 'pain', 'weight'];
     
     // Load all metrics in parallel instead of sequentially
@@ -169,7 +220,70 @@ export class PatientHomePage implements OnInit {
 
   formatTime(dateString: string): string {
     const date = new Date(dateString);
-    return date.toLocaleString();
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMs / 3600000);
+    const diffDays = Math.floor(diffMs / 86400000);
+
+    // Less than 1 minute
+    if (diffMins < 1) {
+      return 'just now';
+    }
+
+    // Less than 1 hour
+    if (diffMins < 60) {
+      return diffMins === 1 ? '1 minute ago' : `${diffMins} minutes ago`;
+    }
+
+    // Less than 24 hours
+    if (diffHours < 24) {
+      const hour = date.getHours();
+      const isToday = date.toDateString() === now.toDateString();
+      
+      if (isToday) {
+        if (hour < 12) return 'this morning';
+        if (hour < 17) return 'this afternoon';
+        return 'this evening';
+      }
+      
+      return diffHours === 1 ? '1 hour ago' : `${diffHours} hours ago`;
+    }
+
+    // Yesterday
+    const yesterday = new Date(now);
+    yesterday.setDate(yesterday.getDate() - 1);
+    if (date.toDateString() === yesterday.toDateString()) {
+      const hour = date.getHours();
+      if (hour >= 18 || hour < 6) return 'last night';
+      return 'yesterday';
+    }
+
+    // Less than 7 days
+    if (diffDays < 7) {
+      return diffDays === 1 ? '1 day ago' : `${diffDays} days ago`;
+    }
+
+    // Less than 14 days
+    if (diffDays < 14) {
+      return 'last week';
+    }
+
+    // Less than 30 days
+    if (diffDays < 30) {
+      const weeks = Math.floor(diffDays / 7);
+      return weeks === 1 ? '1 week ago' : `${weeks} weeks ago`;
+    }
+
+    // Less than 365 days
+    if (diffDays < 365) {
+      const months = Math.floor(diffDays / 30);
+      return months === 1 ? '1 month ago' : `${months} months ago`;
+    }
+
+    // Older than a year
+    const years = Math.floor(diffDays / 365);
+    return years === 1 ? '1 year ago' : `${years} years ago`;
   }
 }
 

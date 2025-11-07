@@ -1,30 +1,196 @@
+.about-content-page {
+  --background: linear-gradient(180deg, #f0f4ff 0%, #ffffff 100%);
+}
+
 .about-container {
-  max-width: 600px;
+  max-width: 700px;
   margin: 0 auto;
+  padding-bottom: 2rem;
+}
 
-  h1 {
-    font-size: 2rem;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-  }
+.back-button-wrapper {
+  margin-bottom: 1rem;
+  padding-top: 0.5rem;
 
-  .about-content {
-    margin-top: 2rem;
+  .back-button {
+    --color: var(--ion-color-primary);
+    --padding-start: 0;
+    --padding-end: 0;
+    font-weight: 500;
+    margin: 0;
 
-    h2 {
+    ion-icon {
       font-size: 1.25rem;
-      font-weight: 600;
-      margin-top: 1.5rem;
-      margin-bottom: 0.5rem;
-    }
-
-    ul {
-      padding-left: 1.5rem;
-
-      li {
-        margin-bottom: 0.5rem;
-      }
     }
   }
 }
 
+.about-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding-top: 1rem;
+
+  .header-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 1.5rem;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 20px rgba(48, 207, 208, 0.3);
+
+    ion-icon {
+      font-size: 2.5rem;
+      color: white;
+    }
+  }
+
+  h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0 0 1rem 0;
+    background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .version-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: linear-gradient(135deg, rgba(48, 207, 208, 0.1) 0%, rgba(51, 8, 103, 0.1) 100%);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--ion-color-dark);
+    border: 1px solid rgba(48, 207, 208, 0.2);
+
+    ion-icon {
+      font-size: 1rem;
+      color: #30cfd0;
+    }
+  }
+}
+
+.about-card {
+  margin: 0 0 1.5rem 0;
+  border-radius: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(48, 207, 208, 0.1);
+  overflow: hidden;
+  animation: slideInUp 0.5s ease-out backwards;
+
+  @for $i from 1 through 5 {
+    &:nth-child(#{$i}) {
+      animation-delay: #{$i * 0.1}s;
+    }
+  }
+
+  ion-card-content {
+    padding: 1.5rem;
+  }
+
+  .about-section {
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 1.125rem;
+      font-weight: 600;
+      margin: 0 0 1rem 0;
+      color: var(--ion-color-dark);
+
+      ion-icon {
+        font-size: 1.5rem;
+        color: var(--ion-color-primary);
+      }
+    }
+
+    p {
+      font-size: 1rem;
+      line-height: 1.6;
+      color: var(--ion-text-color);
+      margin: 0;
+    }
+  }
+
+  &.features-card {
+    border-color: rgba(102, 126, 234, 0.2);
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.02) 0%, rgba(118, 75, 162, 0.02) 100%);
+  }
+
+  &.privacy-card {
+    border-color: rgba(48, 207, 208, 0.2);
+    background: linear-gradient(135deg, rgba(48, 207, 208, 0.02) 0%, rgba(51, 8, 103, 0.02) 100%);
+  }
+}
+
+.features-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1rem;
+
+  .feature-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: #ffffff;
+    border-radius: 12px;
+    border: 1px solid rgba(102, 126, 234, 0.1);
+    transition: all 0.3s ease;
+
+    &:active {
+      transform: scale(0.98);
+    }
+
+    .feature-icon-wrapper {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+
+      ion-icon {
+        font-size: 1.25rem;
+        color: var(--ion-color-primary);
+      }
+    }
+
+    span {
+      font-size: 1rem;
+      color: var(--ion-text-color);
+      font-weight: 400;
+    }
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Responsive design
+@media (min-width: 768px) {
+  .about-container {
+    padding: 2rem;
+  }
+
+  .about-header h1 {
+    font-size: 2.5rem;
+  }
+}

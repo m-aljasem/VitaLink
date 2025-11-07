@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -8,6 +8,12 @@ import {
 } from '@ionic/angular/standalone';
 import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '../../core/auth.service';
+import { I18nService, SupportedLanguage } from '../../core/i18n.service';
+
+interface LanguageOption {
+  code: SupportedLanguage;
+  name: string;
+}
 
 @Component({
   selector: 'app-auth',
@@ -20,15 +26,38 @@ import { AuthService } from '../../core/auth.service';
     IonSpinner, TranslateModule
   ],
 })
-export class AuthPage {
+export class AuthPage implements OnInit {
   email = '';
   loading = false;
+  currentLanguage = 'en' as SupportedLanguage;
+  
+  languages: LanguageOption[] = [
+    { code: 'en', name: 'English' },
+    { code: 'es', name: 'Español' },
+    { code: 'fr', name: 'Français' },
+    { code: 'de', name: 'Deutsch' },
+    { code: 'ar', name: 'العربية' },
+    { code: 'fa', name: 'فارسی' },
+    { code: 'ur', name: 'اردو' },
+    { code: 'zh', name: '中文' },
+    { code: 'ja', name: '日本語' }
+  ];
 
   constructor(
     private authService: AuthService,
     private router: Router,
-    private toastController: ToastController
+    private toastController: ToastController,
+    private i18nService: I18nService
   ) {}
+
+  ngOnInit() {
+    this.currentLanguage = this.i18nService.getCurrentLanguage();
+  }
+
+  changeLanguage(lang: SupportedLanguage) {
+    this.i18nService.setLanguage(lang);
+    this.currentLanguage = lang;
+  }
 
   async requestCode() {
     if (!this.email || !this.email.includes('@')) {

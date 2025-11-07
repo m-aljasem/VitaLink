@@ -1,4 +1,232 @@
-ion-list {
-  padding: 0;
+.settings-content {
+  --background: linear-gradient(180deg, #f0f4ff 0%, #ffffff 100%);
 }
 
+.settings-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding-bottom: 2rem;
+}
+
+.settings-header {
+  margin-bottom: 2rem;
+  padding-top: 1rem;
+
+  h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0 0 0.5rem 0;
+    color: var(--ion-color-dark);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .subtitle {
+    font-size: 1rem;
+    color: var(--ion-color-medium);
+    margin: 0;
+    font-weight: 400;
+  }
+}
+
+.settings-section {
+  margin-bottom: 2rem;
+
+  .section-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--ion-color-medium);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 0 0 1rem 0.5rem;
+  }
+}
+
+.settings-card {
+  margin: 0 0 1rem 0;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(102, 126, 234, 0.1);
+  transition: all 0.3s ease;
+  overflow: hidden;
+
+  &:active {
+    transform: scale(0.98);
+  }
+
+  ion-card-content {
+    padding: 1.25rem;
+  }
+
+  .setting-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    .setting-icon-wrapper {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+
+      ion-icon {
+        font-size: 1.5rem;
+        color: white;
+      }
+
+      // Colorful gradients for each icon
+      &.icon-profile {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      }
+
+      &.icon-reminders {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      }
+
+      &.icon-language {
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      }
+
+      &.icon-mode {
+        background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+      }
+
+      &.icon-export {
+        background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+      }
+
+      &.icon-about {
+        background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);
+      }
+
+      &.icon-logout {
+        background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+      }
+    }
+
+    .setting-content {
+      flex: 1;
+      min-width: 0;
+
+      h3 {
+        font-size: 1rem;
+        font-weight: 600;
+        margin: 0 0 0.25rem 0;
+        color: var(--ion-color-dark);
+      }
+
+      p {
+        font-size: 0.875rem;
+        color: var(--ion-color-medium);
+        margin: 0;
+        font-weight: 400;
+      }
+
+      .language-select {
+        margin-top: 0.5rem;
+        --background: rgba(102, 126, 234, 0.1);
+        --border-radius: 12px;
+        --padding-start: 12px;
+        --padding-end: 12px;
+        --padding-top: 8px;
+        --padding-bottom: 8px;
+        font-weight: 500;
+        color: var(--ion-color-primary);
+      }
+
+      .export-buttons {
+        display: flex;
+        gap: 0.75rem;
+        margin-top: 0.75rem;
+        flex-wrap: wrap;
+
+        ion-button {
+          --border-radius: 12px;
+          --border-width: 2px;
+          --border-color: var(--ion-color-primary);
+          --color: var(--ion-color-primary);
+          font-weight: 500;
+          margin: 0;
+
+          ion-icon {
+            margin-right: 0.25rem;
+          }
+        }
+      }
+    }
+
+    .arrow-icon {
+      color: var(--ion-color-medium);
+      font-size: 1.25rem;
+      flex-shrink: 0;
+    }
+  }
+
+  // Special styling for logout card
+  &.logout-card {
+    border-color: rgba(255, 107, 107, 0.2);
+    background: linear-gradient(135deg, rgba(255, 107, 107, 0.05) 0%, rgba(238, 90, 111, 0.05) 100%);
+
+    .setting-content h3 {
+      color: #ff6b6b;
+    }
+  }
+}
+
+// Hover effects for non-mobile
+@media (hover: hover) {
+  .settings-card:not(.logout-card):hover {
+    box-shadow: 0 4px 20px rgba(102, 126, 234, 0.15);
+    transform: translateY(-2px);
+    border-color: rgba(102, 126, 234, 0.2);
+  }
+
+  .logout-card:hover {
+    box-shadow: 0 4px 20px rgba(255, 107, 107, 0.15);
+    transform: translateY(-2px);
+    border-color: rgba(255, 107, 107, 0.3);
+  }
+}
+
+// Animations
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.settings-card {
+  animation: slideIn 0.4s ease-out backwards;
+
+  @for $i from 1 through 10 {
+    &:nth-child(#{$i}) {
+      animation-delay: #{$i * 0.05}s;
+    }
+  }
+}
+
+// Responsive design
+@media (min-width: 768px) {
+  .settings-container {
+    padding: 2rem;
+  }
+
+  .settings-header h1 {
+    font-size: 2.5rem;
+  }
+
+  .export-buttons {
+    flex-direction: row;
+  }
+}

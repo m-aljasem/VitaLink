@@ -1,58 +1,97 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>{{ 'SETTINGS.PROFILE' | translate }}</ion-title>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content [fullscreen]="true" class="ion-padding">
-  <div class="profile-container">
-    <ion-item>
-      <ion-label position="stacked">{{ 'ONBOARDING.FIRST_NAME' | translate }}</ion-label>
-      <ion-input [(ngModel)]="editedProfile.first_name"></ion-input>
-    </ion-item>
-
-    <ion-item>
-      <ion-label position="stacked">{{ 'ONBOARDING.LAST_NAME' | translate }}</ion-label>
-      <ion-input [(ngModel)]="editedProfile.last_name"></ion-input>
-    </ion-item>
-
-    <ion-item>
-      <ion-label position="stacked">{{ 'ONBOARDING.AGE' | translate }}</ion-label>
-      <ion-input type="number" [(ngModel)]="editedProfile.age"></ion-input>
-    </ion-item>
-
-    <ion-item>
-      <ion-label>{{ 'ONBOARDING.GENDER' | translate }}</ion-label>
-      <ion-select [(ngModel)]="editedProfile.gender">
-        <ion-select-option value="male">{{ 'ONBOARDING.MALE' | translate }}</ion-select-option>
-        <ion-select-option value="female">{{ 'ONBOARDING.FEMALE' | translate }}</ion-select-option>
-      </ion-select>
-    </ion-item>
-
-    <ion-item>
-      <ion-label position="stacked">{{ 'ONBOARDING.COUNTRY' | translate }}</ion-label>
-      <ion-input [(ngModel)]="editedProfile.country"></ion-input>
-    </ion-item>
-
-    <ion-item>
-      <ion-label position="stacked">{{ 'ONBOARDING.CITY' | translate }}</ion-label>
-      <ion-input [(ngModel)]="editedProfile.city"></ion-input>
-    </ion-item>
-
-    <div *ngIf="profile?.role === 'patient'" class="conditions-section ion-margin-top">
-      <h3>{{ 'ONBOARDING.CONDITIONS_TITLE' | translate }}</h3>
-      <div class="conditions-grid">
-        <ion-chip
-          *ngFor="let condition of availableConditions"
-          [color]="editedProfile.conditions?.includes(condition) ? 'primary' : 'medium'"
-          (click)="toggleCondition(condition)"
-        >
-          {{ condition }}
-        </ion-chip>
+<ion-content [fullscreen]="true" class="profile-content">
+  <div class="profile-container ion-padding">
+    <div class="back-button-wrapper">
+      <ion-button fill="clear" (click)="goBack()" class="back-button">
+        <ion-icon name="arrow-back" slot="start"></ion-icon>
+        Back
+      </ion-button>
+    </div>
+    <div class="profile-header">
+      <div class="header-icon">
+        <ion-icon name="person"></ion-icon>
       </div>
+      <h1>{{ 'SETTINGS.PROFILE' | translate }}</h1>
+      <p class="subtitle">Update your personal information</p>
     </div>
 
-    <ion-button expand="block" (click)="save()" class="ion-margin-top">
+    <ion-card class="form-card">
+      <ion-card-content>
+        <div class="form-section">
+          <h3 class="section-title">
+            <ion-icon name="person-outline"></ion-icon>
+            Personal Information
+          </h3>
+          
+          <ion-item class="form-item">
+            <ion-label position="stacked">{{ 'ONBOARDING.FIRST_NAME' | translate }}</ion-label>
+            <ion-input [(ngModel)]="editedProfile.first_name"></ion-input>
+          </ion-item>
+
+          <ion-item class="form-item">
+            <ion-label position="stacked">{{ 'ONBOARDING.LAST_NAME' | translate }}</ion-label>
+            <ion-input [(ngModel)]="editedProfile.last_name"></ion-input>
+          </ion-item>
+
+          <ion-item class="form-item">
+            <ion-label position="stacked">{{ 'ONBOARDING.AGE' | translate }}</ion-label>
+            <ion-input type="number" [(ngModel)]="editedProfile.age"></ion-input>
+          </ion-item>
+
+          <ion-item class="form-item">
+            <ion-label>{{ 'ONBOARDING.GENDER' | translate }}</ion-label>
+            <ion-select [(ngModel)]="editedProfile.gender">
+              <ion-select-option value="male">{{ 'ONBOARDING.MALE' | translate }}</ion-select-option>
+              <ion-select-option value="female">{{ 'ONBOARDING.FEMALE' | translate }}</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card class="form-card">
+      <ion-card-content>
+        <div class="form-section">
+          <h3 class="section-title">
+            <ion-icon name="location-outline"></ion-icon>
+            Location
+          </h3>
+          
+          <ion-item class="form-item">
+            <ion-label position="stacked">{{ 'ONBOARDING.COUNTRY' | translate }}</ion-label>
+            <ion-input [(ngModel)]="editedProfile.country"></ion-input>
+          </ion-item>
+
+          <ion-item class="form-item">
+            <ion-label position="stacked">{{ 'ONBOARDING.CITY' | translate }}</ion-label>
+            <ion-input [(ngModel)]="editedProfile.city"></ion-input>
+          </ion-item>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card *ngIf="profile?.role === 'patient'" class="form-card conditions-card">
+      <ion-card-content>
+        <div class="form-section">
+          <h3 class="section-title">
+            <ion-icon name="medical-outline"></ion-icon>
+            {{ 'ONBOARDING.CONDITIONS_TITLE' | translate }}
+          </h3>
+          <div class="conditions-grid">
+            <ion-chip
+              *ngFor="let condition of availableConditions"
+              class="condition-chip"
+              [class.selected]="editedProfile.conditions?.includes(condition)"
+              (click)="toggleCondition(condition)"
+            >
+              {{ condition }}
+            </ion-chip>
+          </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-button expand="block" (click)="save()" class="save-button">
+      <ion-icon name="checkmark-circle" slot="start"></ion-icon>
       {{ 'COMMON.SAVE' | translate }}
     </ion-button>
   </div>

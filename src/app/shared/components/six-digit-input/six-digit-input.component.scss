@@ -10,15 +10,18 @@
     text-align: center;
     font-size: 1.5rem;
     font-weight: 600;
-    --border-radius: 12px;
-    --background: #f9fafb;
-    --border-color: #e5e7eb;
+    --border-radius: 16px;
+    --background: #ffffff;
+    --border-color: var(--ion-color-medium);
     --border-width: 2px;
     --border-style: solid;
+    --color: var(--ion-text-color);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
     &:focus-within {
       --border-color: var(--ion-color-primary);
       --background: #ffffff;
+      box-shadow: 0 2px 8px rgba(var(--ion-color-primary-rgb), 0.3);
     }
   }
 }

@@ -2,14 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {
   IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonButtons, IonInput, IonItem, IonLabel,
-  IonList, IonCheckbox, IonDatetime, IonIcon, IonText, IonModal, ToastController, AlertController
+  IonList, IonCheckbox, IonDatetime, IonIcon, IonText, IonModal, IonCard, IonCardContent, IonToggle, IonChip, ToastController, AlertController
 } from '@ionic/angular/standalone';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../core/auth.service';
 import { ReminderService, Reminder } from '../../../core/reminder.service';
 import { addIcons } from 'ionicons';
-import { add, trash } from 'ionicons/icons';
+import { add, addCircle, trash, notifications, notificationsOutline, time, timeOutline, arrowBack } from 'ionicons/icons';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-reminders',
@@ -19,7 +20,7 @@ import { add, trash } from 'ionicons/icons';
   imports: [
     CommonModule, FormsModule,
     IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonButtons, IonInput, IonItem, IonLabel,
-    IonList, IonCheckbox, IonDatetime, IonIcon, IonText, IonModal, TranslateModule
+    IonList, IonCheckbox, IonDatetime, IonIcon, IonText, IonModal, IonCard, IonCardContent, IonToggle, IonChip, TranslateModule
   ],
 })
 export class RemindersPage implements OnInit {
@@ -46,9 +47,15 @@ export class RemindersPage implements OnInit {
     private authService: AuthService,
     private reminderService: ReminderService,
     private toastController: ToastController,
-    private alertController: AlertController
+    private alertController: AlertController,
+    private translate: TranslateService,
+    private router: Router
   ) {
-    addIcons({ add, trash });
+    addIcons({ add, addCircle, trash, notifications, notificationsOutline, time, timeOutline, arrowBack });
+  }
+
+  goBack() {
+    this.router.navigate(['/tabs/settings']);
   }
 
   async ngOnInit() {
@@ -78,7 +85,7 @@ export class RemindersPage implements OnInit {
   async saveReminder() {
     if (!this.newReminder.title || !this.newReminder.local_time || !this.newReminder.days?.length) {
       const toast = await this.toastController.create({
-        message: 'Please fill all fields',
+        message: this.translate.instant('SETTINGS.FILL_ALL_FIELDS'),
         duration: 2000,
         color: 'danger',
       });
@@ -96,7 +103,7 @@ export class RemindersPage implements OnInit {
 
     if (error) {
       const toast = await this.toastController.create({
-        message: 'Failed to create reminder',
+        message: this.translate.instant('SETTINGS.CREATE_REMINDER_ERROR'),
         duration: 2000,
         color: 'danger',
       });
@@ -110,12 +117,12 @@ export class RemindersPage implements OnInit {
 
   async deleteReminder(reminder: Reminder) {
     const alert = await this.alertController.create({
-      header: 'Delete Reminder',
-      message: 'Are you sure you want to delete this reminder?',
+      header: this.translate.instant('SETTINGS.DELETE_REMINDER_TITLE'),
+      message: this.translate.instant('SETTINGS.DELETE_REMINDER_MESSAGE'),
       buttons: [
-        { text: 'Cancel', role: 'cancel' },
+        { text: this.translate.instant('COMMON.CANCEL'), role: 'cancel' },
         {
-          text: 'Delete',
+          text: this.translate.instant('SETTINGS.DELETE'),
           role: 'destructive',
           handler: async () => {
             await this.reminderService.deleteReminder(reminder.id!);

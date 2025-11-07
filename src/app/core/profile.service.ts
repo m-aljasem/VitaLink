@@ -36,9 +36,13 @@ export class ProfileService {
       .from('profiles')
       .select('*')
       .eq('id', userId)
-      .single();
+      .maybeSingle();
 
-    return { data: data as Profile, error };
+    if (error) {
+      return { error };
+    }
+
+    return { data: data as Profile | undefined, error: data ? undefined : new Error('Profile not found') };
   }
 }
 

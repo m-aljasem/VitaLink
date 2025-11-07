@@ -1,36 +1,68 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>{{ 'SETTINGS.ABOUT' | translate }}</ion-title>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content [fullscreen]="true" class="ion-padding">
-  <div class="about-container">
-    <h1>{{ 'APP_NAME' | translate }}</h1>
-    <p>Version {{ version }}</p>
-    
-    <div class="about-content">
-      <h2>About VitaLink</h2>
-      <p>
-        VitaLink is a patient-generated health data tracker that allows you to monitor
-        your health metrics and share them securely with your care providers.
-      </p>
-
-      <h2>Features</h2>
-      <ul>
-        <li>Track multiple health metrics</li>
-        <li>Share data with care providers</li>
-        <li>View trends and charts</li>
-        <li>Set reminders</li>
-        <li>Export your data</li>
-      </ul>
-
-      <h2>Privacy</h2>
-      <p>
-        Your data is encrypted and stored securely. You control who can see your information
-        through granular sharing settings.
-      </p>
+<ion-content [fullscreen]="true" class="about-content-page">
+  <div class="about-container ion-padding">
+    <div class="back-button-wrapper">
+      <ion-button fill="clear" (click)="goBack()" class="back-button">
+        <ion-icon name="arrow-back" slot="start"></ion-icon>
+        Back
+      </ion-button>
     </div>
+    <div class="about-header">
+      <div class="header-icon">
+        <ion-icon name="information-circle"></ion-icon>
+      </div>
+      <h1>{{ 'APP_NAME' | translate }}</h1>
+      <div class="version-badge">
+        <ion-icon name="code-working-outline"></ion-icon>
+        <span>{{ 'ABOUT.VERSION' | translate }} {{ version }}</span>
+      </div>
+    </div>
+    
+    <ion-card class="about-card">
+      <ion-card-content>
+        <div class="about-section">
+          <h3 class="section-title">
+            <ion-icon name="document-text-outline"></ion-icon>
+            {{ 'ABOUT.ABOUT_TITLE' | translate }}
+          </h3>
+          <p>
+            {{ 'ABOUT.ABOUT_DESC' | translate }}
+          </p>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card class="about-card features-card">
+      <ion-card-content>
+        <div class="about-section">
+          <h3 class="section-title">
+            <ion-icon name="star"></ion-icon>
+            {{ 'ABOUT.FEATURES_TITLE' | translate }}
+          </h3>
+          <div class="features-list">
+            <div class="feature-item" *ngFor="let feature of features">
+              <div class="feature-icon-wrapper">
+                <ion-icon [name]="feature.icon"></ion-icon>
+              </div>
+              <span>{{ feature.text | translate }}</span>
+            </div>
+          </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card class="about-card privacy-card">
+      <ion-card-content>
+        <div class="about-section">
+          <h3 class="section-title">
+            <ion-icon name="shield-checkmark-outline"></ion-icon>
+            {{ 'ABOUT.PRIVACY_TITLE' | translate }}
+          </h3>
+          <p>
+            {{ 'ABOUT.PRIVACY_DESC' | translate }}
+          </p>
+        </div>
+      </ion-card-content>
+    </ion-card>
   </div>
 </ion-content>
 
