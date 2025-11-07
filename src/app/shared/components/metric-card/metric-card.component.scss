@@ -1,0 +1,82 @@
+.metric-card {
+  margin: 0;
+  border-radius: 16px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  min-height: 140px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  &:active {
+    transform: scale(0.98);
+  }
+
+  ion-card-content {
+    padding: 1rem;
+    background: transparent;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    justify-content: space-between;
+  }
+}
+
+.metric-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+
+  .metric-label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--ion-text-color);
+    opacity: 0.7;
+  }
+}
+
+.metric-value {
+  font-size: 1.75rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+
+  &.no-data {
+    font-size: 0.875rem;
+    font-weight: 500;
+    opacity: 0.6;
+  }
+}
+
+.sparkline-container {
+  margin: 0.75rem 0;
+  height: 30px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+
+  .sparkline {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+}
+
+.metric-footer {
+  margin-top: auto;
+  
+  .metric-time {
+    font-size: 0.75rem;
+    color: var(--ion-text-color);
+    opacity: 0.6;
+  }
+}
+
+.sparkline-container {
+  flex-shrink: 0;
+  min-height: 30px;
+}
+

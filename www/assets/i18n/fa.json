@@ -1,0 +1,13 @@
+{
+  "APP_NAME": "VitaLink",
+  "AUTH": {
+    "TITLE": "به VitaLink خوش آمدید",
+    "SUBTITLE": "ردیاب داده‌های سلامت شخصی شما"
+  },
+  "COMMON": {
+    "CANCEL": "لغو",
+    "CONFIRM": "تأیید",
+    "SAVE": "ذخیره"
+  }
+}
+

@@ -1,0 +1,22 @@
+{
+  "APP_NAME": "VitaLink",
+  "AUTH": {
+    "TITLE": "Bienvenido a VitaLink",
+    "SUBTITLE": "Tu rastreador de datos de salud personal",
+    "EMAIL": "Correo electrónico",
+    "EMAIL_PLACEHOLDER": "Ingresa tu correo",
+    "REQUEST_CODE": "Solicitar código",
+    "VERIFY_CODE": "Verificar código",
+    "CODE_SENT": "Código enviado a tu correo",
+    "ENTER_CODE": "Ingresa código de 6 dígitos",
+    "VERIFY": "Verificar",
+    "RESEND": "Reenviar código"
+  },
+  "COMMON": {
+    "CANCEL": "Cancelar",
+    "CONFIRM": "Confirmar",
+    "SAVE": "Guardar",
+    "NEXT": "Siguiente"
+  }
+}
+

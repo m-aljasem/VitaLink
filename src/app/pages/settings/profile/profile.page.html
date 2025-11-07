@@ -1,0 +1,60 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>{{ 'SETTINGS.PROFILE' | translate }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  <div class="profile-container">
+    <ion-item>
+      <ion-label position="stacked">{{ 'ONBOARDING.FIRST_NAME' | translate }}</ion-label>
+      <ion-input [(ngModel)]="editedProfile.first_name"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">{{ 'ONBOARDING.LAST_NAME' | translate }}</ion-label>
+      <ion-input [(ngModel)]="editedProfile.last_name"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">{{ 'ONBOARDING.AGE' | translate }}</ion-label>
+      <ion-input type="number" [(ngModel)]="editedProfile.age"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>{{ 'ONBOARDING.GENDER' | translate }}</ion-label>
+      <ion-select [(ngModel)]="editedProfile.gender">
+        <ion-select-option value="male">{{ 'ONBOARDING.MALE' | translate }}</ion-select-option>
+        <ion-select-option value="female">{{ 'ONBOARDING.FEMALE' | translate }}</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">{{ 'ONBOARDING.COUNTRY' | translate }}</ion-label>
+      <ion-input [(ngModel)]="editedProfile.country"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">{{ 'ONBOARDING.CITY' | translate }}</ion-label>
+      <ion-input [(ngModel)]="editedProfile.city"></ion-input>
+    </ion-item>
+
+    <div *ngIf="profile?.role === 'patient'" class="conditions-section ion-margin-top">
+      <h3>{{ 'ONBOARDING.CONDITIONS_TITLE' | translate }}</h3>
+      <div class="conditions-grid">
+        <ion-chip
+          *ngFor="let condition of availableConditions"
+          [color]="editedProfile.conditions?.includes(condition) ? 'primary' : 'medium'"
+          (click)="toggleCondition(condition)"
+        >
+          {{ condition }}
+        </ion-chip>
+      </div>
+    </div>
+
+    <ion-button expand="block" (click)="save()" class="ion-margin-top">
+      {{ 'COMMON.SAVE' | translate }}
+    </ion-button>
+  </div>
+</ion-content>
+

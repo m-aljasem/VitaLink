@@ -1,0 +1,19 @@
+.profile-container {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.conditions-section {
+  h3 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
+}
+
+.conditions-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+

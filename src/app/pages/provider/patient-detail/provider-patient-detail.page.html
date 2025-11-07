@@ -1,0 +1,60 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>{{ patientProfile?.first_name }} {{ patientProfile?.last_name }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  <div class="patient-detail-container">
+    <div class="patient-info">
+      <h2>{{ patientProfile?.first_name }} {{ patientProfile?.last_name }}</h2>
+      <p *ngIf="patientProfile?.age">{{ 'ONBOARDING.AGE' | translate }}: {{ patientProfile?.age }}</p>
+    </div>
+
+    <div class="shared-metrics-section">
+      <h3>{{ 'PROVIDER.SHARED_METRICS' | translate }}</h3>
+
+      <div *ngFor="let metricData of sharedMetrics" class="metric-section">
+        <ion-card>
+          <ion-card-content>
+            <h4>{{ metricData.label | translate }}</h4>
+            
+            <div *ngIf="metricData.latestValue" class="latest-value">
+              <p class="value">{{ formatValue(metricData.latestValue) }}</p>
+              <p class="time">{{ formatTime(metricData.latestValue.ts) }}</p>
+            </div>
+
+            <!-- Tiny trend line (sparkline) -->
+            <div *ngIf="metricData.chartData.length > 0" class="trend-line">
+              <svg [attr.width]="100" [attr.height]="30" viewBox="0 0 100 30">
+                <polyline
+                  [attr.points]="getTrendLinePoints(metricData.chartData)"
+                  [attr.stroke]="metricData.color"
+                  fill="none"
+                  stroke-width="1.5"
+                />
+              </svg>
+            </div>
+
+            <div *ngIf="metricData.chartData.length > 0" class="chart-container">
+              <app-line-chart
+                [data]="metricData.chartData"
+                [labels]="metricData.chartLabels"
+                [color]="metricData.color"
+              ></app-line-chart>
+            </div>
+
+            <ion-text *ngIf="!metricData.latestValue" color="medium">
+              {{ 'HOME.NO_DATA' | translate }}
+            </ion-text>
+          </ion-card-content>
+        </ion-card>
+      </div>
+
+      <ion-text *ngIf="sharedMetrics.length === 0" color="medium">
+        {{ 'HOME.NO_DATA' | translate }}
+      </ion-text>
+    </div>
+  </div>
+</ion-content>
+

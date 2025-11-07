@@ -1,0 +1,20 @@
+.reminders-container {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.days-section {
+  margin: 1rem 0;
+
+  p {
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+  }
+}
+
+.days-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem;
+}
+

@@ -1,0 +1,37 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>{{ 'APP_NAME' | translate }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  <div class="auth-container">
+    <div class="auth-header">
+      <h1>{{ 'AUTH.TITLE' | translate }}</h1>
+      <p>{{ 'AUTH.SUBTITLE' | translate }}</p>
+    </div>
+
+    <div class="auth-form">
+      <ion-item>
+        <ion-label position="stacked">{{ 'AUTH.EMAIL' | translate }}</ion-label>
+        <ion-input
+          type="email"
+          [(ngModel)]="email"
+          [placeholder]="'AUTH.EMAIL_PLACEHOLDER' | translate"
+          [disabled]="loading"
+        ></ion-input>
+      </ion-item>
+
+      <ion-button
+        expand="block"
+        (click)="requestCode()"
+        [disabled]="loading || !email"
+        class="ion-margin-top"
+      >
+        <ion-spinner *ngIf="loading" name="crescent"></ion-spinner>
+        <span *ngIf="!loading">{{ 'AUTH.REQUEST_CODE' | translate }}</span>
+      </ion-button>
+    </div>
+  </div>
+</ion-content>
+

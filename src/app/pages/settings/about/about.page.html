@@ -1,0 +1,36 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>{{ 'SETTINGS.ABOUT' | translate }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  <div class="about-container">
+    <h1>{{ 'APP_NAME' | translate }}</h1>
+    <p>Version {{ version }}</p>
+    
+    <div class="about-content">
+      <h2>About VitaLink</h2>
+      <p>
+        VitaLink is a patient-generated health data tracker that allows you to monitor
+        your health metrics and share them securely with your care providers.
+      </p>
+
+      <h2>Features</h2>
+      <ul>
+        <li>Track multiple health metrics</li>
+        <li>Share data with care providers</li>
+        <li>View trends and charts</li>
+        <li>Set reminders</li>
+        <li>Export your data</li>
+      </ul>
+
+      <h2>Privacy</h2>
+      <p>
+        Your data is encrypted and stored securely. You control who can see your information
+        through granular sharing settings.
+      </p>
+    </div>
+  </div>
+</ion-content>
+

@@ -1,0 +1,13 @@
+{
+  "APP_NAME": "VitaLink",
+  "AUTH": {
+    "TITLE": "VitaLink میں خوش آمدید",
+    "SUBTITLE": "آپ کا ذاتی صحت کا ڈیٹا ٹریکر"
+  },
+  "COMMON": {
+    "CANCEL": "منسوخ",
+    "CONFIRM": "تصدیق",
+    "SAVE": "محفوظ"
+  }
+}
+

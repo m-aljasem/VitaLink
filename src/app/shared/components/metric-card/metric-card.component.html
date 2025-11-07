@@ -1,0 +1,38 @@
+<ion-card (click)="navigateToDetail()" class="metric-card" [style.background]="getLightBackgroundColor()">
+  <ion-card-content>
+    <div class="metric-header">
+      <ion-text class="metric-label">{{ getMetricLabel() | translate }}</ion-text>
+      <ion-icon 
+        *ngIf="trend !== 'neutral'"
+        [name]="trend === 'up' ? 'arrow-up' : 'arrow-down'"
+        [style.color]="trend === 'up' ? '#10B981' : '#EF4444'"
+      ></ion-icon>
+    </div>
+    
+    <div class="metric-value" [class.no-data]="!value" [style.color]="color">
+      {{ value || ('HOME.NO_DATA' | translate) }}
+    </div>
+
+    <!-- Sparkline -->
+    <div class="sparkline-container" *ngIf="sparklineData && sparklineData.length > 0">
+      <svg class="sparkline" [attr.width]="120" [attr.height]="30" viewBox="0 0 120 30" preserveAspectRatio="none">
+        <path
+          [attr.d]="getSparklinePath()"
+          [attr.stroke]="color"
+          fill="none"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          vector-effect="non-scaling-stroke"
+        />
+      </svg>
+    </div>
+    
+    <div class="metric-footer">
+      <ion-text class="metric-time" *ngIf="lastTime">
+        {{ 'HOME.LAST' | translate }}: {{ formatTime(lastTime) }}
+      </ion-text>
+    </div>
+  </ion-card-content>
+</ion-card>
+

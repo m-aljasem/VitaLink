@@ -1,0 +1,46 @@
+.connect-container {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.connect-header {
+  margin-bottom: 2rem;
+
+  h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+
+  p {
+    color: var(--ion-text-color);
+    opacity: 0.7;
+  }
+}
+
+.providers-list {
+  margin-top: 2rem;
+
+  h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
+}
+
+.sharing-options {
+  h4 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
+}
+
+.provider-detail {
+  h4 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
+}
+

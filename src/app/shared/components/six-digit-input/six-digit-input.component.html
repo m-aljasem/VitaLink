@@ -1,0 +1,63 @@
+<div class="six-digit-container">
+  <ion-input
+    #input0
+    type="tel"
+    maxlength="1"
+    [(ngModel)]="digits[0]"
+    (ionInput)="onInput(0, $event)"
+    (keydown)="onKeyDown(0, $event)"
+    (paste)="onPaste($event)"
+    class="digit-input"
+  ></ion-input>
+  <ion-input
+    #input1
+    type="tel"
+    maxlength="1"
+    [(ngModel)]="digits[1]"
+    (ionInput)="onInput(1, $event)"
+    (keydown)="onKeyDown(1, $event)"
+    (paste)="onPaste($event)"
+    class="digit-input"
+  ></ion-input>
+  <ion-input
+    #input2
+    type="tel"
+    maxlength="1"
+    [(ngModel)]="digits[2]"
+    (ionInput)="onInput(2, $event)"
+    (keydown)="onKeyDown(2, $event)"
+    (paste)="onPaste($event)"
+    class="digit-input"
+  ></ion-input>
+  <ion-input
+    #input3
+    type="tel"
+    maxlength="1"
+    [(ngModel)]="digits[3]"
+    (ionInput)="onInput(3, $event)"
+    (keydown)="onKeyDown(3, $event)"
+    (paste)="onPaste($event)"
+    class="digit-input"
+  ></ion-input>
+  <ion-input
+    #input4
+    type="tel"
+    maxlength="1"
+    [(ngModel)]="digits[4]"
+    (ionInput)="onInput(4, $event)"
+    (keydown)="onKeyDown(4, $event)"
+    (paste)="onPaste($event)"
+    class="digit-input"
+  ></ion-input>
+  <ion-input
+    #input5
+    type="tel"
+    maxlength="1"
+    [(ngModel)]="digits[5]"
+    (ionInput)="onInput(5, $event)"
+    (keydown)="onKeyDown(5, $event)"
+    (paste)="onPaste($event)"
+    class="digit-input"
+  ></ion-input>
+</div>
+

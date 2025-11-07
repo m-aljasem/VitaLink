@@ -1,0 +1,53 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>{{ 'CONNECT.TITLE' | translate }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  <div class="provider-connect-container">
+    <div class="connect-header">
+      <h2>{{ 'CONNECT.PROVIDER_GENERATE' | translate }}</h2>
+      <p>{{ 'CONNECT.SUBTITLE' | translate }}</p>
+    </div>
+
+    <ion-button expand="block" (click)="generateCode()" class="ion-margin-top">
+      {{ 'CONNECT.PROVIDER_GENERATE' | translate }}
+    </ion-button>
+
+    <!-- Current Token Display -->
+    <ion-card *ngIf="currentToken" class="token-card">
+      <ion-card-content>
+        <div class="token-display">
+          <h3>{{ currentToken.code }}</h3>
+          <p>{{ 'CONNECT.PROVIDER_EXPIRES' | translate }}: {{ formatTimeRemaining(timeRemaining) }}</p>
+        </div>
+        <ion-button expand="block" fill="outline" (click)="shareViaOS()" class="ion-margin-top">
+          {{ 'CONNECT.SHARE_VIA_OS' | translate }}
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Patients List -->
+    <div class="patients-section ion-margin-top">
+      <h3>{{ 'CONNECT.PROVIDER_MY_PATIENTS' | translate }}</h3>
+      
+      <ion-list *ngIf="patients.length > 0">
+        <ion-item *ngFor="let patient of patients">
+          <ion-label>
+            <h3>{{ patient.patientProfile?.first_name }} {{ patient.patientProfile?.last_name }}</h3>
+            <p>Connected: {{ formatDate(patient.created_at) }}</p>
+          </ion-label>
+          <ion-button fill="clear" slot="end" (click)="removePatient(patient)">
+            {{ 'CONNECT.PROVIDER_REMOVE' | translate }}
+          </ion-button>
+        </ion-item>
+      </ion-list>
+
+      <ion-text *ngIf="patients.length === 0" color="medium">
+        {{ 'CONNECT.PROVIDER_NO_PATIENTS' | translate }}
+      </ion-text>
+    </div>
+  </div>
+</ion-content>
+

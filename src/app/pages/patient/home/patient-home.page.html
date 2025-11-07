@@ -1,0 +1,49 @@
+<ion-content [fullscreen]="true">
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <div class="home-container ion-padding">
+    <div class="greeting">
+      <h1>{{ greeting | translate }}, {{ profile?.first_name || 'User' }}</h1>
+    </div>
+
+    <div *ngIf="loading" class="loading-skeleton">
+      <div class="metrics-grid">
+        <div *ngFor="let i of [1,2,3,4,5,6]" class="skeleton-card"></div>
+      </div>
+    </div>
+
+    <div *ngIf="!loading" class="metrics-grid">
+      <app-metric-card
+        *ngFor="let metric of metrics"
+        [metric]="metric.metric"
+        [value]="metric.value"
+        [lastTime]="metric.lastTime"
+        [trend]="metric.trend"
+        [color]="metric.color"
+        [sparklineData]="metric.sparklineData"
+      ></app-metric-card>
+    </div>
+
+    <div class="recent-activity" *ngIf="!loading">
+      <h2>{{ 'HOME.RECENT_ACTIVITY' | translate }}</h2>
+      <ion-list *ngIf="recentActivity.length > 0">
+        <ion-item *ngFor="let activity of recentActivity">
+          <ion-icon [name]="getMetricIcon(activity.metric)" [color]="metricColors[activity.metric]" slot="start"></ion-icon>
+          <ion-label>
+            <h3>{{ 'METRICS.' + activity.metric.toUpperCase() | translate }}</h3>
+            <p>{{ formatMetricValue(activity) }} • {{ formatTime(activity.ts) }}</p>
+            <p *ngIf="activity.tags && activity.tags.length > 0" class="tags">
+              <ion-chip *ngFor="let tag of activity.tags" size="small">{{ tag | translate }}</ion-chip>
+            </p>
+          </ion-label>
+        </ion-item>
+      </ion-list>
+      <ion-text *ngIf="recentActivity.length === 0" color="medium">
+        {{ 'HOME.NO_ACTIVITY' | translate }}
+      </ion-text>
+    </div>
+  </div>
+</ion-content>
+

@@ -1,0 +1,17 @@
+<div class="reminder-banners" *ngIf="activeReminders.length > 0">
+  <ion-card *ngFor="let reminder of activeReminders" class="reminder-banner">
+    <ion-card-content>
+      <div class="banner-content">
+        <ion-icon name="notifications" color="primary"></ion-icon>
+        <div class="banner-text">
+          <strong>{{ reminder.title }}</strong>
+          <p>Time to log your health data</p>
+        </div>
+        <ion-button fill="clear" size="small" (click)="dismissReminder(reminder)">
+          <ion-icon name="close"></ion-icon>
+        </ion-button>
+      </div>
+    </ion-card-content>
+  </ion-card>
+</div>
+

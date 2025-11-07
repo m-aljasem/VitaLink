@@ -1,0 +1,81 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>{{ 'SETTINGS.REMINDERS' | translate }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  <div class="reminders-container">
+    <ion-button expand="block" (click)="showAddModal = true">
+      <ion-icon name="add" slot="start"></ion-icon>
+      {{ 'SETTINGS.ADD_REMINDER' | translate }}
+    </ion-button>
+
+    <ion-list *ngIf="reminders.length > 0" class="ion-margin-top">
+      <ion-item *ngFor="let reminder of reminders">
+        <ion-label>
+          <h3>{{ reminder.title }}</h3>
+          <p>{{ reminder.local_time }} - {{ reminder.days?.join(', ') }}</p>
+        </ion-label>
+        <ion-checkbox
+          [checked]="reminder.enabled"
+          (ionChange)="toggleReminder(reminder)"
+          slot="end"
+        ></ion-checkbox>
+        <ion-button fill="clear" slot="end" (click)="deleteReminder(reminder)">
+          <ion-icon name="trash" color="danger"></ion-icon>
+        </ion-button>
+      </ion-item>
+    </ion-list>
+
+    <ion-text *ngIf="reminders.length === 0" color="medium" class="ion-margin-top">
+      No reminders yet
+    </ion-text>
+  </div>
+
+  <!-- Add Reminder Modal -->
+  <ion-modal [isOpen]="showAddModal" (didDismiss)="showAddModal = false">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>{{ 'SETTINGS.ADD_REMINDER' | translate }}</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="showAddModal = false">{{ 'COMMON.CLOSE' | translate }}</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <ion-item>
+          <ion-label position="stacked">{{ 'SETTINGS.REMINDER_TITLE' | translate }}</ion-label>
+          <ion-input [(ngModel)]="newReminder.title"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">{{ 'SETTINGS.TIME' | translate }}</ion-label>
+          <ion-datetime
+            presentation="time"
+            [(ngModel)]="newReminder.local_time"
+          ></ion-datetime>
+        </ion-item>
+
+        <div class="days-section">
+          <p>{{ 'SETTINGS.DAYS' | translate }}</p>
+          <div class="days-grid">
+            <ion-checkbox
+              *ngFor="let day of daysOfWeek"
+              [checked]="newReminder.days?.includes(day.value)"
+              (ionChange)="toggleDay(day.value)"
+            >
+              {{ day.label | translate }}
+            </ion-checkbox>
+          </div>
+        </div>
+
+        <ion-button expand="block" (click)="saveReminder()" class="ion-margin-top">
+          {{ 'COMMON.SAVE' | translate }}
+        </ion-button>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+</ion-content>
+

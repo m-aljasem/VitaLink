@@ -1,0 +1,13 @@
+{
+  "APP_NAME": "VitaLink",
+  "AUTH": {
+    "TITLE": "Bienvenue sur VitaLink",
+    "SUBTITLE": "Votre suivi de données de santé personnel"
+  },
+  "COMMON": {
+    "CANCEL": "Annuler",
+    "CONFIRM": "Confirmer",
+    "SAVE": "Enregistrer"
+  }
+}
+

@@ -1,0 +1,24 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>{{ 'SETTINGS.SWITCH_MODE' | translate }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  <div class="mode-switch-container">
+    <p>{{ 'SETTINGS.SWITCH_MODE_DESC' | translate }}</p>
+
+    <ion-item>
+      <ion-label>{{ 'SETTINGS.SWITCH_MODE' | translate }}</ion-label>
+      <ion-select [(ngModel)]="currentRole">
+        <ion-select-option value="patient">{{ 'ONBOARDING.PATIENT' | translate }}</ion-select-option>
+        <ion-select-option value="provider">{{ 'ONBOARDING.PROVIDER' | translate }}</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-button expand="block" (click)="switchRole()" class="ion-margin-top">
+      {{ 'COMMON.SAVE' | translate }}
+    </ion-button>
+  </div>
+</ion-content>
+

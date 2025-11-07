@@ -1,0 +1,30 @@
+.about-container {
+  max-width: 600px;
+  margin: 0 auto;
+
+  h1 {
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+
+  .about-content {
+    margin-top: 2rem;
+
+    h2 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-top: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    ul {
+      padding-left: 1.5rem;
+
+      li {
+        margin-bottom: 0.5rem;
+      }
+    }
+  }
+}
+

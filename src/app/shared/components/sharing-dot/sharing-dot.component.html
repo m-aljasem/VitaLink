@@ -1,0 +1,24 @@
+<ion-button fill="clear" size="small" (click)="showPopover = !showPopover">
+  <ion-icon name="share-outline"></ion-icon>
+  <span *ngIf="providers.length > 0" class="badge">{{ providers.length }}</span>
+</ion-button>
+
+<ion-popover [isOpen]="showPopover" (didDismiss)="showPopover = false">
+  <ng-template>
+    <ion-content class="ion-padding">
+      <h3>{{ 'CONNECT.MY_PROVIDERS' | translate }}</h3>
+      <ion-list *ngIf="providers.length > 0">
+        <ion-item *ngFor="let provider of providers">
+          <ion-label>
+            <h4>{{ provider.providerProfile?.first_name }} {{ provider.providerProfile?.last_name }}</h4>
+            <p>{{ getSharedMetricsCount(provider) }} {{ 'CONNECT.SHARING_OPTIONS' | translate }}</p>
+          </ion-label>
+        </ion-item>
+      </ion-list>
+      <ion-text *ngIf="providers.length === 0" color="medium">
+        {{ 'CONNECT.NO_PROVIDERS' | translate }}
+      </ion-text>
+    </ion-content>
+  </ng-template>
+</ion-popover>
+

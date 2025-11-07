@@ -1,0 +1,41 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>{{ 'APP_NAME' | translate }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  <swiper-container [pagination]="true" [initialSlide]="slideOpts.initialSlide" [speed]="slideOpts.speed">
+    <swiper-slide>
+      <div class="slide-content">
+        <h1>{{ 'TOUR.WELCOME' | translate }}</h1>
+        <p>{{ 'TOUR.WELCOME_DESC' | translate }}</p>
+      </div>
+    </swiper-slide>
+
+    <swiper-slide>
+      <div class="slide-content">
+        <h1>{{ 'TOUR.HOME_TAB' | translate }}</h1>
+        <p>{{ 'TOUR.HOME_DESC' | translate }}</p>
+      </div>
+    </swiper-slide>
+
+    <swiper-slide>
+      <div class="slide-content">
+        <h1>{{ 'TOUR.CONNECT_TAB' | translate }}</h1>
+        <p>{{ 'TOUR.CONNECT_DESC' | translate }}</p>
+      </div>
+    </swiper-slide>
+
+    <swiper-slide>
+      <div class="slide-content">
+        <h1>{{ 'TOUR.SETTINGS_TAB' | translate }}</h1>
+        <p>{{ 'TOUR.SETTINGS_DESC' | translate }}</p>
+        <ion-button expand="block" (click)="completeTour()" class="ion-margin-top">
+          {{ 'TOUR.GET_STARTED' | translate }}
+        </ion-button>
+      </div>
+    </swiper-slide>
+  </swiper-container>
+</ion-content>
+

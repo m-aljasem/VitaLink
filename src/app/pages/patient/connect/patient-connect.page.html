@@ -1,0 +1,158 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>{{ 'CONNECT.TITLE' | translate }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  <div class="connect-container">
+    <div class="connect-header">
+      <h2>{{ 'CONNECT.TITLE' | translate }}</h2>
+      <p>{{ 'CONNECT.SUBTITLE' | translate }}</p>
+    </div>
+
+    <ion-button expand="block" (click)="shareViaOS()" class="ion-margin-top">
+      {{ 'CONNECT.SHARE_VIA_OS' | translate }}
+    </ion-button>
+
+    <ion-button expand="block" fill="outline" (click)="showAddProviderModal()" class="ion-margin-top">
+      {{ 'CONNECT.ADD_CARETAKER' | translate }}
+    </ion-button>
+
+    <div class="providers-list ion-margin-top">
+      <h3>{{ 'CONNECT.MY_PROVIDERS' | translate }}</h3>
+      
+      <ion-list *ngIf="providers.length > 0">
+        <ion-item button *ngFor="let provider of providers" (click)="showProviderDetails(provider)">
+          <ion-label>
+            <h3>{{ provider.providerProfile?.first_name }} {{ provider.providerProfile?.last_name }}</h3>
+            <p>{{ provider.providerProfile?.provider_kind }}</p>
+            <p>{{ 'CONNECT.ADDED_DATE' | translate }}: {{ formatDate(provider.created_at) }}</p>
+          </ion-label>
+        </ion-item>
+      </ion-list>
+
+      <ion-text *ngIf="providers.length === 0" color="medium">
+        {{ 'CONNECT.NO_PROVIDERS' | translate }}
+      </ion-text>
+    </div>
+  </div>
+
+  <ion-modal [isOpen]="showCodeModal" (didDismiss)="showCodeModal = false">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>{{ 'CONNECT.ADD_CARETAKER' | translate }}</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="showCodeModal = false">{{ 'COMMON.CLOSE' | translate }}</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <p>{{ 'CONNECT.ENTER_CODE' | translate }}</p>
+        <app-six-digit-input [(code)]="code" (codeComplete)="redeemCode()"></app-six-digit-input>
+        
+        <div class="sharing-options ion-margin-top">
+          <h4>{{ 'CONNECT.SHARING_OPTIONS' | translate }}</h4>
+          <ion-item>
+            <ion-label>{{ 'CONNECT.SHARE_BP' | translate }}</ion-label>
+            <ion-toggle [(ngModel)]="newProviderSharing.share_bp"></ion-toggle>
+          </ion-item>
+          <ion-item>
+            <ion-label>{{ 'CONNECT.SHARE_GLUCOSE' | translate }}</ion-label>
+            <ion-toggle [(ngModel)]="newProviderSharing.share_glucose"></ion-toggle>
+          </ion-item>
+          <ion-item>
+            <ion-label>{{ 'CONNECT.SHARE_SPO2' | translate }}</ion-label>
+            <ion-toggle [(ngModel)]="newProviderSharing.share_spo2"></ion-toggle>
+          </ion-item>
+          <ion-item>
+            <ion-label>{{ 'CONNECT.SHARE_HR' | translate }}</ion-label>
+            <ion-toggle [(ngModel)]="newProviderSharing.share_hr"></ion-toggle>
+          </ion-item>
+          <ion-item>
+            <ion-label>{{ 'CONNECT.SHARE_PAIN' | translate }}</ion-label>
+            <ion-toggle [(ngModel)]="newProviderSharing.share_pain"></ion-toggle>
+          </ion-item>
+          <ion-item>
+            <ion-label>{{ 'CONNECT.SHARE_WEIGHT' | translate }}</ion-label>
+            <ion-toggle [(ngModel)]="newProviderSharing.share_weight"></ion-toggle>
+          </ion-item>
+        </div>
+
+        <ion-button expand="block" (click)="redeemCode()" [disabled]="code.length !== 6" class="ion-margin-top">
+          {{ 'COMMON.CONFIRM' | translate }}
+        </ion-button>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+  <!-- Provider Detail Modal -->
+  <ion-modal [isOpen]="showProviderDetail" (didDismiss)="showProviderDetail = false">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>{{ selectedProvider?.providerProfile?.first_name }} {{ selectedProvider?.providerProfile?.last_name }}</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="showProviderDetail = false">{{ 'COMMON.CLOSE' | translate }}</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding" *ngIf="selectedProvider">
+        <div class="provider-detail">
+          <p><strong>{{ 'ONBOARDING.PROVIDER_KIND' | translate }}:</strong> {{ selectedProvider.providerProfile?.provider_kind }}</p>
+          <p><strong>{{ 'CONNECT.ADDED_DATE' | translate }}:</strong> {{ formatDate(selectedProvider.created_at) }}</p>
+          
+          <h4 class="ion-margin-top">{{ 'CONNECT.SHARING_OPTIONS' | translate }}</h4>
+          <ion-item>
+            <ion-label>{{ 'CONNECT.SHARE_BP' | translate }}</ion-label>
+            <ion-toggle
+              [checked]="selectedProvider.share_bp"
+              (ionChange)="updateSharing(selectedProvider.id, 'share_bp', $event.detail.checked)"
+            ></ion-toggle>
+          </ion-item>
+          <ion-item>
+            <ion-label>{{ 'CONNECT.SHARE_GLUCOSE' | translate }}</ion-label>
+            <ion-toggle
+              [checked]="selectedProvider.share_glucose"
+              (ionChange)="updateSharing(selectedProvider.id, 'share_glucose', $event.detail.checked)"
+            ></ion-toggle>
+          </ion-item>
+          <ion-item>
+            <ion-label>{{ 'CONNECT.SHARE_SPO2' | translate }}</ion-label>
+            <ion-toggle
+              [checked]="selectedProvider.share_spo2"
+              (ionChange)="updateSharing(selectedProvider.id, 'share_spo2', $event.detail.checked)"
+            ></ion-toggle>
+          </ion-item>
+          <ion-item>
+            <ion-label>{{ 'CONNECT.SHARE_HR' | translate }}</ion-label>
+            <ion-toggle
+              [checked]="selectedProvider.share_hr"
+              (ionChange)="updateSharing(selectedProvider.id, 'share_hr', $event.detail.checked)"
+            ></ion-toggle>
+          </ion-item>
+          <ion-item>
+            <ion-label>{{ 'CONNECT.SHARE_PAIN' | translate }}</ion-label>
+            <ion-toggle
+              [checked]="selectedProvider.share_pain"
+              (ionChange)="updateSharing(selectedProvider.id, 'share_pain', $event.detail.checked)"
+            ></ion-toggle>
+          </ion-item>
+          <ion-item>
+            <ion-label>{{ 'CONNECT.SHARE_WEIGHT' | translate }}</ion-label>
+            <ion-toggle
+              [checked]="selectedProvider.share_weight"
+              (ionChange)="updateSharing(selectedProvider.id, 'share_weight', $event.detail.checked)"
+            ></ion-toggle>
+          </ion-item>
+
+          <ion-button expand="block" color="danger" (click)="revokeAccess(selectedProvider); showProviderDetail = false" class="ion-margin-top">
+            {{ 'CONNECT.REVOKE' | translate }}
+          </ion-button>
+        </div>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+</ion-content>
+

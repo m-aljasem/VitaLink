@@ -1,2 +1,38 @@
-// For information on how to create your own theme, please see:
-// http://ionicframework.com/docs/theming/
+// Ionic Variables and Theming
+// Light mode only - no dark mode variables
+
+:root {
+  --ion-color-primary: #3B82F6;
+  --ion-color-primary-rgb: 59, 130, 246;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255, 255, 255;
+  --ion-color-primary-shade: #3472d8;
+  --ion-color-primary-tint: #4f8ff7;
+
+  --ion-color-secondary: #10B981;
+  --ion-color-secondary-rgb: 16, 185, 129;
+  --ion-color-secondary-contrast: #ffffff;
+  --ion-color-secondary-contrast-rgb: 255, 255, 255;
+  --ion-color-secondary-shade: #0ea372;
+  --ion-color-secondary-tint: #28c091;
+
+  --ion-color-tertiary: #F59E0B;
+  --ion-color-tertiary-rgb: 245, 158, 11;
+  --ion-color-tertiary-contrast: #ffffff;
+  --ion-color-tertiary-contrast-rgb: 255, 255, 255;
+  --ion-color-tertiary-shade: #d88b0a;
+  --ion-color-tertiary-tint: #f6a824;
+
+  --ion-color-success: #10B981;
+  --ion-color-warning: #F59E0B;
+  --ion-color-danger: #EF4444;
+  
+  --ion-background-color: #ffffff;
+  --ion-background-color-rgb: 255, 255, 255;
+  --ion-text-color: #1F2937;
+  --ion-text-color-rgb: 31, 41, 55;
+  --ion-border-color: #E5E7EB;
+  --ion-card-background: #ffffff;
+  --ion-toolbar-background: #ffffff;
+  --ion-item-background: #ffffff;
+}

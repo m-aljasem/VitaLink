@@ -1,0 +1,164 @@
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import {
+  IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonCard, IonCardContent,
+  IonList, IonItem, IonLabel, IonText, ToastController, AlertController
+} from '@ionic/angular/standalone';
+import { TranslateModule } from '@ngx-translate/core';
+import { CommonModule } from '@angular/common';
+import { AuthService } from '../../../core/auth.service';
+import { SharingService, ProviderLink, LinkToken } from '../../../core/sharing.service';
+import { ProfileService } from '../../../core/profile.service';
+
+@Component({
+  selector: 'app-provider-connect',
+  templateUrl: './provider-connect.page.html',
+  styleUrls: ['./provider-connect.page.scss'],
+  standalone: true,
+  imports: [
+    CommonModule,
+    IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonCard, IonCardContent,
+    IonList, IonItem, IonLabel, IonText, TranslateModule
+  ],
+})
+export class ProviderConnectPage implements OnInit, OnDestroy {
+  patients: (ProviderLink & { patientProfile?: any })[] = [];
+  currentToken: LinkToken | null = null;
+  tokenExpiryTimer: any;
+  timeRemaining = 0;
+
+  constructor(
+    private authService: AuthService,
+    private sharingService: SharingService,
+    private profileService: ProfileService,
+    private toastController: ToastController,
+    private alertController: AlertController
+  ) {}
+
+  async ngOnInit() {
+    await this.loadPatients();
+  }
+
+  ngOnDestroy() {
+    if (this.tokenExpiryTimer) {
+      clearInterval(this.tokenExpiryTimer);
+    }
+  }
+
+  async loadPatients() {
+    const user = this.authService.getCurrentUser();
+    if (!user) return;
+
+    const { data: links } = await this.sharingService.getProviderLinks(user.id);
+    if (links) {
+      this.patients = await Promise.all(
+        links.map(async (link) => {
+          const { data: profile } = await this.profileService.getProfile(link.patient_id);
+          return { ...link, patientProfile: profile };
+        })
+      );
+    }
+  }
+
+  async generateCode() {
+    const user = this.authService.getCurrentUser();
+    if (!user) return;
+
+    const { data: token, error } = await this.sharingService.createToken(user.id);
+    
+    if (error) {
+      const toast = await this.toastController.create({
+        message: 'Failed to generate code',
+        duration: 2000,
+        color: 'danger',
+      });
+      await toast.present();
+      return;
+    }
+
+    this.currentToken = token || null;
+    if (this.currentToken) {
+      this.startExpiryTimer();
+    }
+  }
+
+  startExpiryTimer() {
+    if (this.tokenExpiryTimer) {
+      clearInterval(this.tokenExpiryTimer);
+    }
+
+    this.tokenExpiryTimer = setInterval(() => {
+      if (!this.currentToken) {
+        clearInterval(this.tokenExpiryTimer);
+        return;
+      }
+
+      const now = new Date().getTime();
+      const expiry = new Date(this.currentToken.expires_at).getTime();
+      const remaining = Math.max(0, Math.floor((expiry - now) / 1000));
+
+      this.timeRemaining = remaining;
+
+      if (remaining === 0) {
+        this.currentToken = null;
+        clearInterval(this.tokenExpiryTimer);
+      }
+    }, 1000);
+  }
+
+  formatTimeRemaining(seconds: number): string {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  }
+
+  async shareViaOS() {
+    if (!this.currentToken) return;
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: 'VitaLink Connection Code',
+          text: `Use this code to connect: ${this.currentToken.code}`,
+          url: window.location.origin,
+        });
+      } catch (err) {
+        // User cancelled
+      }
+    } else {
+      // Fallback: copy to clipboard
+      await navigator.clipboard.writeText(this.currentToken.code);
+      const toast = await this.toastController.create({
+        message: 'Code copied to clipboard',
+        duration: 2000,
+        color: 'success',
+      });
+      await toast.present();
+    }
+  }
+
+  async removePatient(link: ProviderLink) {
+    const alert = await this.alertController.create({
+      header: 'Remove Patient',
+      message: 'Are you sure you want to remove this patient?',
+      buttons: [
+        { text: 'Cancel', role: 'cancel' },
+        {
+          text: 'Remove',
+          role: 'destructive',
+          handler: async () => {
+            await this.sharingService.revokeLink(link.id);
+            await this.loadPatients();
+          },
+        },
+      ],
+    });
+
+    await alert.present();
+  }
+
+  formatDate(dateString: string | undefined): string {
+    if (!dateString) return '';
+    return new Date(dateString).toLocaleDateString();
+  }
+}
+

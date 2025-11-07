@@ -1,0 +1,10 @@
+<ion-item>
+  <ion-label>{{ label | translate }}</ion-label>
+  <ion-toggle
+    [checked]="checked"
+    [disabled]="disabled"
+    (ionChange)="onToggle($event)"
+    slot="end"
+  ></ion-toggle>
+</ion-item>
+
