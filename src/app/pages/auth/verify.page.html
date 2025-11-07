@@ -29,8 +29,12 @@
       [disabled]="loading || code.length !== 6"
       class="verify-button"
     >
-      <ion-spinner *ngIf="loading" name="crescent"></ion-spinner>
-      <span *ngIf="!loading">{{ 'AUTH.VERIFY' | translate }}</span>
+      @if (loading) {
+        <ion-spinner name="crescent"></ion-spinner>
+      }
+      @if (!loading) {
+        <span>{{ 'AUTH.VERIFY' | translate }}</span>
+      }
     </ion-button>
 
     <!-- Resend Button -->

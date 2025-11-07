@@ -64,9 +64,11 @@ export class AuthPage implements OnInit {
   }
 
   async requestCode() {
-    if (!this.email || !this.email.includes('@')) {
+    // Improved email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!this.email || !emailRegex.test(this.email.trim())) {
       const toast = await this.toastController.create({
-        message: 'Please enter a valid email',
+        message: 'Please enter a valid email address',
         duration: 2000,
         color: 'danger',
       });

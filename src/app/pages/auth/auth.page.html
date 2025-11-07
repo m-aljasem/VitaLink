@@ -31,8 +31,12 @@
         [disabled]="loading || !email"
         class="request-button"
       >
-        <ion-spinner *ngIf="loading" name="crescent"></ion-spinner>
-        <span *ngIf="!loading">{{ 'AUTH.LOGIN' | translate }}</span>
+        @if (loading) {
+          <ion-spinner name="crescent"></ion-spinner>
+        }
+        @if (!loading) {
+          <span>{{ 'AUTH.LOGIN' | translate }}</span>
+        }
       </ion-button>
     </div>
 
@@ -43,14 +47,15 @@
         {{ 'SETTINGS.LANGUAGE' | translate }}
       </h3>
       <div class="language-buttons">
-        <ion-button
-          *ngFor="let lang of languages"
-          [class.active]="currentLanguage === lang.code"
-          (click)="changeLanguage(lang.code)"
-          class="language-button"
-        >
-          {{ lang.name }}
-        </ion-button>
+        @for (lang of languages; track lang.code) {
+          <ion-button
+            [class.active]="currentLanguage === lang.code"
+            (click)="changeLanguage(lang.code)"
+            class="language-button"
+          >
+            {{ lang.name }}
+          </ion-button>
+        }
       </div>
     </div>
   </div>

@@ -3,11 +3,13 @@ import { RouteReuseStrategy, provideRouter, withPreloading, PreloadAllModules } 
 import { HttpClient, provideHttpClient } from '@angular/common/http';
 import { IonicRouteStrategy, provideIonicAngular } from '@ionic/angular/standalone';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { provideServiceWorker } from '@angular/service-worker';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { routes } from './app/app.routes';
 import { AppComponent } from './app/app.component';
+import { environment } from './environments/environment';
 
 // Custom loader for translations
 export class CustomTranslateLoader implements TranslateLoader {
@@ -43,5 +45,10 @@ bootstrapApplication(AppComponent, {
         deps: [HttpClient],
       },
     }).providers!,
+    // Register service worker (enable in dev mode for testing PWA)
+    provideServiceWorker('ngsw-worker.js', {
+      enabled: true, // Enable in both dev and prod for testing
+      registrationStrategy: 'registerWhenStable:30000'
+    }),
   ],
 });

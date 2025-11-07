@@ -1,7 +1,8 @@
 <ion-content [fullscreen]="true" class="onboarding-content">
   <div class="onboarding-container ion-padding">
     <!-- Role Step -->
-    <div *ngIf="currentStep === 'role'" class="step">
+    @if (currentStep === 'role') {
+    <div class="step">
       <div class="step-header">
         <div class="step-icon-wrapper">
           <ion-icon name="people"></ion-icon>
@@ -28,9 +29,11 @@
         </ion-card-content>
       </ion-card>
     </div>
+    }
 
     <!-- Profile Step -->
-    <div *ngIf="currentStep === 'profile'" class="step">
+    @if (currentStep === 'profile') {
+    <div class="step">
       <div class="step-header">
         <div class="step-icon-wrapper">
           <ion-icon name="person"></ion-icon>
@@ -73,7 +76,8 @@
             <ion-input [(ngModel)]="city"></ion-input>
           </ion-item>
 
-          <div *ngIf="role === 'provider'" class="provider-section">
+          @if (role === 'provider') {
+          <div class="provider-section">
             <ion-item class="form-item">
               <ion-label>{{ 'ONBOARDING.PROVIDER_KIND' | translate }}</ion-label>
               <ion-select [(ngModel)]="providerKind">
@@ -85,11 +89,14 @@
               </ion-select>
             </ion-item>
             
-            <ion-item *ngIf="providerKind === 'doctor' || providerKind === 'nurse'" class="form-item">
+            @if (providerKind === 'doctor' || providerKind === 'nurse') {
+            <ion-item class="form-item">
               <ion-label position="stacked">{{ 'ONBOARDING.HOSPITAL' | translate }}</ion-label>
               <ion-input [(ngModel)]="hospital"></ion-input>
             </ion-item>
+            }
           </div>
+          }
         </ion-card-content>
       </ion-card>
       
@@ -97,31 +104,38 @@
         {{ 'COMMON.NEXT' | translate }}
       </ion-button>
     </div>
+    }
 
     <!-- Conditions Step -->
-    <div *ngIf="currentStep === 'conditions'" class="step">
-      <div class="step-header" *ngIf="role === 'patient'">
+    @if (currentStep === 'conditions') {
+    <div class="step">
+      @if (role === 'patient') {
+      <div class="step-header">
         <div class="step-icon-wrapper">
           <ion-icon name="medical"></ion-icon>
         </div>
         <h1>{{ 'ONBOARDING.CONDITIONS_TITLE' | translate }}</h1>
         <p>{{ 'ONBOARDING.CONDITIONS_SUBTITLE' | translate }}</p>
       </div>
+      }
       
-      <ion-card class="conditions-card" *ngIf="role === 'patient'">
+      @if (role === 'patient') {
+      <ion-card class="conditions-card">
         <ion-card-content>
           <div class="conditions-grid">
+            @for (condition of availableConditions; track condition) {
             <ion-chip
-              *ngFor="let condition of availableConditions"
               [class.selected]="conditions.includes(condition)"
               (click)="toggleCondition(condition)"
               class="condition-chip"
             >
               {{ condition }}
             </ion-chip>
+            }
           </div>
         </ion-card-content>
       </ion-card>
+      }
       
       <ion-button expand="block" (click)="nextStep()" class="next-button">
         {{ 'COMMON.NEXT' | translate }}
@@ -130,9 +144,11 @@
         {{ 'ONBOARDING.SKIP' | translate }}
       </ion-button>
     </div>
+    }
 
     <!-- Initial Metrics Step -->
-    <div *ngIf="currentStep === 'initial-metrics'" class="step">
+    @if (currentStep === 'initial-metrics') {
+    <div class="step">
       <div class="step-header">
         <div class="step-icon-wrapper">
           <ion-icon name="pulse"></ion-icon>
@@ -165,13 +181,18 @@
       </ion-card>
       
       <ion-button expand="block" (click)="completeOnboarding()" [disabled]="loading" class="next-button">
-        <ion-spinner *ngIf="loading" name="crescent"></ion-spinner>
-        <span *ngIf="!loading">{{ 'COMMON.SAVE' | translate }}</span>
+        @if (loading) {
+          <ion-spinner name="crescent"></ion-spinner>
+        }
+        @if (!loading) {
+          <span>{{ 'COMMON.SAVE' | translate }}</span>
+        }
       </ion-button>
       <ion-button expand="block" fill="clear" (click)="skip()" [disabled]="loading" class="skip-button">
         {{ 'ONBOARDING.SKIP' | translate }}
       </ion-button>
     </div>
+    }
   </div>
 </ion-content>
 
