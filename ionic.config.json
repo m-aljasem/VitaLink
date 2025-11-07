@@ -1,7 +1,7 @@
 {
-  "name": "Vivia",
+  "name": "VitaLink",
   "integrations": {
     "capacitor": {}
   },
-  "type": "angular"
+  "type": "angular-standalone"
 }
