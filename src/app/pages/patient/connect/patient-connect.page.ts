@@ -2,8 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { 
   IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonButtons, IonItem, IonLabel,
-  IonText, IonToggle, IonModal, IonCard, IonCardContent, IonIcon, ToastController, AlertController,
-  IonDatetime, IonCheckbox, IonSpinner
+  IonText, IonToggle, IonModal, IonCard, IonCardContent, IonIcon, ToastController, AlertController
 } from '@ionic/angular/standalone';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { CommonModule } from '@angular/common';
@@ -29,8 +28,7 @@ import { MetricType } from '../../../core/observation.service';
   imports: [
     CommonModule, FormsModule,
     IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonButtons, IonItem, IonLabel,
-    IonText, IonToggle, IonModal, IonCard, IonCardContent, IonIcon, TranslateModule, SixDigitInputComponent,
-    IonDatetime, IonCheckbox, IonSpinner
+    IonText, IonToggle, IonModal, IonCard, IonCardContent, IonIcon, TranslateModule, SixDigitInputComponent
   ],
 })
 export class PatientConnectPage implements OnInit {

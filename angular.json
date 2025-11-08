@@ -40,7 +40,11 @@
                 "output": "/"
               }
             ],
-            "styles": ["src/global.scss", "src/theme/variables.scss"],
+            "styles": [
+              "src/global.scss", 
+              "src/theme/variables.scss",
+              "node_modules/flag-icons/css/flag-icons.min.css"
+            ],
             "scripts": [],
             "browser": "src/main.ts",
             "serviceWorker": "ngsw-config.json",

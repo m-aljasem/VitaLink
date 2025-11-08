@@ -8,10 +8,11 @@ import {
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { CommonModule } from '@angular/common';
 import { addIcons } from 'ionicons';
-import { person, personOutline, locationOutline, medicalOutline, checkmarkCircle, arrowBack } from 'ionicons/icons';
+import { person, personOutline, locationOutline, medicalOutline, checkmarkCircle, arrowBack, male, female } from 'ionicons/icons';
 import { AuthService, Profile } from '../../../core/auth.service';
 import { ProfileService } from '../../../core/profile.service';
-import { CountrySelectorComponent } from '../../../shared/components/country-selector/country-selector.component';
+import { I18nService } from '../../../core/i18n.service';
+import { CountrySelectComponent, Country } from '@wlucha/ng-country-select';
 
 @Component({
   selector: 'app-profile',
@@ -21,13 +22,14 @@ import { CountrySelectorComponent } from '../../../shared/components/country-sel
   imports: [
     CommonModule, FormsModule,
     IonContent, IonButton, IonInput, IonItem, IonLabel,
-    IonSelect, IonSelectOption, IonChip, IonCard, IonCardContent, IonIcon, TranslateModule,
-    CountrySelectorComponent
+    IonChip, IonCard, IonCardContent, IonIcon, TranslateModule,
+    CountrySelectComponent
   ],
 })
 export class ProfilePage implements OnInit {
   profile: Profile | null = null;
   editedProfile: Partial<Profile> = {};
+  countryCode = ''; // Store alpha2 code for database
 
   availableConditions = [
     'HYPERTENSION', 'DIABETES', 'HEART_PROBLEMS', 'STRESS', 'HEADACHE',
@@ -39,16 +41,27 @@ export class ProfilePage implements OnInit {
     private profileService: ProfileService,
     private router: Router,
     private toastController: ToastController,
-    private translate: TranslateService
+    private translate: TranslateService,
+    public i18nService: I18nService
   ) {
-    addIcons({ person, personOutline, locationOutline, medicalOutline, checkmarkCircle, arrowBack });
+    addIcons({ person, personOutline, locationOutline, medicalOutline, checkmarkCircle, arrowBack, male, female });
   }
 
   async ngOnInit() {
     this.profile = await this.authService.getCurrentProfile();
     if (this.profile) {
       this.editedProfile = { ...this.profile };
+      this.countryCode = this.profile.country || '';
     }
+  }
+
+  onCountrySelected(country: Country) {
+    this.countryCode = country.alpha2;
+    this.editedProfile.country = country.alpha2;
+  }
+
+  selectGender(gender: 'male' | 'female') {
+    this.editedProfile.gender = gender;
   }
 
   toggleCondition(condition: string) {

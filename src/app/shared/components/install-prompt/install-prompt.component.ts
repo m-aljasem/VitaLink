@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IonButton, IonIcon, IonCard, IonCardContent, IonText } from '@ionic/angular/standalone';
+import { IonButton, IonIcon, IonCard, IonCardContent } from '@ionic/angular/standalone';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { addIcons } from 'ionicons';
 import { downloadOutline, closeOutline, phonePortraitOutline, flashOutline, notificationsOutline, homeOutline } from 'ionicons/icons';
@@ -13,7 +13,7 @@ interface BeforeInstallPromptEvent extends Event {
 @Component({
   selector: 'app-install-prompt',
   standalone: true,
-  imports: [CommonModule, IonButton, IonIcon, IonCard, IonCardContent, IonText, TranslateModule],
+  imports: [CommonModule, IonButton, IonIcon, IonCard, IonCardContent, TranslateModule],
   templateUrl: './install-prompt.component.html',
   styleUrls: ['./install-prompt.component.scss']
 })

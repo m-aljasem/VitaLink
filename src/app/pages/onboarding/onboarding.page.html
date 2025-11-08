@@ -65,19 +65,41 @@
             </ion-input>
           </ion-item>
           
-          <ion-item class="form-item">
-            <ion-label>{{ 'ONBOARDING.GENDER' | translate }}</ion-label>
-            <ion-select [(ngModel)]="gender">
-              <ion-select-option value="male">{{ 'ONBOARDING.MALE' | translate }}</ion-select-option>
-              <ion-select-option value="female">{{ 'ONBOARDING.FEMALE' | translate }}</ion-select-option>
-            </ion-select>
-          </ion-item>
+          <div class="gender-selection">
+            <ion-label position="stacked" class="gender-label">{{ 'ONBOARDING.GENDER' | translate }}</ion-label>
+            <div class="gender-buttons">
+              <ion-button
+                [class.selected]="gender === 'male'"
+                (click)="selectGender('male')"
+                class="gender-button"
+                fill="outline"
+              >
+                <ion-icon name="male" slot="start"></ion-icon>
+                {{ 'ONBOARDING.MALE' | translate }}
+              </ion-button>
+              <ion-button
+                [class.selected]="gender === 'female'"
+                (click)="selectGender('female')"
+                class="gender-button"
+                fill="outline"
+              >
+                <ion-icon name="female" slot="start"></ion-icon>
+                {{ 'ONBOARDING.FEMALE' | translate }}
+              </ion-button>
+            </div>
+          </div>
           
-          <app-country-selector
-            [label]="'ONBOARDING.COUNTRY' | translate"
-            [(ngModel)]="country"
-            class="form-item">
-          </app-country-selector>
+          <ion-item class="form-item">
+            <ion-label position="stacked">{{ 'ONBOARDING.COUNTRY' | translate }}</ion-label>
+            <ng-country-select
+              [lang]="i18nService.getCurrentLanguage()"
+              [selectedCountryByAlpha2]="countryCode"
+              [placeholder]="'ONBOARDING.COUNTRY' | translate"
+              [appearance]="'outline'"
+              (countrySelected)="onCountrySelected($event)"
+              style="width: 100%; display: block;"
+            ></ng-country-select>
+          </ion-item>
           
           <ion-item class="form-item">
             <ion-label position="stacked">{{ 'ONBOARDING.CITY' | translate }}</ion-label>

@@ -6,14 +6,14 @@ import {
   IonSelect, IonSelectOption, IonChip, IonSpinner, IonCard, IonCardContent, IonIcon
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { people, person, medical, pulse } from 'ionicons/icons';
+import { people, person, medical, pulse, male, female } from 'ionicons/icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { CommonModule } from '@angular/common';
 import { AuthService, Profile } from '../../core/auth.service';
 import { ProfileService } from '../../core/profile.service';
 import { ObservationService } from '../../core/observation.service';
 import { I18nService } from '../../core/i18n.service';
-import { CountrySelectorComponent } from '../../shared/components/country-selector/country-selector.component';
+import { CountrySelectComponent, Country } from '@wlucha/ng-country-select';
 
 type OnboardingStep = 'role' | 'profile' | 'conditions' | 'initial-metrics';
 
@@ -26,7 +26,7 @@ type OnboardingStep = 'role' | 'profile' | 'conditions' | 'initial-metrics';
     CommonModule, FormsModule,
     IonContent, IonButton, IonInput, IonItem, IonLabel,
     IonSelect, IonSelectOption, IonChip, IonSpinner, IonCard, IonCardContent, IonIcon, TranslateModule,
-    CountrySelectorComponent
+    CountrySelectComponent
   ],
 })
 export class OnboardingPage implements OnInit {
@@ -41,7 +41,8 @@ export class OnboardingPage implements OnInit {
   lastName = '';
   age: number | null = null;
   gender: 'male' | 'female' | null = null;
-  country = '';
+  country: Country | null = null;
+  countryCode = ''; // Store alpha2 code for database
   city = '';
 
   // Provider step
@@ -67,10 +68,10 @@ export class OnboardingPage implements OnInit {
     private authService: AuthService,
     private profileService: ProfileService,
     private observationService: ObservationService,
-    private i18nService: I18nService,
+    public i18nService: I18nService,
     private router: Router
   ) {
-    addIcons({ people, person, medical, pulse });
+    addIcons({ people, person, medical, pulse, male, female });
   }
 
   async ngOnInit() {
@@ -95,7 +96,11 @@ export class OnboardingPage implements OnInit {
       this.lastName = profile.last_name || '';
       this.age = profile.age || null;
       this.gender = profile.gender || null;
-      this.country = profile.country || '';
+      this.countryCode = profile.country || '';
+      // Set country by alpha2 code if exists
+      if (this.countryCode) {
+        // Will be set via selectedCountryByAlpha2 in template
+      }
       this.city = profile.city || '';
       this.providerKind = profile.provider_kind || null;
       this.hospital = profile.hospital || '';
@@ -204,7 +209,7 @@ export class OnboardingPage implements OnInit {
       last_name: this.lastName,
       age: this.age || undefined,
       gender: this.gender || undefined,
-      country: this.country || undefined,
+      country: this.countryCode || undefined,
       city: this.city || undefined,
       provider_kind: this.providerKind || undefined,
       hospital: this.hospital || undefined,
@@ -247,6 +252,15 @@ export class OnboardingPage implements OnInit {
 
     this.loading = false;
     this.router.navigate(['/tour']);
+  }
+
+  onCountrySelected(country: Country) {
+    this.country = country;
+    this.countryCode = country.alpha2;
+  }
+
+  selectGender(gender: 'male' | 'female') {
+    this.gender = gender;
   }
 
   skip() {
