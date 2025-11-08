@@ -156,3 +156,4 @@ if (!this.email || !this.email.includes('@')) {
 - The service key should NEVER be exposed client-side (✅ not found in code)
 
 
+

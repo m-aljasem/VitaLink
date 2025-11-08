@@ -1,29 +1,47 @@
 const fs = require('fs');
 const path = require('path');
 
-// Read .env file
-const envPath = path.join(__dirname, '..', '.env');
-const envContent = fs.readFileSync(envPath, 'utf8');
-
 // Parse environment variables
 const envVars = {};
-envContent.split('\n').forEach(line => {
-  const trimmed = line.trim();
-  if (trimmed && !trimmed.startsWith('#')) {
-    const [key, ...valueParts] = trimmed.split('=');
-    if (key && valueParts.length > 0) {
-      // Handle VITE_ prefix and convert to camelCase
-      const cleanKey = key.replace(/^VITE_/, '').toLowerCase();
-      const value = valueParts.join('=').trim();
-      
-      if (cleanKey === 'supabase_url') {
-        envVars.supabaseUrl = value;
-      } else if (cleanKey === 'supabase_anon_key') {
-        envVars.supabaseAnonKey = value;
+
+// Check if .env file exists (local development)
+const envPath = path.join(__dirname, '..', '.env');
+if (fs.existsSync(envPath)) {
+  // Read from .env file (local development)
+  const envContent = fs.readFileSync(envPath, 'utf8');
+  envContent.split('\n').forEach(line => {
+    const trimmed = line.trim();
+    if (trimmed && !trimmed.startsWith('#')) {
+      const [key, ...valueParts] = trimmed.split('=');
+      if (key && valueParts.length > 0) {
+        // Handle VITE_ prefix and convert to camelCase
+        const cleanKey = key.replace(/^VITE_/, '').toLowerCase();
+        const value = valueParts.join('=').trim();
+        
+        if (cleanKey === 'supabase_url') {
+          envVars.supabaseUrl = value;
+        } else if (cleanKey === 'supabase_anon_key') {
+          envVars.supabaseAnonKey = value;
+        }
       }
     }
-  }
-});
+  });
+  console.log('📄 Reading environment variables from .env file');
+} else {
+  // Read from process.env (Vercel/CI environments)
+  // Try multiple possible variable names
+  envVars.supabaseUrl = 
+    process.env.VITE_SUPABASE_URL || 
+    process.env.SUPABASE_URL || 
+    '';
+  
+  envVars.supabaseAnonKey = 
+    process.env.VITE_SUPABASE_ANON_KEY || 
+    process.env.SUPABASE_ANON_KEY || 
+    '';
+  
+  console.log('🌐 Reading environment variables from process.env (Vercel/CI)');
+}
 
 // Generate environment.ts content
 const devEnvContent = `// This file can be replaced during build by using the \`fileReplacements\` array.
@@ -61,7 +79,7 @@ const prodEnvPath = path.join(__dirname, '..', 'src', 'environments', 'environme
 fs.writeFileSync(devEnvPath, devEnvContent);
 fs.writeFileSync(prodEnvPath, prodEnvContent);
 
-console.log('✅ Environment files generated successfully from .env');
+console.log('✅ Environment files generated successfully');
 console.log(`   - ${devEnvPath}`);
 console.log(`   - ${prodEnvPath}`);
 
