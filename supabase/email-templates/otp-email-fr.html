@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Votre Code de Vérification VitaLink</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+        .email-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .email-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: pulse 3s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+        .logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            position: relative;
+            z-index: 1;
+        }
+        .logo-text {
+            font-size: 32px;
+            font-weight: 700;
+            color: white;
+        }
+        .email-header h1 {
+            color: white;
+            font-size: 28px;
+            font-weight: 700;
+            margin: 0;
+            position: relative;
+            z-index: 1;
+        }
+        .email-body {
+            padding: 40px 30px;
+        }
+        .greeting {
+            font-size: 18px;
+            color: #1a202c;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        .code-container {
+            background: linear-gradient(135deg, #f0f4ff 0%, #ffffff 100%);
+            border: 2px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 30px;
+            text-align: center;
+            margin: 30px 0;
+        }
+        .code-label {
+            font-size: 14px;
+            color: #718096;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        .code {
+            font-size: 42px;
+            font-weight: 700;
+            color: #667eea;
+            letter-spacing: 8px;
+            font-family: 'Courier New', monospace;
+            margin: 10px 0;
+            text-shadow: 0 2px 4px rgba(102, 126, 234, 0.2);
+        }
+        .code-expiry {
+            font-size: 14px;
+            color: #718096;
+            margin-top: 15px;
+        }
+        .message {
+            font-size: 16px;
+            color: #4a5568;
+            line-height: 1.7;
+            margin: 20px 0;
+        }
+        .security-note {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin: 25px 0;
+        }
+        .security-note p {
+            font-size: 14px;
+            color: #92400e;
+            margin: 0;
+            line-height: 1.6;
+        }
+        .footer {
+            background: #f7fafc;
+            padding: 30px;
+            text-align: center;
+            border-top: 1px solid #e5e7eb;
+        }
+        .footer p {
+            font-size: 14px;
+            color: #718096;
+            margin: 8px 0;
+            line-height: 1.6;
+        }
+        .footer-links {
+            margin-top: 20px;
+        }
+        .footer-links a {
+            color: #667eea;
+            text-decoration: none;
+            margin: 0 10px;
+            font-size: 14px;
+        }
+        @media only screen and (max-width: 600px) {
+            .email-container {
+                border-radius: 0;
+            }
+            .email-header, .email-body, .footer {
+                padding: 30px 20px;
+            }
+            .code {
+                font-size: 36px;
+                letter-spacing: 6px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="email-header">
+            <div class="logo">
+                <div class="logo-text">VL</div>
+            </div>
+            <h1>Vérifiez Votre Email</h1>
+        </div>
+        
+        <div class="email-body">
+            <p class="greeting">Bonjour !</p>
+            
+            <p class="message">
+                Bienvenue sur <strong>VitaLink</strong> ! Nous sommes ravis de vous accueillir pour suivre votre santé et rester connecté avec vos proches.
+            </p>
+            
+            <div class="code-container">
+                <div class="code-label">Votre Code de Vérification</div>
+                <div class="code">{{ .Token }}</div>
+                <div class="code-expiry">Ce code expire dans 1 heure</div>
+            </div>
+            
+            <p class="message">
+                Entrez ce code dans l'application VitaLink pour compléter votre vérification. Si vous n'avez pas demandé ce code, veuillez ignorer cet email.
+            </p>
+            
+            <div class="security-note">
+                <p>
+                    <strong>🔒 Conseil de Sécurité :</strong> Ne partagez jamais ce code avec qui que ce soit. Le personnel de VitaLink ne vous demandera jamais votre code de vérification.
+                </p>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p><strong>VitaLink</strong> - La Santé de Votre Famille, Toujours à Portée</p>
+            <p>Connecter les familles à la santé, mondialement.</p>
+            <div class="footer-links">
+                <a href="https://vitalink.app">Visiter le Site</a>
+                <a href="https://vitalink.app/support">Support</a>
+            </div>
+            <p style="margin-top: 20px; font-size: 12px; color: #a0aec0;">
+                Cet email a été envoyé à {{ .Email }}. Si vous n'avez pas demandé ceci, vous pouvez l'ignorer en toute sécurité.
+            </p>
+        </div>
+    </div>
+</body>
+</html>
+

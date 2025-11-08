@@ -79,6 +79,7 @@
     "GREETING_AFTERNOON": "こんにちは",
     "GREETING_EVENING": "こんばんは",
     "GREETING_NIGHT": "おやすみなさい",
+    "SUBTITLE": "健康指標を追跡",
     "LAST": "最後",
     "NO_DATA": "データがありません",
     "RECENT_ACTIVITY": "最近の活動",
@@ -158,7 +159,19 @@
     "CODE_INVALID_EXPIRED": "無効または期限切れのコード",
     "PROVIDER_ADDED_SUCCESS": "提供者が正常に追加されました",
     "GENERATE_CODE_ERROR": "コードの生成に失敗しました",
-    "CODE_COPIED": "コードがクリップボードにコピーされました"
+    "CODE_COPIED": "コードがクリップボードにコピーされました",
+    "EXPORT_PDF": "PDFをエクスポート",
+    "DATE_RANGE": "日付範囲",
+    "START_DATE": "開始日",
+    "END_DATE": "終了日",
+    "SELECT_METRICS": "指標を選択",
+    "EXPORT_OPTIONS": "エクスポートオプション",
+    "INCLUDE_SUMMARY": "要約を含める",
+    "INCLUDE_SUMMARY_DESC": "主要な統計を含む要約セクションを追加",
+    "INCLUDE_CHARTS": "チャートを含める",
+    "INCLUDE_CHARTS_DESC": "選択した指標の視覚的なチャートを追加",
+    "GENERATE_PDF": "PDFを生成",
+    "GENERATING": "生成中..."
   },
   "SETTINGS": {
     "TITLE": "設定",

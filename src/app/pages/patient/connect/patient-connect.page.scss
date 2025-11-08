@@ -95,6 +95,27 @@
   }
 }
 
+.pdf-export-button {
+  --background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  --color: white;
+  --border-radius: 16px;
+  --padding-top: 16px;
+  --padding-bottom: 16px;
+  font-weight: 600;
+  font-size: 1rem;
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+  transition: all 0.3s ease;
+  --border-width: 0;
+
+  &:active {
+    transform: scale(0.98);
+  }
+
+  ion-icon {
+    font-size: 1.25rem;
+  }
+}
+
 .providers-section {
   margin-top: 2rem;
 
@@ -352,6 +373,92 @@
 
 // Modal Styles
 .modal-content {
+  .pdf-export-container {
+    padding: 0.5rem 0;
+  }
+
+  .export-section-card {
+    margin: 0 0 1.5rem 0;
+    border-radius: 16px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(102, 126, 234, 0.1);
+
+    ion-card-content {
+      padding: 1.5rem;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 1.125rem;
+      font-weight: 600;
+      margin: 0 0 1.25rem 0;
+      color: var(--ion-color-dark);
+
+      ion-icon {
+        font-size: 1.5rem;
+        color: var(--ion-color-primary);
+      }
+    }
+
+    .form-item {
+      --background: #ffffff;
+      --border-radius: 12px;
+      --border-width: 1px;
+      --border-style: solid;
+      --border-color: #e5e7eb;
+      margin-bottom: 1rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .metrics-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+
+      .metric-checkbox-item {
+        --border-radius: 12px;
+        --background: #ffffff;
+        --border-width: 1px;
+        --border-style: solid;
+        --border-color: #e5e7eb;
+        margin-bottom: 0.5rem;
+        border-radius: 12px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+
+        .metric-icon {
+          font-size: 1.25rem;
+        }
+      }
+    }
+  }
+
+  .generate-pdf-button {
+    --background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    --color: white;
+    --border-radius: 16px;
+    --padding-top: 16px;
+    --padding-bottom: 16px;
+    font-weight: 600;
+    font-size: 1rem;
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+    margin-top: 1rem;
+    transition: all 0.3s ease;
+
+    &:active {
+      transform: scale(0.98);
+    }
+
+    &[disabled] {
+      opacity: 0.6;
+    }
+
+    ion-icon {
+      font-size: 1.25rem;
+    }
+  }
+
   .modal-header-section {
     text-align: center;
     margin-bottom: 2rem;

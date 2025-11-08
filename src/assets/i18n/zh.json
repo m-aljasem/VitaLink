@@ -79,6 +79,7 @@
     "GREETING_AFTERNOON": "下午好",
     "GREETING_EVENING": "晚上好",
     "GREETING_NIGHT": "晚安",
+    "SUBTITLE": "追踪您的健康指标",
     "LAST": "最后",
     "NO_DATA": "暂无数据",
     "RECENT_ACTIVITY": "最近活动",
@@ -158,7 +159,19 @@
     "CODE_INVALID_EXPIRED": "无效或已过期的验证码",
     "PROVIDER_ADDED_SUCCESS": "提供者添加成功",
     "GENERATE_CODE_ERROR": "生成验证码失败",
-    "CODE_COPIED": "验证码已复制到剪贴板"
+    "CODE_COPIED": "验证码已复制到剪贴板",
+    "EXPORT_PDF": "导出PDF",
+    "DATE_RANGE": "日期范围",
+    "START_DATE": "开始日期",
+    "END_DATE": "结束日期",
+    "SELECT_METRICS": "选择指标",
+    "EXPORT_OPTIONS": "导出选项",
+    "INCLUDE_SUMMARY": "包含摘要",
+    "INCLUDE_SUMMARY_DESC": "添加包含关键统计信息的摘要部分",
+    "INCLUDE_CHARTS": "包含图表",
+    "INCLUDE_CHARTS_DESC": "为选定的指标添加可视化图表",
+    "GENERATE_PDF": "生成PDF",
+    "GENERATING": "正在生成..."
   },
   "SETTINGS": {
     "TITLE": "设置",

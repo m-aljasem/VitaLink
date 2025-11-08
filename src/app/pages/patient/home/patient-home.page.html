@@ -6,7 +6,7 @@
   <div class="home-container ion-padding">
     <div class="greeting-section">
       <h1>{{ greeting | translate }}, {{ profile?.first_name || 'User' }}</h1>
-      <p class="greeting-subtitle">Track your health metrics</p>
+      <p class="greeting-subtitle">{{ 'HOME.SUBTITLE' | translate }}</p>
     </div>
 
     <div *ngIf="loading" class="loading-skeleton">

@@ -79,6 +79,7 @@
     "GREETING_AFTERNOON": "Guten Tag",
     "GREETING_EVENING": "Guten Abend",
     "GREETING_NIGHT": "Gute Nacht",
+    "SUBTITLE": "Verfolgen Sie Ihre Gesundheitsmetriken",
     "LAST": "Zuletzt",
     "NO_DATA": "Noch keine Daten",
     "RECENT_ACTIVITY": "Aktuelle Aktivität",
@@ -158,7 +159,19 @@
     "CODE_INVALID_EXPIRED": "Ungültiger oder abgelaufener Code",
     "PROVIDER_ADDED_SUCCESS": "Anbieter erfolgreich hinzugefügt",
     "GENERATE_CODE_ERROR": "Fehler beim Generieren des Codes",
-    "CODE_COPIED": "Code in die Zwischenablage kopiert"
+    "CODE_COPIED": "Code in die Zwischenablage kopiert",
+    "EXPORT_PDF": "PDF exportieren",
+    "DATE_RANGE": "Datumsbereich",
+    "START_DATE": "Startdatum",
+    "END_DATE": "Enddatum",
+    "SELECT_METRICS": "Metriken auswählen",
+    "EXPORT_OPTIONS": "Exportoptionen",
+    "INCLUDE_SUMMARY": "Zusammenfassung einschließen",
+    "INCLUDE_SUMMARY_DESC": "Einen Zusammenfassungsabschnitt mit wichtigen Statistiken hinzufügen",
+    "INCLUDE_CHARTS": "Diagramme einschließen",
+    "INCLUDE_CHARTS_DESC": "Visuelle Diagramme für ausgewählte Metriken hinzufügen",
+    "GENERATE_PDF": "PDF generieren",
+    "GENERATING": "Wird generiert..."
   },
   "SETTINGS": {
     "TITLE": "Einstellungen",

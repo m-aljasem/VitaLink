@@ -79,6 +79,7 @@
     "GREETING_AFTERNOON": "ظهر بخیر",
     "GREETING_EVENING": "عصر بخیر",
     "GREETING_NIGHT": "شب بخیر",
+    "SUBTITLE": "متریک‌های سلامت خود را ردیابی کنید",
     "LAST": "آخرین",
     "NO_DATA": "هنوز داده‌ای وجود ندارد",
     "RECENT_ACTIVITY": "فعالیت اخیر",
@@ -158,7 +159,19 @@
     "CODE_INVALID_EXPIRED": "کد نامعتبر یا منقضی شده",
     "PROVIDER_ADDED_SUCCESS": "ارائه‌دهنده با موفقیت افزوده شد",
     "GENERATE_CODE_ERROR": "خطا در تولید کد",
-    "CODE_COPIED": "کد در کلیپ‌بورد کپی شد"
+    "CODE_COPIED": "کد در کلیپ‌بورد کپی شد",
+    "EXPORT_PDF": "صدور PDF",
+    "DATE_RANGE": "محدوده تاریخ",
+    "START_DATE": "تاریخ شروع",
+    "END_DATE": "تاریخ پایان",
+    "SELECT_METRICS": "انتخاب متریک‌ها",
+    "EXPORT_OPTIONS": "گزینه‌های صدور",
+    "INCLUDE_SUMMARY": "شامل کردن خلاصه",
+    "INCLUDE_SUMMARY_DESC": "افزودن بخش خلاصه با آمار کلیدی",
+    "INCLUDE_CHARTS": "شامل کردن نمودارها",
+    "INCLUDE_CHARTS_DESC": "افزودن نمودارهای بصری برای متریک‌های انتخاب شده",
+    "GENERATE_PDF": "تولید PDF",
+    "GENERATING": "در حال تولید..."
   },
   "SETTINGS": {
     "TITLE": "تنظیمات",

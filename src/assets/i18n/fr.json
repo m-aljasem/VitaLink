@@ -79,6 +79,7 @@
     "GREETING_AFTERNOON": "Bon après-midi",
     "GREETING_EVENING": "Bonsoir",
     "GREETING_NIGHT": "Bonne nuit",
+    "SUBTITLE": "Suivez vos métriques de santé",
     "LAST": "Dernier",
     "NO_DATA": "Pas encore de données",
     "RECENT_ACTIVITY": "Activité récente",
@@ -158,7 +159,19 @@
     "CODE_INVALID_EXPIRED": "Code invalide ou expiré",
     "PROVIDER_ADDED_SUCCESS": "Fournisseur ajouté avec succès",
     "GENERATE_CODE_ERROR": "Échec de la génération du code",
-    "CODE_COPIED": "Code copié dans le presse-papiers"
+    "CODE_COPIED": "Code copié dans le presse-papiers",
+    "EXPORT_PDF": "Exporter PDF",
+    "DATE_RANGE": "Plage de dates",
+    "START_DATE": "Date de début",
+    "END_DATE": "Date de fin",
+    "SELECT_METRICS": "Sélectionner les métriques",
+    "EXPORT_OPTIONS": "Options d'exportation",
+    "INCLUDE_SUMMARY": "Inclure le résumé",
+    "INCLUDE_SUMMARY_DESC": "Ajouter une section de résumé avec des statistiques clés",
+    "INCLUDE_CHARTS": "Inclure les graphiques",
+    "INCLUDE_CHARTS_DESC": "Ajouter des graphiques visuels pour les métriques sélectionnées",
+    "GENERATE_PDF": "Générer PDF",
+    "GENERATING": "Génération..."
   },
   "SETTINGS": {
     "TITLE": "Paramètres",

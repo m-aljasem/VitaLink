@@ -79,6 +79,7 @@
     "GREETING_AFTERNOON": "دوپہر بخیر",
     "GREETING_EVENING": "شام بخیر",
     "GREETING_NIGHT": "رات بخیر",
+    "SUBTITLE": "اپنے صحت کے میٹرکس کو ٹریک کریں",
     "LAST": "آخری",
     "NO_DATA": "ابھی تک کوئی ڈیٹا نہیں",
     "RECENT_ACTIVITY": "حالیہ سرگرمی",
@@ -158,7 +159,19 @@
     "CODE_INVALID_EXPIRED": "غلط یا ختم شدہ کوڈ",
     "PROVIDER_ADDED_SUCCESS": "فراہم کنندہ کامیابی سے شامل ہو گیا",
     "GENERATE_CODE_ERROR": "کوڈ بنانے میں ناکام",
-    "CODE_COPIED": "کوڈ کلپ بورڈ میں کاپی ہو گیا"
+    "CODE_COPIED": "کوڈ کلپ بورڈ میں کاپی ہو گیا",
+    "EXPORT_PDF": "PDF برآمد کریں",
+    "DATE_RANGE": "تاریخ کی حد",
+    "START_DATE": "شروع کی تاریخ",
+    "END_DATE": "اختتام کی تاریخ",
+    "SELECT_METRICS": "میٹرکس منتخب کریں",
+    "EXPORT_OPTIONS": "برآمد کے اختیارات",
+    "INCLUDE_SUMMARY": "خلاصہ شامل کریں",
+    "INCLUDE_SUMMARY_DESC": "اہم اعداد و شمار کے ساتھ خلاصہ سیکشن شامل کریں",
+    "INCLUDE_CHARTS": "چارٹس شامل کریں",
+    "INCLUDE_CHARTS_DESC": "منتخب میٹرکس کے لیے بصری چارٹس شامل کریں",
+    "GENERATE_PDF": "PDF بنائیں",
+    "GENERATING": "بنایا جا رہا ہے..."
   },
   "SETTINGS": {
     "TITLE": "ترتیبات",

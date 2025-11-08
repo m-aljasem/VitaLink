@@ -79,6 +79,7 @@
     "GREETING_AFTERNOON": "Good afternoon",
     "GREETING_EVENING": "Good evening",
     "GREETING_NIGHT": "Good night",
+    "SUBTITLE": "Track your health metrics",
     "LAST": "Last",
     "NO_DATA": "No data yet",
     "RECENT_ACTIVITY": "Recent Activity",
@@ -157,7 +158,19 @@
     "CODE_INVALID_EXPIRED": "Invalid or expired code",
     "PROVIDER_ADDED_SUCCESS": "Provider added successfully",
     "GENERATE_CODE_ERROR": "Failed to generate code",
-    "CODE_COPIED": "Code copied to clipboard"
+    "CODE_COPIED": "Code copied to clipboard",
+    "EXPORT_PDF": "Export PDF",
+    "DATE_RANGE": "Date Range",
+    "START_DATE": "Start Date",
+    "END_DATE": "End Date",
+    "SELECT_METRICS": "Select Metrics",
+    "EXPORT_OPTIONS": "Export Options",
+    "INCLUDE_SUMMARY": "Include Summary",
+    "INCLUDE_SUMMARY_DESC": "Add a summary section with key statistics",
+    "INCLUDE_CHARTS": "Include Charts",
+    "INCLUDE_CHARTS_DESC": "Add visual charts for selected metrics",
+    "GENERATE_PDF": "Generate PDF",
+    "GENERATING": "Generating..."
   },
   "SETTINGS": {
     "TITLE": "Settings",

@@ -79,6 +79,7 @@
     "GREETING_AFTERNOON": "مساء الخير",
     "GREETING_EVENING": "مساء الخير",
     "GREETING_NIGHT": "تصبح على خير",
+    "SUBTITLE": "تتبع مقاييس صحتك",
     "LAST": "آخر",
     "NO_DATA": "لا توجد بيانات بعد",
     "RECENT_ACTIVITY": "النشاط الأخير",
@@ -158,7 +159,19 @@
     "CODE_INVALID_EXPIRED": "رمز غير صحيح أو منتهي الصلاحية",
     "PROVIDER_ADDED_SUCCESS": "تمت إضافة المقدم بنجاح",
     "GENERATE_CODE_ERROR": "فشل إنشاء الرمز",
-    "CODE_COPIED": "تم نسخ الرمز إلى الحافظة"
+    "CODE_COPIED": "تم نسخ الرمز إلى الحافظة",
+    "EXPORT_PDF": "تصدير PDF",
+    "DATE_RANGE": "نطاق التاريخ",
+    "START_DATE": "تاريخ البداية",
+    "END_DATE": "تاريخ النهاية",
+    "SELECT_METRICS": "اختر المقاييس",
+    "EXPORT_OPTIONS": "خيارات التصدير",
+    "INCLUDE_SUMMARY": "تضمين الملخص",
+    "INCLUDE_SUMMARY_DESC": "إضافة قسم ملخص مع إحصائيات رئيسية",
+    "INCLUDE_CHARTS": "تضمين الرسوم البيانية",
+    "INCLUDE_CHARTS_DESC": "إضافة رسوم بيانية مرئية للمقاييس المحددة",
+    "GENERATE_PDF": "إنشاء PDF",
+    "GENERATING": "جاري الإنشاء..."
   },
   "SETTINGS": {
     "TITLE": "الإعدادات",
