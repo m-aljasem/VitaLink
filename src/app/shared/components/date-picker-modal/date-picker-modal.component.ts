@@ -19,7 +19,8 @@ import { CommonModule } from '@angular/common';
         [(ngModel)]="selectedDate"
         presentation="date-time"
         [max]="maxDate"
-        [showDefaultButtons]="true"
+        [showDefaultButtons]="false"
+        [preferWheel]="true"
       ></ion-datetime>
       <ion-button expand="block" (click)="confirm()" class="ion-margin-top">
         Confirm
@@ -40,6 +41,12 @@ export class DatePickerModalComponent {
   }
 
   confirm() {
+    // Ensure selected date is not in the future
+    const selectedDate = new Date(this.selectedDate);
+    const maxDate = new Date(this.maxDate);
+    if (selectedDate > maxDate) {
+      this.selectedDate = this.maxDate;
+    }
     this.modalController.dismiss({ selectedDate: this.selectedDate });
   }
 }

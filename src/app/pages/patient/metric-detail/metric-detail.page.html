@@ -19,18 +19,95 @@
           <div *ngIf="metric === 'bp'" class="form-fields bp-fields">
             <ion-item class="form-item">
               <ion-label position="stacked">{{ 'ONBOARDING.SYSTOLIC' | translate }}</ion-label>
-              <ion-input type="number" [(ngModel)]="systolic"></ion-input>
+              <ion-input 
+                type="number" 
+                [(ngModel)]="systolic"
+                [min]="50"
+                [max]="250"
+                [step]="1"
+                placeholder="50-250">
+              </ion-input>
             </ion-item>
             <ion-item class="form-item">
               <ion-label position="stacked">{{ 'ONBOARDING.DIASTOLIC' | translate }}</ion-label>
-              <ion-input type="number" [(ngModel)]="diastolic"></ion-input>
+              <ion-input 
+                type="number" 
+                [(ngModel)]="diastolic"
+                [min]="30"
+                [max]="150"
+                [step]="1"
+                placeholder="30-150">
+              </ion-input>
             </ion-item>
           </div>
 
-          <div *ngIf="metric !== 'bp'" class="form-fields">
+          <div *ngIf="metric === 'glucose'" class="form-fields">
             <ion-item class="form-item">
               <ion-label position="stacked">{{ 'METRICS.ENTER_VALUE' | translate }}</ion-label>
-              <ion-input type="number" [(ngModel)]="numericValue"></ion-input>
+              <ion-input 
+                type="number" 
+                [(ngModel)]="numericValue"
+                [min]="20"
+                [max]="600"
+                [step]="1"
+                placeholder="20-600 mg/dL">
+              </ion-input>
+            </ion-item>
+          </div>
+
+          <div *ngIf="metric === 'spo2'" class="form-fields">
+            <ion-item class="form-item">
+              <ion-label position="stacked">{{ 'METRICS.ENTER_VALUE' | translate }}</ion-label>
+              <ion-input 
+                type="number" 
+                [(ngModel)]="numericValue"
+                [min]="0"
+                [max]="100"
+                [step]="1"
+                placeholder="0-100%">
+              </ion-input>
+            </ion-item>
+          </div>
+
+          <div *ngIf="metric === 'hr'" class="form-fields">
+            <ion-item class="form-item">
+              <ion-label position="stacked">{{ 'METRICS.ENTER_VALUE' | translate }}</ion-label>
+              <ion-input 
+                type="number" 
+                [(ngModel)]="numericValue"
+                [min]="30"
+                [max]="220"
+                [step]="1"
+                placeholder="30-220 bpm">
+              </ion-input>
+            </ion-item>
+          </div>
+
+          <div *ngIf="metric === 'pain'" class="form-fields">
+            <ion-item class="form-item">
+              <ion-label position="stacked">{{ 'METRICS.ENTER_VALUE' | translate }}</ion-label>
+              <ion-input 
+                type="number" 
+                [(ngModel)]="numericValue"
+                [min]="0"
+                [max]="10"
+                [step]="1"
+                placeholder="0-10">
+              </ion-input>
+            </ion-item>
+          </div>
+
+          <div *ngIf="metric === 'weight'" class="form-fields">
+            <ion-item class="form-item">
+              <ion-label position="stacked">{{ 'METRICS.ENTER_VALUE' | translate }}</ion-label>
+              <ion-input 
+                type="number" 
+                [(ngModel)]="numericValue"
+                [min]="1"
+                [max]="500"
+                [step]="0.1"
+                placeholder="1-500 kg">
+              </ion-input>
             </ion-item>
           </div>
 

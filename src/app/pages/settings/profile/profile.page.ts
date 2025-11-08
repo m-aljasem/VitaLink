@@ -67,6 +67,19 @@ export class ProfilePage implements OnInit {
   async save() {
     if (!this.profile) return;
 
+    // Validate age if provided
+    if (this.editedProfile.age !== null && this.editedProfile.age !== undefined) {
+      if (this.editedProfile.age < 0 || this.editedProfile.age > 150) {
+        const toast = await this.toastController.create({
+          message: this.translate.instant('SETTINGS.AGE_RANGE_ERROR') || 'Age must be between 0 and 150',
+          duration: 2000,
+          color: 'danger',
+        });
+        await toast.present();
+        return;
+      }
+    }
+
     const { error } = await this.profileService.updateProfile(this.profile.id, this.editedProfile);
 
     if (error) {

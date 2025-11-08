@@ -34,7 +34,14 @@
 
           <ion-item class="form-item">
             <ion-label position="stacked">{{ 'ONBOARDING.AGE' | translate }}</ion-label>
-            <ion-input type="number" [(ngModel)]="editedProfile.age"></ion-input>
+            <ion-input 
+              type="number" 
+              [(ngModel)]="editedProfile.age"
+              [min]="0"
+              [max]="150"
+              [step]="1"
+              placeholder="0-150">
+            </ion-input>
           </ion-item>
 
           <ion-item class="form-item">

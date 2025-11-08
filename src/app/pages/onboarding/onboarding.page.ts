@@ -147,6 +147,46 @@ export class OnboardingPage implements OnInit {
   async completeOnboarding() {
     if (!this.user) return;
 
+    // Validate height if provided
+    if (this.height !== null && this.height !== undefined) {
+      if (this.height < 50 || this.height > 250) {
+        // Height validation error - but allow to continue (optional field)
+        console.warn('Height out of range:', this.height);
+      }
+    }
+
+    // Validate weight if provided
+    if (this.weight !== null && this.weight !== undefined) {
+      if (this.weight < 1 || this.weight > 500) {
+        // Weight validation error - but allow to continue (optional field)
+        console.warn('Weight out of range:', this.weight);
+      }
+    }
+
+    // Validate BP if provided
+    if (this.systolic !== null && this.systolic !== undefined) {
+      if (this.systolic < 50 || this.systolic > 250) {
+        // BP validation error - but allow to continue (optional field)
+        console.warn('Systolic out of range:', this.systolic);
+      }
+    }
+
+    if (this.diastolic !== null && this.diastolic !== undefined) {
+      if (this.diastolic < 30 || this.diastolic > 150) {
+        // BP validation error - but allow to continue (optional field)
+        console.warn('Diastolic out of range:', this.diastolic);
+      }
+    }
+
+    // Validate BP ratio if both provided
+    if (this.systolic !== null && this.systolic !== undefined && 
+        this.diastolic !== null && this.diastolic !== undefined) {
+      if (this.systolic <= this.diastolic) {
+        // BP ratio error - but allow to continue (optional field)
+        console.warn('Systolic must be greater than diastolic');
+      }
+    }
+
     this.loading = true;
 
     // Check if profile already exists
@@ -177,8 +217,12 @@ export class OnboardingPage implements OnInit {
       await this.profileService.createProfile(profileData);
     }
 
-    // Save initial observations
-    if (this.systolic && this.diastolic) {
+    // Save initial observations (only if values are valid)
+    if (this.systolic !== null && this.systolic !== undefined && 
+        this.diastolic !== null && this.diastolic !== undefined &&
+        this.systolic >= 50 && this.systolic <= 250 &&
+        this.diastolic >= 30 && this.diastolic <= 150 &&
+        this.systolic > this.diastolic) {
       await this.observationService.createObservation({
         user_id: this.user.id,
         metric: 'bp',
@@ -188,7 +232,8 @@ export class OnboardingPage implements OnInit {
       });
     }
 
-    if (this.weight) {
+    if (this.weight !== null && this.weight !== undefined &&
+        this.weight >= 1 && this.weight <= 500) {
       await this.observationService.createObservation({
         user_id: this.user.id,
         metric: 'weight',

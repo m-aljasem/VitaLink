@@ -170,6 +170,19 @@ export class MetricDetailPage implements OnInit {
     const user = this.authService.getCurrentUser();
     if (!user) return;
 
+    // Validate date is not in the future
+    const selectedDate = new Date(this.selectedDateTime);
+    const now = new Date();
+    if (selectedDate > now) {
+      const toast = await this.toastController.create({
+        message: this.translate.instant('METRICS.DATE_FUTURE_ERROR') || 'Cannot select a future date',
+        duration: 2000,
+        color: 'danger',
+      });
+      await toast.present();
+      return;
+    }
+
     let observationData: Partial<Observation> = {
       user_id: user.id,
       metric: this.metric,
@@ -187,13 +200,45 @@ export class MetricDetailPage implements OnInit {
         await toast.present();
         return;
       }
+      
+      // Validate BP ranges
+      if (this.systolic < 50 || this.systolic > 250) {
+        const toast = await this.toastController.create({
+          message: this.translate.instant('METRICS.BP_SYSTOLIC_RANGE_ERROR') || 'Systolic must be between 50 and 250',
+          duration: 2000,
+          color: 'danger',
+        });
+        await toast.present();
+        return;
+      }
+      
+      if (this.diastolic < 30 || this.diastolic > 150) {
+        const toast = await this.toastController.create({
+          message: this.translate.instant('METRICS.BP_DIASTOLIC_RANGE_ERROR') || 'Diastolic must be between 30 and 150',
+          duration: 2000,
+          color: 'danger',
+        });
+        await toast.present();
+        return;
+      }
+      
+      if (this.systolic <= this.diastolic) {
+        const toast = await this.toastController.create({
+          message: this.translate.instant('METRICS.BP_RATIO_ERROR') || 'Systolic must be greater than diastolic',
+          duration: 2000,
+          color: 'danger',
+        });
+        await toast.present();
+        return;
+      }
+      
       observationData.systolic = this.systolic;
       observationData.diastolic = this.diastolic;
       if (this.pulse) {
         observationData.context = { pulse: this.pulse };
       }
     } else {
-      if (!this.numericValue) {
+      if (!this.numericValue && this.numericValue !== 0) {
         const toast = await this.toastController.create({
           message: this.translate.instant('METRICS.ENTER_VALUE_REQUIRED'),
           duration: 2000,
@@ -202,6 +247,44 @@ export class MetricDetailPage implements OnInit {
         await toast.present();
         return;
       }
+      
+      // Validate ranges based on metric type
+      let min = 0;
+      let max = 0;
+      let errorMessage = '';
+      
+      if (this.metric === 'glucose') {
+        min = 20;
+        max = 600;
+        errorMessage = this.translate.instant('METRICS.GLUCOSE_RANGE_ERROR') || 'Glucose must be between 20 and 600 mg/dL';
+      } else if (this.metric === 'spo2') {
+        min = 0;
+        max = 100;
+        errorMessage = this.translate.instant('METRICS.SPO2_RANGE_ERROR') || 'SpO2 must be between 0 and 100%';
+      } else if (this.metric === 'hr') {
+        min = 30;
+        max = 220;
+        errorMessage = this.translate.instant('METRICS.HR_RANGE_ERROR') || 'Heart rate must be between 30 and 220 bpm';
+      } else if (this.metric === 'pain') {
+        min = 0;
+        max = 10;
+        errorMessage = this.translate.instant('METRICS.PAIN_RANGE_ERROR') || 'Pain level must be between 0 and 10';
+      } else if (this.metric === 'weight') {
+        min = 1;
+        max = 500;
+        errorMessage = this.translate.instant('METRICS.WEIGHT_RANGE_ERROR') || 'Weight must be between 1 and 500 kg';
+      }
+      
+      if (this.numericValue < min || this.numericValue > max) {
+        const toast = await this.toastController.create({
+          message: errorMessage,
+          duration: 2000,
+          color: 'danger',
+        });
+        await toast.present();
+        return;
+      }
+      
       observationData.numeric_value = this.numericValue;
       
       // Set units
@@ -351,7 +434,20 @@ export class MetricDetailPage implements OnInit {
 
     const { data } = await modal.onWillDismiss();
     if (data && data.selectedDate) {
-      this.selectedDateTime = data.selectedDate;
+      // Ensure selected date is not in the future
+      const selectedDate = new Date(data.selectedDate);
+      const now = new Date();
+      if (selectedDate > now) {
+        const toast = await this.toastController.create({
+          message: this.translate.instant('METRICS.DATE_FUTURE_ERROR') || 'Cannot select a future date',
+          duration: 2000,
+          color: 'danger',
+        });
+        await toast.present();
+        this.selectedDateTime = now.toISOString();
+      } else {
+        this.selectedDateTime = data.selectedDate;
+      }
       this.dateSelectionMode = 'custom';
     }
   }

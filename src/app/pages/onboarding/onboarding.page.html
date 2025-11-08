@@ -55,7 +55,14 @@
           
           <ion-item class="form-item">
             <ion-label position="stacked">{{ 'ONBOARDING.AGE' | translate }}</ion-label>
-            <ion-input type="number" [(ngModel)]="age"></ion-input>
+            <ion-input 
+              type="number" 
+              [(ngModel)]="age"
+              [min]="0"
+              [max]="150"
+              [step]="1"
+              placeholder="0-150">
+            </ion-input>
           </ion-item>
           
           <ion-item class="form-item">
@@ -160,22 +167,50 @@
         <ion-card-content>
           <ion-item class="form-item">
             <ion-label position="stacked">{{ 'ONBOARDING.HEIGHT' | translate }}</ion-label>
-            <ion-input type="number" [(ngModel)]="height" [placeholder]="'ONBOARDING.HEIGHT_PLACEHOLDER' | translate"></ion-input>
+            <ion-input 
+              type="number" 
+              [(ngModel)]="height" 
+              [placeholder]="'ONBOARDING.HEIGHT_PLACEHOLDER' | translate"
+              [min]="50"
+              [max]="250"
+              [step]="1">
+            </ion-input>
           </ion-item>
           
           <ion-item class="form-item">
             <ion-label position="stacked">{{ 'ONBOARDING.WEIGHT' | translate }}</ion-label>
-            <ion-input type="number" [(ngModel)]="weight" [placeholder]="'ONBOARDING.WEIGHT_PLACEHOLDER' | translate"></ion-input>
+            <ion-input 
+              type="number" 
+              [(ngModel)]="weight" 
+              [placeholder]="'ONBOARDING.WEIGHT_PLACEHOLDER' | translate"
+              [min]="1"
+              [max]="500"
+              [step]="0.1">
+            </ion-input>
           </ion-item>
           
           <ion-item class="form-item">
             <ion-label position="stacked">{{ 'ONBOARDING.SYSTOLIC' | translate }}</ion-label>
-            <ion-input type="number" [(ngModel)]="systolic"></ion-input>
+            <ion-input 
+              type="number" 
+              [(ngModel)]="systolic"
+              [min]="50"
+              [max]="250"
+              [step]="1"
+              placeholder="50-250">
+            </ion-input>
           </ion-item>
           
           <ion-item class="form-item">
             <ion-label position="stacked">{{ 'ONBOARDING.DIASTOLIC' | translate }}</ion-label>
-            <ion-input type="number" [(ngModel)]="diastolic"></ion-input>
+            <ion-input 
+              type="number" 
+              [(ngModel)]="diastolic"
+              [min]="30"
+              [max]="150"
+              [step]="1"
+              placeholder="30-150">
+            </ion-input>
           </ion-item>
         </ion-card-content>
       </ion-card>
