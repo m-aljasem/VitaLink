@@ -155,3 +155,4 @@ if (!this.email || !this.email.includes('@')) {
 - RLS policies provide the actual security layer
 - The service key should NEVER be exposed client-side (✅ not found in code)
 
+
