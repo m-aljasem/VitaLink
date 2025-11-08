@@ -10,6 +10,42 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Download button handlers
+    const androidDownloadBtn = document.getElementById('download-android');
+    const webDownloadBtn = document.getElementById('download-web');
+    
+    if (androidDownloadBtn) {
+        androidDownloadBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            // TODO: Replace with actual Android APK download link
+            // For now, this could link to Google Play Store or direct APK download
+            const androidUrl = 'https://github.com/m-aljasem/VitaLink/releases/latest'; // Placeholder
+            window.open(androidUrl, '_blank');
+            
+            // Add click animation
+            androidDownloadBtn.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                androidDownloadBtn.style.transform = '';
+            }, 150);
+        });
+    }
+    
+    if (webDownloadBtn) {
+        webDownloadBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            // TODO: Replace with actual web app URL
+            // This could be the PWA URL or hosted web app
+            const webAppUrl = window.location.origin + '/app'; // Placeholder
+            window.open(webAppUrl, '_blank');
+            
+            // Add click animation
+            webDownloadBtn.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                webDownloadBtn.style.transform = '';
+            }, 150);
+        });
+    }
+
     // Close mobile menu when clicking on a link
     const links = document.querySelectorAll('.nav-links a');
     links.forEach(link => {
