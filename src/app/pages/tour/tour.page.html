@@ -1,5 +1,10 @@
 <ion-content [fullscreen]="true" class="tour-content">
-  <swiper-container [pagination]="true" [initialSlide]="slideOpts.initialSlide" [speed]="slideOpts.speed" class="tour-swiper">
+  <swiper-container 
+    [pagination]="true" 
+    [initialSlide]="slideOpts.initialSlide" 
+    [speed]="slideOpts.speed" 
+    [attr.dir]="isRTL ? 'rtl' : 'ltr'"
+    class="tour-swiper">
     <swiper-slide>
       <div class="slide-content">
         <div class="slide-icon-wrapper welcome-icon">

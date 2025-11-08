@@ -71,7 +71,8 @@ export class MetricDetailPage implements OnInit {
     private toastController: ToastController,
     private modalController: ModalController,
     private alertController: AlertController,
-    private i18nService: I18nService
+    private i18nService: I18nService,
+    private translate: TranslateService
   ) {
     addIcons({ 
       pulse, water, heart, thermometer, bandage, scale, timeOutline, arrowBack, arrowForward,
