@@ -2,12 +2,12 @@
   <div class="settings-container ion-padding">
     <div class="settings-header">
       <h1>{{ 'SETTINGS.TITLE' | translate }}</h1>
-      <p class="subtitle">Manage your preferences and account</p>
+      <p class="subtitle">{{ 'SETTINGS.SUBTITLE' | translate }}</p>
     </div>
 
     <!-- Account Section -->
     <div class="settings-section">
-      <h2 class="section-title">Account</h2>
+      <h2 class="section-title">{{ 'SETTINGS.ACCOUNT' | translate }}</h2>
       <ion-card class="settings-card" button routerLink="profile">
         <ion-card-content>
           <div class="setting-item">
@@ -16,7 +16,7 @@
             </div>
             <div class="setting-content">
               <h3>{{ 'SETTINGS.PROFILE' | translate }}</h3>
-              <p>Manage your personal information</p>
+              <p>{{ 'SETTINGS.PROFILE_DESC' | translate }}</p>
             </div>
             <ion-icon name="chevron-forward" class="arrow-icon"></ion-icon>
           </div>
@@ -31,7 +31,7 @@
             </div>
             <div class="setting-content">
               <h3>{{ 'SETTINGS.REMINDERS' | translate }}</h3>
-              <p>Set up health reminders</p>
+              <p>{{ 'SETTINGS.REMINDERS_DESC' | translate }}</p>
             </div>
             <ion-icon name="chevron-forward" class="arrow-icon"></ion-icon>
           </div>
@@ -41,7 +41,7 @@
 
     <!-- Preferences Section -->
     <div class="settings-section">
-      <h2 class="section-title">Preferences</h2>
+      <h2 class="section-title">{{ 'SETTINGS.PREFERENCES' | translate }}</h2>
       <ion-card class="settings-card">
         <ion-card-content>
           <div class="setting-item">
@@ -77,7 +77,7 @@
             </div>
             <div class="setting-content">
               <h3>{{ 'SETTINGS.SWITCH_MODE' | translate }}</h3>
-              <p>Switch between patient and provider mode</p>
+              <p>{{ 'SETTINGS.SWITCH_MODE_DESC' | translate }}</p>
             </div>
             <ion-icon name="chevron-forward" class="arrow-icon"></ion-icon>
           </div>
@@ -87,7 +87,7 @@
 
     <!-- Data Section -->
     <div class="settings-section">
-      <h2 class="section-title">Data</h2>
+      <h2 class="section-title">{{ 'SETTINGS.DATA' | translate }}</h2>
       <ion-card class="settings-card">
         <ion-card-content>
           <div class="setting-item">
@@ -104,6 +104,10 @@
                 <ion-button fill="outline" size="small" (click)="exportJSON()">
                   <ion-icon name="code" slot="start"></ion-icon>
                   {{ 'SETTINGS.EXPORT_JSON' | translate }}
+                </ion-button>
+                <ion-button fill="outline" size="small" (click)="exportFHIR()">
+                  <ion-icon name="medical" slot="start"></ion-icon>
+                  {{ 'SETTINGS.EXPORT_FHIR' | translate }}
                 </ion-button>
               </div>
             </div>
@@ -122,7 +126,7 @@
             </div>
             <div class="setting-content">
               <h3>{{ 'SETTINGS.ABOUT' | translate }}</h3>
-              <p>App version and information</p>
+              <p>{{ 'SETTINGS.ABOUT_DESC' | translate }}</p>
             </div>
             <ion-icon name="chevron-forward" class="arrow-icon"></ion-icon>
           </div>
@@ -140,7 +144,7 @@
             </div>
             <div class="setting-content">
               <h3>{{ 'SETTINGS.LOGOUT' | translate }}</h3>
-              <p>Sign out of your account</p>
+              <p>{{ 'SETTINGS.LOGOUT_DESC' | translate }}</p>
             </div>
             <ion-icon name="chevron-forward" class="arrow-icon"></ion-icon>
           </div>

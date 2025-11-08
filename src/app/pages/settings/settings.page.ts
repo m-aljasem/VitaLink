@@ -5,12 +5,12 @@ import {
   IonContent, IonSelect, IonSelectOption, ToastController, AlertController, IonCard, IonCardContent,
   IonIcon, IonButton
 } from '@ionic/angular/standalone';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { CommonModule } from '@angular/common';
 import { addIcons } from 'ionicons';
 import {
   person, notifications, language, swapHorizontal, download, documentText, code,
-  informationCircle, logOutOutline, chevronForward
+  informationCircle, logOutOutline, chevronForward, medical
 } from 'ionicons/icons';
 import { AuthService, Profile } from '../../core/auth.service';
 import { ProfileService } from '../../core/profile.service';
@@ -40,11 +40,12 @@ export class SettingsPage implements OnInit {
     private reminderService: ReminderService,
     private router: Router,
     private toastController: ToastController,
-    private alertController: AlertController
+    private alertController: AlertController,
+    private translate: TranslateService
   ) {
     addIcons({
       person, notifications, language, swapHorizontal, download, documentText, code,
-      informationCircle, 'log-out': logOutOutline, chevronForward
+      informationCircle, 'log-out': logOutOutline, chevronForward, medical
     });
   }
 
@@ -62,7 +63,7 @@ export class SettingsPage implements OnInit {
       const { error } = await this.profileService.updateProfile(this.profile.id, { language: lang });
       if (error) {
         const toast = await this.toastController.create({
-          message: 'Failed to update language',
+          message: this.translate.instant('SETTINGS.UPDATE_LANGUAGE_ERROR'),
           duration: 2000,
           color: 'danger',
         });
@@ -75,14 +76,14 @@ export class SettingsPage implements OnInit {
     const { error } = await this.exportService.exportToCSV();
     if (error) {
       const toast = await this.toastController.create({
-        message: 'Export failed',
+        message: this.translate.instant('SETTINGS.EXPORT_ERROR'),
         duration: 2000,
         color: 'danger',
       });
       await toast.present();
     } else {
       const toast = await this.toastController.create({
-        message: 'Export successful',
+        message: this.translate.instant('SETTINGS.EXPORT_SUCCESS'),
         duration: 2000,
         color: 'success',
       });
@@ -94,14 +95,33 @@ export class SettingsPage implements OnInit {
     const { error } = await this.exportService.exportToJSON();
     if (error) {
       const toast = await this.toastController.create({
-        message: 'Export failed',
+        message: this.translate.instant('SETTINGS.EXPORT_ERROR'),
         duration: 2000,
         color: 'danger',
       });
       await toast.present();
     } else {
       const toast = await this.toastController.create({
-        message: 'Export successful',
+        message: this.translate.instant('SETTINGS.EXPORT_SUCCESS'),
+        duration: 2000,
+        color: 'success',
+      });
+      await toast.present();
+    }
+  }
+
+  async exportFHIR() {
+    const { error } = await this.exportService.exportToFHIR();
+    if (error) {
+      const toast = await this.toastController.create({
+        message: this.translate.instant('SETTINGS.EXPORT_ERROR'),
+        duration: 2000,
+        color: 'danger',
+      });
+      await toast.present();
+    } else {
+      const toast = await this.toastController.create({
+        message: this.translate.instant('SETTINGS.EXPORT_SUCCESS'),
         duration: 2000,
         color: 'success',
       });
@@ -111,12 +131,12 @@ export class SettingsPage implements OnInit {
 
   async logout() {
     const alert = await this.alertController.create({
-      header: 'Logout',
-      message: 'Are you sure you want to logout?',
+      header: this.translate.instant('SETTINGS.LOGOUT_TITLE'),
+      message: this.translate.instant('SETTINGS.LOGOUT_MESSAGE'),
       buttons: [
-        { text: 'Cancel', role: 'cancel' },
+        { text: this.translate.instant('COMMON.CANCEL'), role: 'cancel' },
         {
-          text: 'Logout',
+          text: this.translate.instant('SETTINGS.LOGOUT'),
           role: 'destructive',
           handler: async () => {
             await this.authService.signOut();

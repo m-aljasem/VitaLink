@@ -8,7 +8,7 @@ import {
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { language } from 'ionicons/icons';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../core/auth.service';
 import { I18nService, SupportedLanguage } from '../../core/i18n.service';
 
@@ -49,7 +49,8 @@ export class AuthPage implements OnInit {
     private authService: AuthService,
     private router: Router,
     private toastController: ToastController,
-    private i18nService: I18nService
+    private i18nService: I18nService,
+    private translate: TranslateService
   ) {
     addIcons({ language });
   }
@@ -68,7 +69,7 @@ export class AuthPage implements OnInit {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!this.email || !emailRegex.test(this.email.trim())) {
       const toast = await this.toastController.create({
-        message: 'Please enter a valid email address',
+        message: this.translate.instant('AUTH.INVALID_EMAIL'),
         duration: 2000,
         color: 'danger',
       });
@@ -82,7 +83,7 @@ export class AuthPage implements OnInit {
 
     if (error) {
       const toast = await this.toastController.create({
-        message: error.message || 'Failed to send code',
+        message: error.message || this.translate.instant('AUTH.SEND_CODE_ERROR'),
         duration: 3000,
         color: 'danger',
       });

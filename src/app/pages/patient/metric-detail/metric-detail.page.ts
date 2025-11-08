@@ -179,7 +179,7 @@ export class MetricDetailPage implements OnInit {
     if (this.metric === 'bp') {
       if (!this.systolic || !this.diastolic) {
         const toast = await this.toastController.create({
-          message: 'Please enter both systolic and diastolic values',
+          message: this.translate.instant('METRICS.ENTER_BP_VALUES'),
           duration: 2000,
           color: 'danger',
         });
@@ -194,7 +194,7 @@ export class MetricDetailPage implements OnInit {
     } else {
       if (!this.numericValue) {
         const toast = await this.toastController.create({
-          message: 'Please enter a value',
+          message: this.translate.instant('METRICS.ENTER_VALUE_REQUIRED'),
           duration: 2000,
           color: 'danger',
         });
@@ -214,14 +214,14 @@ export class MetricDetailPage implements OnInit {
     
     if (error) {
       const toast = await this.toastController.create({
-        message: 'Failed to save',
+        message: this.translate.instant('METRICS.SAVE_ERROR'),
         duration: 2000,
         color: 'danger',
       });
       await toast.present();
     } else {
       const toast = await this.toastController.create({
-        message: 'Saved successfully',
+        message: this.translate.instant('METRICS.SAVE_SUCCESS'),
         duration: 2000,
         color: 'success',
       });
@@ -392,15 +392,15 @@ export class MetricDetailPage implements OnInit {
     if (!this.selectedRecord) return;
 
     const alert = await this.alertController.create({
-      header: 'Delete Record',
-      message: 'Are you sure you want to delete this record?',
+      header: this.translate.instant('METRICS.DELETE_RECORD_TITLE'),
+      message: this.translate.instant('METRICS.DELETE_RECORD_MESSAGE'),
       buttons: [
         {
-          text: 'Cancel',
+          text: this.translate.instant('COMMON.CANCEL'),
           role: 'cancel'
         },
         {
-          text: 'Delete',
+          text: this.translate.instant('COMMON.DELETE'),
           role: 'destructive',
           handler: async () => {
             if (this.selectedRecord?.id) {
@@ -408,14 +408,14 @@ export class MetricDetailPage implements OnInit {
               
               if (error) {
                 const toast = await this.toastController.create({
-                  message: 'Failed to delete record',
+                  message: this.translate.instant('METRICS.DELETE_RECORD_ERROR'),
                   duration: 2000,
                   color: 'danger',
                 });
                 await toast.present();
               } else {
                 const toast = await this.toastController.create({
-                  message: 'Record deleted successfully',
+                  message: this.translate.instant('METRICS.DELETE_RECORD_SUCCESS'),
                   duration: 2000,
                   color: 'success',
                 });

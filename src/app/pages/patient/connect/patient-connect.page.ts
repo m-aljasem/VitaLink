@@ -3,7 +3,7 @@ import {
   IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonButtons, IonItem, IonLabel,
   IonText, IonToggle, IonModal, IonCard, IonCardContent, IonIcon, ToastController, AlertController
 } from '@ionic/angular/standalone';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { addIcons } from 'ionicons';
@@ -59,7 +59,8 @@ export class PatientConnectPage implements OnInit {
     private sharingService: SharingService,
     private profileService: ProfileService,
     private toastController: ToastController,
-    private alertController: AlertController
+    private alertController: AlertController,
+    private translate: TranslateService
   ) {
     addIcons({ 
       people, peopleOutline, shareSocial, addCircle, person, medical, timeOutline, 
@@ -123,7 +124,7 @@ export class PatientConnectPage implements OnInit {
   async redeemCode() {
     if (this.code.length !== 6) {
       const toast = await this.toastController.create({
-        message: 'Please enter a 6-digit code',
+        message: this.translate.instant('CONNECT.INVALID_CODE'),
         duration: 2000,
         color: 'danger',
       });
@@ -138,7 +139,7 @@ export class PatientConnectPage implements OnInit {
     
     if (error) {
       const toast = await this.toastController.create({
-        message: error.message || 'Invalid or expired code',
+        message: error.message || this.translate.instant('CONNECT.CODE_INVALID_EXPIRED'),
         duration: 3000,
         color: 'danger',
       });
@@ -159,7 +160,7 @@ export class PatientConnectPage implements OnInit {
       };
       await this.loadProviders();
       const toast = await this.toastController.create({
-        message: 'Provider added successfully',
+        message: this.translate.instant('CONNECT.PROVIDER_ADDED_SUCCESS'),
         duration: 2000,
         color: 'success',
       });
@@ -180,12 +181,12 @@ export class PatientConnectPage implements OnInit {
 
   async revokeAccess(link: ProviderLink) {
     const alert = await this.alertController.create({
-      header: 'Revoke Access',
-      message: 'Are you sure you want to revoke access for this provider?',
+      header: this.translate.instant('CONNECT.REVOKE_TITLE'),
+      message: this.translate.instant('CONNECT.REVOKE_MESSAGE'),
       buttons: [
-        { text: 'Cancel', role: 'cancel' },
+        { text: this.translate.instant('COMMON.CANCEL'), role: 'cancel' },
         {
-          text: 'Revoke',
+          text: this.translate.instant('CONNECT.REVOKE'),
           role: 'destructive',
           handler: async () => {
             await this.sharingService.revokeLink(link.id);

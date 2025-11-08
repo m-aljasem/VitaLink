@@ -49,8 +49,8 @@ export class OnboardingPage implements OnInit {
   // Conditions step
   conditions: string[] = [];
   availableConditions = [
-    'Hypertension', 'Diabetes', 'Heart Problems', 'Stress', 'Headache',
-    'Back Pain', 'Obesity', 'Depression', 'Respiratory Issues'
+    'HYPERTENSION', 'DIABETES', 'HEART_PROBLEMS', 'STRESS', 'HEADACHE',
+    'BACK_PAIN', 'OBESITY', 'DEPRESSION', 'RESPIRATORY_ISSUES'
   ];
 
   // Initial metrics

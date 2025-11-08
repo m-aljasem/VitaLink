@@ -8,7 +8,7 @@ import {
   IonList, IonItem, IonLabel, IonIcon, IonText, IonChip, IonCard, IonCardContent,
   IonModal, IonHeader, IonToolbar, IonTitle, IonButtons, IonButton, ToastController, AlertController
 } from '@ionic/angular/standalone';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AuthService, Profile } from '../../../core/auth.service';
 import { ObservationService, MetricType, Observation } from '../../../core/observation.service';
 import { MetricCardComponent } from '../../../shared/components/metric-card/metric-card.component';
@@ -63,7 +63,8 @@ export class PatientHomePage implements OnInit, ViewWillEnter, OnDestroy {
     private observationService: ObservationService,
     private router: Router,
     private toastController: ToastController,
-    private alertController: AlertController
+    private alertController: AlertController,
+    private translate: TranslateService
   ) {
     addIcons({ heart, water, pulse, thermometer, bandage, scale, timeOutline, createOutline, trash, pricetagOutline });
     
@@ -248,12 +249,15 @@ export class PatientHomePage implements OnInit, ViewWillEnter, OnDestroy {
 
     // Less than 1 minute
     if (diffMins < 1) {
-      return 'just now';
+      return this.translate.instant('TIME.JUST_NOW');
     }
 
     // Less than 1 hour
     if (diffMins < 60) {
-      return diffMins === 1 ? '1 minute ago' : `${diffMins} minutes ago`;
+      if (diffMins === 1) {
+        return this.translate.instant('TIME.ONE_MINUTE_AGO');
+      }
+      return this.translate.instant('TIME.MINUTES_AGO', { count: diffMins });
     }
 
     // Less than 24 hours
@@ -262,12 +266,15 @@ export class PatientHomePage implements OnInit, ViewWillEnter, OnDestroy {
       const isToday = date.toDateString() === now.toDateString();
       
       if (isToday) {
-        if (hour < 12) return 'this morning';
-        if (hour < 17) return 'this afternoon';
-        return 'this evening';
+        if (hour < 12) return this.translate.instant('TIME.THIS_MORNING');
+        if (hour < 17) return this.translate.instant('TIME.THIS_AFTERNOON');
+        return this.translate.instant('TIME.THIS_EVENING');
       }
       
-      return diffHours === 1 ? '1 hour ago' : `${diffHours} hours ago`;
+      if (diffHours === 1) {
+        return this.translate.instant('TIME.ONE_HOUR_AGO');
+      }
+      return this.translate.instant('TIME.HOURS_AGO', { count: diffHours });
     }
 
     // Yesterday
@@ -275,35 +282,47 @@ export class PatientHomePage implements OnInit, ViewWillEnter, OnDestroy {
     yesterday.setDate(yesterday.getDate() - 1);
     if (date.toDateString() === yesterday.toDateString()) {
       const hour = date.getHours();
-      if (hour >= 18 || hour < 6) return 'last night';
-      return 'yesterday';
+      if (hour >= 18 || hour < 6) return this.translate.instant('TIME.LAST_NIGHT');
+      return this.translate.instant('TIME.YESTERDAY');
     }
 
     // Less than 7 days
     if (diffDays < 7) {
-      return diffDays === 1 ? '1 day ago' : `${diffDays} days ago`;
+      if (diffDays === 1) {
+        return this.translate.instant('TIME.ONE_DAY_AGO');
+      }
+      return this.translate.instant('TIME.DAYS_AGO', { count: diffDays });
     }
 
     // Less than 14 days
     if (diffDays < 14) {
-      return 'last week';
+      return this.translate.instant('TIME.LAST_WEEK');
     }
 
     // Less than 30 days
     if (diffDays < 30) {
       const weeks = Math.floor(diffDays / 7);
-      return weeks === 1 ? '1 week ago' : `${weeks} weeks ago`;
+      if (weeks === 1) {
+        return this.translate.instant('TIME.ONE_WEEK_AGO');
+      }
+      return this.translate.instant('TIME.WEEKS_AGO', { count: weeks });
     }
 
     // Less than 365 days
     if (diffDays < 365) {
       const months = Math.floor(diffDays / 30);
-      return months === 1 ? '1 month ago' : `${months} months ago`;
+      if (months === 1) {
+        return this.translate.instant('TIME.ONE_MONTH_AGO');
+      }
+      return this.translate.instant('TIME.MONTHS_AGO', { count: months });
     }
 
     // Older than a year
     const years = Math.floor(diffDays / 365);
-    return years === 1 ? '1 year ago' : `${years} years ago`;
+    if (years === 1) {
+      return this.translate.instant('TIME.ONE_YEAR_AGO');
+    }
+    return this.translate.instant('TIME.YEARS_AGO', { count: years });
   }
 
   formatDateTime(dateString: string): string {
@@ -336,15 +355,15 @@ export class PatientHomePage implements OnInit, ViewWillEnter, OnDestroy {
     if (!this.selectedRecord) return;
 
     const alert = await this.alertController.create({
-      header: 'Delete Record',
-      message: 'Are you sure you want to delete this record?',
+      header: this.translate.instant('METRICS.DELETE_RECORD_TITLE'),
+      message: this.translate.instant('METRICS.DELETE_RECORD_MESSAGE'),
       buttons: [
         {
-          text: 'Cancel',
+          text: this.translate.instant('COMMON.CANCEL'),
           role: 'cancel'
         },
         {
-          text: 'Delete',
+          text: this.translate.instant('COMMON.DELETE'),
           role: 'destructive',
           handler: async () => {
             if (this.selectedRecord?.id) {
@@ -352,14 +371,14 @@ export class PatientHomePage implements OnInit, ViewWillEnter, OnDestroy {
               
               if (error) {
                 const toast = await this.toastController.create({
-                  message: 'Failed to delete record',
+                  message: this.translate.instant('METRICS.DELETE_RECORD_ERROR'),
                   duration: 2000,
                   color: 'danger',
                 });
                 await toast.present();
               } else {
                 const toast = await this.toastController.create({
-                  message: 'Record deleted successfully',
+                  message: this.translate.instant('METRICS.DELETE_RECORD_SUCCESS'),
                   duration: 2000,
                   color: 'success',
                 });

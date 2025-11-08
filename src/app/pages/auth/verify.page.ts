@@ -7,7 +7,7 @@ import {
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { lockClosed } from 'ionicons/icons';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../core/auth.service';
 import { ProfileService } from '../../core/profile.service';
 import { SixDigitInputComponent } from '../../shared/components/six-digit-input/six-digit-input.component';
@@ -33,7 +33,8 @@ export class VerifyPage implements OnInit {
     private profileService: ProfileService,
     private router: Router,
     private route: ActivatedRoute,
-    private toastController: ToastController
+    private toastController: ToastController,
+    private translate: TranslateService
   ) {
     addIcons({ lockClosed });
   }
@@ -63,7 +64,7 @@ export class VerifyPage implements OnInit {
 
     if (error) {
       const toast = await this.toastController.create({
-        message: error.message || 'Invalid code',
+        message: error.message || this.translate.instant('AUTH.INVALID_CODE'),
         duration: 3000,
         color: 'danger',
       });
@@ -90,14 +91,14 @@ export class VerifyPage implements OnInit {
 
     if (error) {
       const toast = await this.toastController.create({
-        message: error.message || 'Failed to resend code',
+        message: error.message || this.translate.instant('AUTH.RESEND_CODE_ERROR'),
         duration: 3000,
         color: 'danger',
       });
       await toast.present();
     } else {
       const toast = await this.toastController.create({
-        message: 'Code sent',
+        message: this.translate.instant('AUTH.CODE_SENT_SUCCESS'),
         duration: 2000,
         color: 'success',
       });

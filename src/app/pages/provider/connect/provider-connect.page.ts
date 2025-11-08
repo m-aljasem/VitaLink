@@ -3,7 +3,7 @@ import {
   IonContent, IonButton, IonCard, IonCardContent,
   IonText, ToastController, AlertController, IonIcon, IonSpinner
 } from '@ionic/angular/standalone';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { CommonModule } from '@angular/common';
 import { addIcons } from 'ionicons';
 import { qrCode, share, people, peopleOutline, person, timeOutline, closeCircle } from 'ionicons/icons';
@@ -35,7 +35,8 @@ export class ProviderConnectPage implements OnInit, OnDestroy {
     private sharingService: SharingService,
     private profileService: ProfileService,
     private toastController: ToastController,
-    private alertController: AlertController
+    private alertController: AlertController,
+    private translate: TranslateService
   ) {
     addIcons({ qrCode, share, people, peopleOutline, person, timeOutline, closeCircle });
   }
@@ -84,7 +85,7 @@ export class ProviderConnectPage implements OnInit, OnDestroy {
       
       if (error) {
         const toast = await this.toastController.create({
-          message: 'Failed to generate code',
+          message: this.translate.instant('CONNECT.GENERATE_CODE_ERROR'),
           duration: 2000,
           color: 'danger',
         });
@@ -157,7 +158,7 @@ export class ProviderConnectPage implements OnInit, OnDestroy {
       // Fallback: copy to clipboard
       await navigator.clipboard.writeText(this.currentToken.code);
       const toast = await this.toastController.create({
-        message: 'Code copied to clipboard',
+        message: this.translate.instant('CONNECT.CODE_COPIED'),
         duration: 2000,
         color: 'success',
       });
@@ -167,12 +168,12 @@ export class ProviderConnectPage implements OnInit, OnDestroy {
 
   async removePatient(link: ProviderLink) {
     const alert = await this.alertController.create({
-      header: 'Remove Patient',
-      message: 'Are you sure you want to remove this patient?',
+      header: this.translate.instant('CONNECT.PROVIDER_REMOVE_TITLE'),
+      message: this.translate.instant('CONNECT.PROVIDER_REMOVE_MESSAGE'),
       buttons: [
-        { text: 'Cancel', role: 'cancel' },
+        { text: this.translate.instant('COMMON.CANCEL'), role: 'cancel' },
         {
-          text: 'Remove',
+          text: this.translate.instant('CONNECT.PROVIDER_REMOVE'),
           role: 'destructive',
           handler: async () => {
             await this.sharingService.revokeLink(link.id);

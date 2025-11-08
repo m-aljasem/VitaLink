@@ -129,7 +129,7 @@
               (click)="toggleCondition(condition)"
               class="condition-chip"
             >
-              {{ condition }}
+              {{ 'ONBOARDING.' + condition | translate }}
             </ion-chip>
             }
           </div>
@@ -160,12 +160,12 @@
         <ion-card-content>
           <ion-item class="form-item">
             <ion-label position="stacked">{{ 'ONBOARDING.HEIGHT' | translate }}</ion-label>
-            <ion-input type="number" [(ngModel)]="height" placeholder="cm"></ion-input>
+            <ion-input type="number" [(ngModel)]="height" [placeholder]="'ONBOARDING.HEIGHT_PLACEHOLDER' | translate"></ion-input>
           </ion-item>
           
           <ion-item class="form-item">
             <ion-label position="stacked">{{ 'ONBOARDING.WEIGHT' | translate }}</ion-label>
-            <ion-input type="number" [(ngModel)]="weight" placeholder="kg"></ion-input>
+            <ion-input type="number" [(ngModel)]="weight" [placeholder]="'ONBOARDING.WEIGHT_PLACEHOLDER' | translate"></ion-input>
           </ion-item>
           
           <ion-item class="form-item">
