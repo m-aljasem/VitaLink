@@ -15,6 +15,7 @@ import { AuthService, Profile } from '../../../core/auth.service';
 import { SharingService, ProviderLink } from '../../../core/sharing.service';
 import { ProfileService } from '../../../core/profile.service';
 import { ObservationService } from '../../../core/observation.service';
+import { DateFormatService } from '../../../core/date-format.service';
 
 interface PatientInfo {
   link: ProviderLink;
@@ -57,7 +58,8 @@ export class ProviderHomePage implements OnInit {
     private sharingService: SharingService,
     private profileService: ProfileService,
     private observationService: ObservationService,
-    private router: Router
+    private router: Router,
+    private dateFormatService: DateFormatService
   ) {
     addIcons({ 
       people, pulse, addCircle, warning, person, timeOutline, chevronForward, 
@@ -171,7 +173,7 @@ export class ProviderHomePage implements OnInit {
     if (diffDays === 0) return 'Today';
     if (diffDays === 1) return 'Yesterday';
     if (diffDays < 7) return `${diffDays} days ago`;
-    return date.toLocaleDateString();
+    return this.dateFormatService.formatDateSync(dateString);
   }
 
   getMetricIcon(metric: string): string {

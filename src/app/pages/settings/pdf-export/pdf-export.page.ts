@@ -16,6 +16,7 @@ import {
 } from 'ionicons/icons';
 import { PdfExportService } from '../../../core/pdf-export.service';
 import { MetricType } from '../../../core/observation.service';
+import { DateFormatService } from '../../../core/date-format.service';
 
 @Component({
   selector: 'app-pdf-export',
@@ -63,7 +64,8 @@ export class PdfExportPage implements OnInit {
     private location: Location,
     private pdfExportService: PdfExportService,
     private toastController: ToastController,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private dateFormatService: DateFormatService
   ) {
     addIcons({ 
       arrowBack, documentText, pulse, water, pulseOutline, heart, medical, scale,
@@ -125,8 +127,7 @@ export class PdfExportPage implements OnInit {
 
   formatDate(dateString: string): string {
     if (!dateString) return '';
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { 
+    return this.dateFormatService.formatDateSync(dateString, { 
       year: 'numeric', 
       month: 'short', 
       day: 'numeric' 

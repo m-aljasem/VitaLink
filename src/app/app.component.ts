@@ -9,6 +9,7 @@ import { OfflineIndicatorComponent } from './shared/components/offline-indicator
 import { InstallPromptComponent } from './shared/components/install-prompt/install-prompt.component';
 import { I18nService } from './core/i18n.service';
 import { AuthService } from './core/auth.service';
+import { DateFormatService } from './core/date-format.service';
 
 @Component({
   selector: 'app-root',
@@ -21,7 +22,8 @@ export class AppComponent implements OnInit {
     private offlineStorage: OfflineStorageService,
     private syncService: SyncService,
     private i18nService: I18nService,
-    private authService: AuthService
+    private authService: AuthService,
+    private dateFormatService: DateFormatService
   ) {}
 
   async ngOnInit() {
@@ -43,6 +45,9 @@ export class AppComponent implements OnInit {
 
     // Initialize language from saved preference (localStorage or profile)
     await this.i18nService.initializeLanguage(profileLanguage);
+    
+    // Initialize date format service to cache locale based on user's country
+    await this.dateFormatService.getLocale();
 
     // Initialize offline storage (SyncService will wait for this)
     try {

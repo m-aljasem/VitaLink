@@ -12,6 +12,7 @@ import { person, personOutline, locationOutline, medicalOutline, checkmarkCircle
 import { AuthService, Profile } from '../../../core/auth.service';
 import { ProfileService } from '../../../core/profile.service';
 import { I18nService } from '../../../core/i18n.service';
+import { DateFormatService } from '../../../core/date-format.service';
 import { CountrySelectComponent, Country } from '@wlucha/ng-country-select';
 
 @Component({
@@ -42,7 +43,8 @@ export class ProfilePage implements OnInit {
     private router: Router,
     private toastController: ToastController,
     private translate: TranslateService,
-    public i18nService: I18nService
+    public i18nService: I18nService,
+    private dateFormatService: DateFormatService
   ) {
     addIcons({ person, personOutline, locationOutline, medicalOutline, checkmarkCircle, arrowBack, male, female });
   }
@@ -112,6 +114,8 @@ export class ProfilePage implements OnInit {
       });
       await toast.present();
       await this.authService.loadProfile(this.profile.id);
+      // Clear date format cache so locale updates if country changed
+      this.dateFormatService.clearCache();
       this.router.navigate(['/tabs/settings'], { replaceUrl: true });
     }
   }

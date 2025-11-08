@@ -12,6 +12,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AuthService, Profile } from '../../../core/auth.service';
 import { ObservationService, MetricType, Observation } from '../../../core/observation.service';
 import { MetricCardComponent } from '../../../shared/components/metric-card/metric-card.component';
+import { DateFormatService } from '../../../core/date-format.service';
 import { CommonModule } from '@angular/common';
 import { addIcons } from 'ionicons';
 import { heart, water, pulse, thermometer, bandage, scale, timeOutline, createOutline, trash, pricetagOutline } from 'ionicons/icons';
@@ -64,7 +65,8 @@ export class PatientHomePage implements OnInit, ViewWillEnter, OnDestroy {
     private router: Router,
     private toastController: ToastController,
     private alertController: AlertController,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private dateFormatService: DateFormatService
   ) {
     addIcons({ heart, water, pulse, thermometer, bandage, scale, timeOutline, createOutline, trash, pricetagOutline });
     
@@ -326,8 +328,7 @@ export class PatientHomePage implements OnInit, ViewWillEnter, OnDestroy {
   }
 
   formatDateTime(dateString: string): string {
-    const date = new Date(dateString);
-    return date.toLocaleString('en-US', {
+    return this.dateFormatService.formatDateTimeSync(dateString, {
       month: 'short',
       day: 'numeric',
       year: 'numeric',

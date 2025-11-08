@@ -16,6 +16,7 @@ import {
 import { AuthService } from '../../../core/auth.service';
 import { SharingService, ProviderLink } from '../../../core/sharing.service';
 import { ProfileService } from '../../../core/profile.service';
+import { DateFormatService } from '../../../core/date-format.service';
 import { SixDigitInputComponent } from '../../../shared/components/six-digit-input/six-digit-input.component';
 import { PdfExportService } from '../../../core/pdf-export.service';
 import { MetricType } from '../../../core/observation.service';
@@ -82,7 +83,8 @@ export class PatientConnectPage implements OnInit {
     private alertController: AlertController,
     private translate: TranslateService,
     private pdfExportService: PdfExportService,
-    private router: Router
+    private router: Router,
+    private dateFormatService: DateFormatService
   ) {
     addIcons({ 
       people, peopleOutline, shareSocial, addCircle, person, medical, timeOutline, 
@@ -223,7 +225,7 @@ export class PatientConnectPage implements OnInit {
 
   formatDate(dateString: string | undefined): string {
     if (!dateString) return '';
-    return new Date(dateString).toLocaleDateString();
+    return this.dateFormatService.formatDateSync(dateString);
   }
 
   showPdfExport() {

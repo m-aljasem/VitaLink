@@ -78,6 +78,13 @@ body {
     text-decoration: none;
 }
 
+.logo-image {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    animation: pulse 2s ease-in-out infinite;
+}
+
 .logo-icon {
     font-size: 2rem;
     animation: pulse 2s ease-in-out infinite;
@@ -293,6 +300,13 @@ body {
     border: 1px solid rgba(102, 126, 234, 0.2);
     transition: all 0.3s ease;
     backdrop-filter: blur(10px);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.badge i {
+    font-size: 0.875rem;
 }
 
 .badge:hover {
@@ -592,6 +606,11 @@ body {
     display: block;
     transition: transform 0.4s ease;
     filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+    color: var(--primary-color);
+}
+
+.feature-icon i {
+    font-size: 3.5rem;
 }
 
 .feature-card:hover .feature-icon {
@@ -690,6 +709,11 @@ body {
 .story-icon {
     font-size: 4rem;
     margin-bottom: 1rem;
+    color: white;
+}
+
+.story-icon i {
+    font-size: 4rem;
 }
 
 .story-card h3 {
@@ -736,6 +760,32 @@ body {
     justify-content: center;
     color: var(--text-muted);
     font-size: 4rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.screenshot-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.placeholder-fallback {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    color: var(--text-muted);
+}
+
+.placeholder-fallback i {
+    font-size: 4rem;
+}
+
+.placeholder-fallback p {
+    font-size: 1rem;
+    margin: 0;
 }
 
 .screenshot-placeholder-large p {
@@ -800,6 +850,11 @@ body {
 .global-icon {
     font-size: 2.5rem;
     flex-shrink: 0;
+    color: var(--primary-color);
+}
+
+.global-icon i {
+    font-size: 2.5rem;
 }
 
 .global-feature h3 {
@@ -875,6 +930,11 @@ body {
     justify-content: center;
     font-size: 3rem;
     flex-shrink: 0;
+    color: white;
+}
+
+.creator-avatar i {
+    font-size: 3rem;
 }
 
 .about-header h2 {
@@ -925,6 +985,10 @@ body {
     transition: all 0.3s ease;
 }
 
+.link-github i {
+    font-size: 1.25rem;
+}
+
 .link-github:hover {
     background: var(--primary-color);
     color: white;
@@ -953,6 +1017,12 @@ body {
     font-size: 1.5rem;
     font-weight: 700;
     margin-bottom: 1rem;
+}
+
+.footer-logo .logo-image {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
 }
 
 .footer-tagline {
@@ -1013,6 +1083,103 @@ body {
     font-size: 0.9rem;
 }
 
+/* Technical Section */
+.technical {
+    padding: 6rem 0;
+    background: linear-gradient(180deg, #ffffff 0%, var(--bg-light) 100%);
+    position: relative;
+}
+
+.technical-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+}
+
+.technical-category {
+    background: white;
+    padding: 2.5rem;
+    border-radius: 20px;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid rgba(102, 126, 234, 0.1);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.technical-category:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-xl);
+    border-color: var(--primary-color);
+}
+
+.technical-category h3 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: var(--text-dark);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.technical-category h3 i {
+    color: var(--primary-color);
+    font-size: 1.5rem;
+}
+
+.technical-category ul {
+    list-style: none;
+    padding: 0;
+}
+
+.technical-category ul li {
+    padding: 0.75rem 0;
+    color: var(--text-light);
+    line-height: 1.7;
+    border-bottom: 1px solid rgba(102, 126, 234, 0.05);
+}
+
+.technical-category ul li:last-child {
+    border-bottom: none;
+}
+
+.technical-category ul li strong {
+    color: var(--text-dark);
+    font-weight: 600;
+}
+
+.screenshot-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.screenshot-placeholder .placeholder-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 30px;
+}
+
+.screenshot-placeholder .placeholder-fallback {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    color: var(--text-muted);
+}
+
+.screenshot-placeholder .placeholder-fallback i {
+    font-size: 3rem;
+}
+
 /* Responsive Design */
 @media (max-width: 968px) {
     .hero-content {
@@ -1026,6 +1193,10 @@ body {
 
     .story-content,
     .global-content {
+        grid-template-columns: 1fr;
+    }
+
+    .technical-grid {
         grid-template-columns: 1fr;
     }
 

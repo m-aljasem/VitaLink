@@ -18,6 +18,7 @@ import { ObservationService, MetricType, Observation } from '../../../core/obser
 import { LineChartComponent } from '../../../shared/components/line-chart/line-chart.component';
 import { DatePickerModalComponent } from '../../../shared/components/date-picker-modal/date-picker-modal.component';
 import { I18nService } from '../../../core/i18n.service';
+import { DateFormatService } from '../../../core/date-format.service';
 
 @Component({
   selector: 'app-metric-detail',
@@ -72,7 +73,8 @@ export class MetricDetailPage implements OnInit {
     private modalController: ModalController,
     private alertController: AlertController,
     private i18nService: I18nService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private dateFormatService: DateFormatService
   ) {
     addIcons({ 
       pulse, water, heart, thermometer, bandage, scale, timeOutline, arrowBack, arrowForward,
@@ -152,8 +154,7 @@ export class MetricDetailPage implements OnInit {
       return o.numeric_value || 0;
     });
     this.chartLabels = chartObs.map(o => {
-      const date = new Date(o.ts);
-      return date.toLocaleDateString();
+      return this.dateFormatService.formatDateSync(o.ts);
     });
   }
 
@@ -404,8 +405,7 @@ export class MetricDetailPage implements OnInit {
   }
 
   formatDateTime(dateString: string): string {
-    const date = new Date(dateString);
-    return date.toLocaleString('en-US', {
+    return this.dateFormatService.formatDateTimeSync(dateString, {
       month: 'short',
       day: 'numeric',
       year: 'numeric',
