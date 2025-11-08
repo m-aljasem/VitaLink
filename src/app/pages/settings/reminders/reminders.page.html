@@ -3,7 +3,7 @@
     <div class="back-button-wrapper">
       <ion-button fill="clear" (click)="goBack()" class="back-button">
         <ion-icon name="arrow-back" slot="start"></ion-icon>
-        Back
+        {{ 'COMMON.BACK' | translate }}
       </ion-button>
     </div>
     <div class="reminders-header">
@@ -11,7 +11,7 @@
         <ion-icon name="notifications"></ion-icon>
       </div>
       <h1>{{ 'SETTINGS.REMINDERS' | translate }}</h1>
-      <p class="subtitle">Set up health reminders and notifications</p>
+      <p class="subtitle">{{ 'SETTINGS.REMINDERS_DESC' | translate }}</p>
     </div>
 
     <ion-button expand="block" (click)="showAddModal = true" class="add-button">

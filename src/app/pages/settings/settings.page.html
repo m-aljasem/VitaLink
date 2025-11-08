@@ -88,7 +88,7 @@
     <!-- Data Section -->
     <div class="settings-section">
       <h2 class="section-title">{{ 'SETTINGS.DATA' | translate }}</h2>
-      <ion-card class="settings-card">
+      <ion-card class="settings-card" button routerLink="export-options">
         <ion-card-content>
           <div class="setting-item">
             <div class="setting-icon-wrapper icon-export">
@@ -96,21 +96,9 @@
             </div>
             <div class="setting-content">
               <h3>{{ 'SETTINGS.EXPORT_DATA' | translate }}</h3>
-              <div class="export-buttons">
-                <ion-button fill="outline" size="small" (click)="exportCSV()">
-                  <ion-icon name="document-text" slot="start"></ion-icon>
-                  {{ 'SETTINGS.EXPORT_CSV' | translate }}
-                </ion-button>
-                <ion-button fill="outline" size="small" (click)="exportJSON()">
-                  <ion-icon name="code" slot="start"></ion-icon>
-                  {{ 'SETTINGS.EXPORT_JSON' | translate }}
-                </ion-button>
-                <ion-button fill="outline" size="small" (click)="exportFHIR()">
-                  <ion-icon name="medical" slot="start"></ion-icon>
-                  {{ 'SETTINGS.EXPORT_FHIR' | translate }}
-                </ion-button>
-              </div>
+              <p>{{ 'SETTINGS.EXPORT_DATA_DESC' | translate }}</p>
             </div>
+            <ion-icon name="chevron-forward" class="arrow-icon"></ion-icon>
           </div>
         </ion-card-content>
       </ion-card>

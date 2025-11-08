@@ -1,0 +1,18 @@
+<ion-item class="country-selector-item">
+  <ion-label position="stacked" *ngIf="label">{{ label }}</ion-label>
+  
+  <ion-select
+    [(ngModel)]="selectedCountry"
+    (ionChange)="onCountrySelect($event)"
+    [interface]="'popover'"
+    [interfaceOptions]="{ header: label || ('ONBOARDING.COUNTRY' | translate) }"
+    class="country-select"
+    [placeholder]="placeholder || ('ONBOARDING.COUNTRY' | translate)"
+    [style.width]="'100%'"
+  >
+    <ion-select-option *ngFor="let country of countries" [value]="country.code">
+      {{ country.flag }} {{ getCountryName(country) }}
+    </ion-select-option>
+  </ion-select>
+</ion-item>
+

@@ -7,6 +7,8 @@ import { OfflineStorageService } from './core/offline-storage.service';
 import { SyncService } from './core/sync.service';
 import { OfflineIndicatorComponent } from './shared/components/offline-indicator/offline-indicator.component';
 import { InstallPromptComponent } from './shared/components/install-prompt/install-prompt.component';
+import { I18nService } from './core/i18n.service';
+import { AuthService } from './core/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -17,13 +19,30 @@ export class AppComponent implements OnInit {
   constructor(
     private translate: TranslateService,
     private offlineStorage: OfflineStorageService,
-    private syncService: SyncService
+    private syncService: SyncService,
+    private i18nService: I18nService,
+    private authService: AuthService
   ) {}
 
   async ngOnInit() {
     // Ensure default language is set and translations are loaded
     this.translate.setDefaultLang('en');
     await firstValueFrom(this.translate.use('en'));
+
+    // Wait for auth initialization to complete
+    await this.authService.waitForInitialization();
+    
+    // Get profile language if user is authenticated
+    let profileLanguage: string | undefined;
+    try {
+      const profile = await this.authService.getCurrentProfile();
+      profileLanguage = profile?.language;
+    } catch (error) {
+      // Ignore errors, will fall back to localStorage or default
+    }
+
+    // Initialize language from saved preference (localStorage or profile)
+    await this.i18nService.initializeLanguage(profileLanguage);
 
     // Initialize offline storage (SyncService will wait for this)
     try {

@@ -1,8 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonButton, IonIcon, IonCard, IonCardContent, IonText } from '@ionic/angular/standalone';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { addIcons } from 'ionicons';
-import { downloadOutline, closeOutline } from 'ionicons/icons';
+import { downloadOutline, closeOutline, phonePortraitOutline, flashOutline, notificationsOutline, homeOutline } from 'ionicons/icons';
 
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>;
@@ -12,96 +13,24 @@ interface BeforeInstallPromptEvent extends Event {
 @Component({
   selector: 'app-install-prompt',
   standalone: true,
-  imports: [CommonModule, IonButton, IonIcon, IonCard, IonCardContent, IonText],
-  template: `
-    <div *ngIf="showPrompt" class="install-prompt-overlay">
-      <ion-card class="install-prompt-card">
-        <ion-card-content>
-          <div class="install-prompt-content">
-            <h3>Install VitaLink</h3>
-            <ion-text>
-              <p>Install VitaLink as an app for a better experience!</p>
-            </ion-text>
-            <div class="install-prompt-actions">
-              <ion-button (click)="installApp()" expand="block">
-                <ion-icon name="download-outline" slot="start"></ion-icon>
-                Install
-              </ion-button>
-              <ion-button (click)="dismissPrompt()" fill="clear" expand="block">
-                <ion-icon name="close-outline" slot="start"></ion-icon>
-                Not now
-              </ion-button>
-            </div>
-          </div>
-        </ion-card-content>
-      </ion-card>
-    </div>
-  `,
-  styles: [`
-    .install-prompt-overlay {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: rgba(0, 0, 0, 0.5);
-      z-index: 10001;
-      display: flex;
-      align-items: flex-end;
-      padding: 1rem;
-      animation: slideUp 0.3s ease-out;
-    }
-
-    .install-prompt-card {
-      width: 100%;
-      max-width: 500px;
-      margin: 0 auto;
-      border-radius: 16px 16px 0 0;
-      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
-    }
-
-    .install-prompt-content {
-      text-align: center;
-      padding: 1rem 0;
-    }
-
-    .install-prompt-content h3 {
-      margin: 0 0 0.5rem 0;
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: var(--ion-color-dark);
-    }
-
-    .install-prompt-content p {
-      margin: 0 0 1.5rem 0;
-      color: var(--ion-color-medium);
-      font-size: 0.9rem;
-    }
-
-    .install-prompt-actions {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-    }
-
-    @keyframes slideUp {
-      from {
-        transform: translateY(100%);
-        opacity: 0;
-      }
-      to {
-        transform: translateY(0);
-        opacity: 1;
-      }
-    }
-  `]
+  imports: [CommonModule, IonButton, IonIcon, IonCard, IonCardContent, IonText, TranslateModule],
+  templateUrl: './install-prompt.component.html',
+  styleUrls: ['./install-prompt.component.scss']
 })
 export class InstallPromptComponent implements OnInit, OnDestroy {
   showPrompt = false;
   private deferredPrompt: BeforeInstallPromptEvent | null = null;
   private dismissedKey = 'pwa-install-dismissed';
 
-  constructor() {
-    addIcons({ 'download-outline': downloadOutline, 'close-outline': closeOutline });
+  constructor(private translate: TranslateService) {
+    addIcons({ 
+      'download-outline': downloadOutline, 
+      'close-outline': closeOutline,
+      'phone-portrait-outline': phonePortraitOutline,
+      'flash-outline': flashOutline,
+      'notifications-outline': notificationsOutline,
+      'home-outline': homeOutline
+    });
   }
 
   ngOnInit() {
@@ -134,8 +63,10 @@ export class InstallPromptComponent implements OnInit, OnDestroy {
     e.preventDefault();
     // Store the event for later use
     this.deferredPrompt = e as BeforeInstallPromptEvent;
-    // Show our custom prompt
-    this.showPrompt = true;
+    // Show our custom prompt with a slight delay for better UX
+    setTimeout(() => {
+      this.showPrompt = true;
+    }, 2000);
   }
 
   async installApp() {
@@ -172,4 +103,3 @@ export class InstallPromptComponent implements OnInit, OnDestroy {
            (window.navigator as any).standalone === true;
   }
 }
-

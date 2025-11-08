@@ -3,19 +3,18 @@ import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import {
   IonContent, IonSelect, IonSelectOption, ToastController, AlertController, IonCard, IonCardContent,
-  IonIcon, IonButton
+  IonIcon
 } from '@ionic/angular/standalone';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { CommonModule } from '@angular/common';
 import { addIcons } from 'ionicons';
 import {
-  person, notifications, language, swapHorizontal, download, documentText, code,
-  informationCircle, logOutOutline, chevronForward, medical
+  person, notifications, language, swapHorizontal, download,
+  informationCircle, logOutOutline, chevronForward
 } from 'ionicons/icons';
 import { AuthService, Profile } from '../../core/auth.service';
 import { ProfileService } from '../../core/profile.service';
 import { I18nService } from '../../core/i18n.service';
-import { ExportService } from '../../core/export.service';
 import { ReminderService } from '../../core/reminder.service';
 
 @Component({
@@ -25,7 +24,7 @@ import { ReminderService } from '../../core/reminder.service';
   standalone: true,
   imports: [
     CommonModule, FormsModule, RouterLink,
-    IonContent, IonSelect, IonSelectOption, IonCard, IonCardContent, IonIcon, IonButton, TranslateModule
+    IonContent, IonSelect, IonSelectOption, IonCard, IonCardContent, IonIcon, TranslateModule
   ],
 })
 export class SettingsPage implements OnInit {
@@ -36,7 +35,6 @@ export class SettingsPage implements OnInit {
     private authService: AuthService,
     private profileService: ProfileService,
     private i18nService: I18nService,
-    private exportService: ExportService,
     private reminderService: ReminderService,
     private router: Router,
     private toastController: ToastController,
@@ -44,8 +42,8 @@ export class SettingsPage implements OnInit {
     private translate: TranslateService
   ) {
     addIcons({
-      person, notifications, language, swapHorizontal, download, documentText, code,
-      informationCircle, 'log-out': logOutOutline, chevronForward, medical
+      person, notifications, language, swapHorizontal, download,
+      informationCircle, 'log-out': logOutOutline, chevronForward
     });
   }
 
@@ -72,62 +70,6 @@ export class SettingsPage implements OnInit {
     }
   }
 
-  async exportCSV() {
-    const { error } = await this.exportService.exportToCSV();
-    if (error) {
-      const toast = await this.toastController.create({
-        message: this.translate.instant('SETTINGS.EXPORT_ERROR'),
-        duration: 2000,
-        color: 'danger',
-      });
-      await toast.present();
-    } else {
-      const toast = await this.toastController.create({
-        message: this.translate.instant('SETTINGS.EXPORT_SUCCESS'),
-        duration: 2000,
-        color: 'success',
-      });
-      await toast.present();
-    }
-  }
-
-  async exportJSON() {
-    const { error } = await this.exportService.exportToJSON();
-    if (error) {
-      const toast = await this.toastController.create({
-        message: this.translate.instant('SETTINGS.EXPORT_ERROR'),
-        duration: 2000,
-        color: 'danger',
-      });
-      await toast.present();
-    } else {
-      const toast = await this.toastController.create({
-        message: this.translate.instant('SETTINGS.EXPORT_SUCCESS'),
-        duration: 2000,
-        color: 'success',
-      });
-      await toast.present();
-    }
-  }
-
-  async exportFHIR() {
-    const { error } = await this.exportService.exportToFHIR();
-    if (error) {
-      const toast = await this.toastController.create({
-        message: this.translate.instant('SETTINGS.EXPORT_ERROR'),
-        duration: 2000,
-        color: 'danger',
-      });
-      await toast.present();
-    } else {
-      const toast = await this.toastController.create({
-        message: this.translate.instant('SETTINGS.EXPORT_SUCCESS'),
-        duration: 2000,
-        color: 'success',
-      });
-      await toast.present();
-    }
-  }
 
   async logout() {
     const alert = await this.alertController.create({

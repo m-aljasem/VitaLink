@@ -100,10 +100,17 @@
       --border-style: solid;
       --border-color: #d1d5db;
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      width: 100%;
 
       &:last-child {
         margin-bottom: 0;
       }
+    }
+
+    // Ensure country selector is full width
+    app-country-selector {
+      display: block;
+      width: 100%;
     }
   }
 

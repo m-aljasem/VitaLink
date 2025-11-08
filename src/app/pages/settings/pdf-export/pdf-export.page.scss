@@ -1,0 +1,337 @@
+.pdf-export-content {
+  --background: linear-gradient(180deg, #f0f4ff 0%, #ffffff 100%);
+}
+
+.pdf-export-container {
+  max-width: 700px;
+  margin: 0 auto;
+  padding-bottom: 2rem;
+}
+
+.back-button-wrapper {
+  margin-bottom: 1rem;
+  padding-top: 0.5rem;
+
+  .back-button {
+    --color: var(--ion-color-primary);
+    --padding-start: 0;
+    --padding-end: 0;
+    font-weight: 500;
+    margin: 0;
+
+    ion-icon {
+      font-size: 1.25rem;
+    }
+  }
+}
+
+.pdf-export-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding-top: 1rem;
+
+  .header-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 1.5rem;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 20px rgba(79, 172, 254, 0.3);
+
+    ion-icon {
+      font-size: 2.5rem;
+      color: white;
+    }
+  }
+
+  h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0 0 0.5rem 0;
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .subtitle {
+    font-size: 1rem;
+    color: var(--ion-color-medium);
+    margin: 0;
+    font-weight: 400;
+  }
+}
+
+.export-section-card {
+  margin: 0 0 1.5rem 0;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(102, 126, 234, 0.1);
+  overflow: hidden;
+
+  ion-card-content {
+    padding: 1.25rem;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    padding: 0.5rem 0;
+    margin-bottom: 1rem;
+
+    .section-title-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .section-icon {
+      font-size: 1.5rem;
+      color: var(--ion-color-primary);
+    }
+
+    .section-title {
+      font-size: 1.125rem;
+      font-weight: 600;
+      margin: 0;
+      color: var(--ion-color-dark);
+    }
+
+    .expand-icon {
+      font-size: 1.25rem;
+      color: var(--ion-color-medium);
+      transition: transform 0.3s ease;
+    }
+  }
+
+  .section-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin: 0 0 1rem 0;
+    color: var(--ion-color-dark);
+
+    .section-icon {
+      font-size: 1.5rem;
+      color: var(--ion-color-primary);
+    }
+  }
+}
+
+.metrics-container {
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    max-height: 0;
+  }
+  to {
+    opacity: 1;
+    max-height: 1000px;
+  }
+}
+
+.metrics-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.metric-checkbox-item {
+  --padding-start: 0;
+  --padding-end: 0;
+  --inner-padding-end: 0;
+  border-radius: 12px;
+  margin-bottom: 0.5rem;
+  background: rgba(102, 126, 234, 0.05);
+  transition: all 0.2s ease;
+
+  &:active {
+    transform: scale(0.98);
+  }
+
+  .metric-icon {
+    font-size: 1.5rem;
+    margin-right: 0.5rem;
+  }
+
+  ion-label {
+    font-weight: 500;
+    color: var(--ion-color-dark);
+  }
+}
+
+.date-range-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.date-range-button {
+  --border-radius: 12px;
+  --border-width: 2px;
+  --border-color: var(--ion-color-primary);
+  --color: var(--ion-color-primary);
+  --padding-top: 16px;
+  --padding-bottom: 16px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+
+  &.selected {
+    --background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    --color: white;
+    --border-color: transparent;
+    box-shadow: 0 4px 12px rgba(79, 172, 254, 0.3);
+    transform: translateY(-2px);
+  }
+
+  &:active:not(.selected) {
+    transform: scale(0.98);
+  }
+
+  ion-icon {
+    font-size: 1.25rem;
+  }
+}
+
+.date-pickers-container {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 2px solid rgba(102, 126, 234, 0.1);
+  animation: slideDown 0.3s ease-out;
+}
+
+.date-picker-wrapper {
+  margin-bottom: 1.5rem;
+
+  .date-picker-label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--ion-color-medium);
+    margin-bottom: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .date-input-button {
+    --border-radius: 12px;
+    --border-width: 2px;
+    --border-color: rgba(102, 126, 234, 0.2);
+    --color: var(--ion-color-dark);
+    --background: white;
+    --padding-start: 16px;
+    --padding-end: 16px;
+    --padding-top: 16px;
+    --padding-bottom: 16px;
+    height: auto;
+    min-height: 56px;
+    justify-content: space-between;
+    text-transform: none;
+    font-weight: 500;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+
+    &:active {
+      transform: scale(0.98);
+    }
+
+    &:hover {
+      --border-color: var(--ion-color-primary);
+      box-shadow: 0 4px 12px rgba(79, 172, 254, 0.2);
+    }
+
+    span {
+      flex: 1;
+      text-align: left;
+      margin-left: 0.5rem;
+    }
+
+    ion-icon {
+      font-size: 1.25rem;
+      
+      &[name="chevron-down"] {
+        color: var(--ion-color-medium);
+      }
+    }
+  }
+}
+
+.option-item {
+  --padding-start: 0;
+  --padding-end: 0;
+  --inner-padding-end: 0;
+  margin-bottom: 0.5rem;
+  border-radius: 12px;
+  background: rgba(102, 126, 234, 0.05);
+
+  ion-label {
+    h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin: 0 0 0.25rem 0;
+      color: var(--ion-color-dark);
+    }
+
+    p {
+      font-size: 0.875rem;
+      color: var(--ion-color-medium);
+      margin: 0;
+    }
+  }
+}
+
+.generate-pdf-button {
+  --background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  --color: white;
+  --border-radius: 16px;
+  --padding-top: 18px;
+  --padding-bottom: 18px;
+  font-weight: 600;
+  font-size: 1.125rem;
+  box-shadow: 0 4px 15px rgba(79, 172, 254, 0.3);
+  margin-top: 1rem;
+  transition: all 0.3s ease;
+
+  &:active:not([disabled]) {
+    transform: scale(0.98);
+  }
+
+  &[disabled] {
+    opacity: 0.6;
+  }
+
+  ion-icon {
+    font-size: 1.25rem;
+  }
+}
+
+// Responsive design
+@media (min-width: 768px) {
+  .pdf-export-container {
+    padding: 2rem;
+  }
+
+  .pdf-export-header h1 {
+    font-size: 2.5rem;
+  }
+
+  .date-range-buttons {
+    flex-direction: row;
+  }
+
+  .date-range-button {
+    flex: 1;
+  }
+}
+

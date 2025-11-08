@@ -3,7 +3,7 @@
     <div class="back-button-wrapper">
       <ion-button fill="clear" (click)="goBack()" class="back-button">
         <ion-icon name="arrow-back" slot="start"></ion-icon>
-        Back
+        {{ 'COMMON.BACK' | translate }}
       </ion-button>
     </div>
     <div class="profile-header">
@@ -11,7 +11,7 @@
         <ion-icon name="person"></ion-icon>
       </div>
       <h1>{{ 'SETTINGS.PROFILE' | translate }}</h1>
-      <p class="subtitle">Update your personal information</p>
+      <p class="subtitle">{{ 'SETTINGS.PROFILE_UPDATE_SUBTITLE' | translate }}</p>
     </div>
 
     <ion-card class="form-card">
@@ -19,7 +19,7 @@
         <div class="form-section">
           <h3 class="section-title">
             <ion-icon name="person-outline"></ion-icon>
-            Personal Information
+            {{ 'SETTINGS.PROFILE_PERSONAL_INFO' | translate }}
           </h3>
           
           <ion-item class="form-item">
@@ -60,13 +60,14 @@
         <div class="form-section">
           <h3 class="section-title">
             <ion-icon name="location-outline"></ion-icon>
-            Location
+            {{ 'SETTINGS.PROFILE_LOCATION' | translate }}
           </h3>
           
-          <ion-item class="form-item">
-            <ion-label position="stacked">{{ 'ONBOARDING.COUNTRY' | translate }}</ion-label>
-            <ion-input [(ngModel)]="editedProfile.country"></ion-input>
-          </ion-item>
+          <app-country-selector
+            [label]="'ONBOARDING.COUNTRY' | translate"
+            [(ngModel)]="editedProfile.country"
+            class="form-item">
+          </app-country-selector>
 
           <ion-item class="form-item">
             <ion-label position="stacked">{{ 'ONBOARDING.CITY' | translate }}</ion-label>
@@ -90,7 +91,7 @@
               [class.selected]="editedProfile.conditions?.includes(condition)"
               (click)="toggleCondition(condition)"
             >
-              {{ condition }}
+              {{ 'ONBOARDING.' + condition | translate }}
             </ion-chip>
           </div>
         </div>

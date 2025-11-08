@@ -13,6 +13,7 @@ import { AuthService, Profile } from '../../core/auth.service';
 import { ProfileService } from '../../core/profile.service';
 import { ObservationService } from '../../core/observation.service';
 import { I18nService } from '../../core/i18n.service';
+import { CountrySelectorComponent } from '../../shared/components/country-selector/country-selector.component';
 
 type OnboardingStep = 'role' | 'profile' | 'conditions' | 'initial-metrics';
 
@@ -24,7 +25,8 @@ type OnboardingStep = 'role' | 'profile' | 'conditions' | 'initial-metrics';
   imports: [
     CommonModule, FormsModule,
     IonContent, IonButton, IonInput, IonItem, IonLabel,
-    IonSelect, IonSelectOption, IonChip, IonSpinner, IonCard, IonCardContent, IonIcon, TranslateModule
+    IonSelect, IonSelectOption, IonChip, IonSpinner, IonCard, IonCardContent, IonIcon, TranslateModule,
+    CountrySelectorComponent
   ],
 })
 export class OnboardingPage implements OnInit {

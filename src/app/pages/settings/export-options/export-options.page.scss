@@ -1,0 +1,183 @@
+.export-options-content {
+  --background: linear-gradient(180deg, #f0f4ff 0%, #ffffff 100%);
+}
+
+.export-options-container {
+  max-width: 700px;
+  margin: 0 auto;
+  padding-bottom: 2rem;
+}
+
+.back-button-wrapper {
+  margin-bottom: 1rem;
+  padding-top: 0.5rem;
+
+  .back-button {
+    --color: var(--ion-color-primary);
+    --padding-start: 0;
+    --padding-end: 0;
+    font-weight: 500;
+    margin: 0;
+
+    ion-icon {
+      font-size: 1.25rem;
+    }
+  }
+}
+
+.export-options-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding-top: 1rem;
+
+  .header-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 1.5rem;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 20px rgba(250, 112, 154, 0.3);
+
+    ion-icon {
+      font-size: 2.5rem;
+      color: white;
+    }
+  }
+
+  h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0 0 0.5rem 0;
+    background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .subtitle {
+    font-size: 1rem;
+    color: var(--ion-color-medium);
+    margin: 0;
+    font-weight: 400;
+  }
+}
+
+.export-options-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.export-option-card {
+  margin: 0;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(102, 126, 234, 0.1);
+  transition: all 0.3s ease;
+  overflow: hidden;
+
+  &:active:not([disabled]) {
+    transform: scale(0.98);
+  }
+
+  &[disabled] {
+    opacity: 0.6;
+    pointer-events: none;
+  }
+
+  ion-card-content {
+    padding: 1.25rem;
+  }
+
+  .export-option-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    .export-icon-wrapper {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+
+      ion-icon {
+        font-size: 1.75rem;
+        color: white;
+      }
+
+      // Colorful gradients for each icon
+      &.icon-csv {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      }
+
+      &.icon-fhir {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      }
+
+      &.icon-pdf {
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      }
+
+      &.icon-google {
+        background: linear-gradient(135deg, #4285f4 0%, #34a853 100%);
+      }
+
+      &.icon-apple {
+        background: linear-gradient(135deg, #000000 0%, #333333 100%);
+      }
+    }
+
+    .export-content {
+      flex: 1;
+      min-width: 0;
+
+      h3 {
+        font-size: 1.125rem;
+        font-weight: 600;
+        margin: 0 0 0.25rem 0;
+        color: var(--ion-color-dark);
+      }
+
+      p {
+        font-size: 0.875rem;
+        color: var(--ion-color-medium);
+        margin: 0;
+        font-weight: 400;
+      }
+    }
+
+    .arrow-icon {
+      color: var(--ion-color-medium);
+      font-size: 1.25rem;
+      flex-shrink: 0;
+    }
+  }
+}
+
+// Hover effects for non-mobile
+@media (hover: hover) {
+  .export-option-card:not([disabled]):hover {
+    box-shadow: 0 4px 20px rgba(102, 126, 234, 0.15);
+    transform: translateY(-2px);
+    border-color: rgba(102, 126, 234, 0.2);
+  }
+}
+
+// Responsive design
+@media (min-width: 768px) {
+  .export-options-container {
+    padding: 2rem;
+  }
+
+  .export-options-header h1 {
+    font-size: 2.5rem;
+  }
+}
+

@@ -183,6 +183,9 @@
     "REMINDERS": "Recordatorios",
     "REMINDERS_DESC": "Configurar recordatorios de salud",
     "PROFILE": "Perfil",
+    "PROFILE_UPDATE_SUBTITLE": "Actualiza tu información personal",
+    "PROFILE_PERSONAL_INFO": "Información Personal",
+    "PROFILE_LOCATION": "Ubicación",
     "LANGUAGE": "Idioma",
     "SWITCH_MODE": "Cambiar modo",
     "ABOUT": "Acerca de",
@@ -252,6 +255,7 @@
     "YEARS_AGO": "hace {{count}} años"
   },
   "COMMON": {
+    "BACK": "Atrás",
     "CANCEL": "Cancelar",
     "CONFIRM": "Confirmar",
     "DELETE": "Eliminar",
@@ -265,5 +269,17 @@
     "RETRY": "Reintentar",
     "OPTIONAL": "Opcional",
     "NEXT": "Siguiente"
+  },
+  "INSTALL": {
+    "TITLE": "Instalar VitaLink",
+    "SUBTITLE": "Obtén la experiencia de la app",
+    "DESCRIPTION": "¡Instala VitaLink en tu dispositivo para acceso más rápido, soporte offline y una mejor experiencia!",
+    "BENEFIT_FAST": "⚡ Acceso más rápido",
+    "BENEFIT_OFFLINE": "📱 Funciona sin internet",
+    "BENEFIT_NOTIFICATIONS": "🔔 Notificaciones push",
+    "BENEFIT_HOME": "🏠 Icono en pantalla de inicio",
+    "INSTALL_BUTTON": "Instalar Ahora",
+    "NOT_NOW": "Ahora No",
+    "LATER": "Tal Vez Más Tarde"
   }
 }

@@ -65,6 +65,14 @@ export const routes: Routes = [
         loadComponent: () => import('./pages/settings/mode-switch/mode-switch.page').then((m) => m.ModeSwitchPage),
       },
       {
+        path: 'settings/export-options',
+        loadComponent: () => import('./pages/settings/export-options/export-options.page').then((m) => m.ExportOptionsPage),
+      },
+      {
+        path: 'settings/pdf-export',
+        loadComponent: () => import('./pages/settings/pdf-export/pdf-export.page').then((m) => m.PdfExportPage),
+      },
+      {
         path: '',
         redirectTo: 'home',
         pathMatch: 'full',

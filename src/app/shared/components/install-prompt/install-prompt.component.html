@@ -1,0 +1,64 @@
+<div *ngIf="showPrompt" class="install-prompt-overlay" (click)="dismissPrompt()">
+  <ion-card class="install-prompt-card" (click)="$event.stopPropagation()">
+    <ion-card-content>
+      <div class="install-prompt-content">
+        <!-- App Icon/Logo -->
+        <div class="app-icon-wrapper">
+          <img src="assets/icon/icon-512x512.png" alt="VitaLink" class="app-icon" />
+          <div class="install-badge">
+            <ion-icon name="download-outline"></ion-icon>
+          </div>
+        </div>
+
+        <!-- Title and Subtitle -->
+        <h2 class="install-title">{{ 'INSTALL.TITLE' | translate }}</h2>
+        <p class="install-subtitle">{{ 'INSTALL.SUBTITLE' | translate }}</p>
+        
+        <!-- Description -->
+        <p class="install-description">{{ 'INSTALL.DESCRIPTION' | translate }}</p>
+
+        <!-- Benefits Grid -->
+        <div class="benefits-grid">
+          <div class="benefit-item">
+            <ion-icon name="flash-outline" class="benefit-icon"></ion-icon>
+            <span class="benefit-text">{{ 'INSTALL.BENEFIT_FAST' | translate }}</span>
+          </div>
+          <div class="benefit-item">
+            <ion-icon name="phone-portrait-outline" class="benefit-icon"></ion-icon>
+            <span class="benefit-text">{{ 'INSTALL.BENEFIT_OFFLINE' | translate }}</span>
+          </div>
+          <div class="benefit-item">
+            <ion-icon name="notifications-outline" class="benefit-icon"></ion-icon>
+            <span class="benefit-text">{{ 'INSTALL.BENEFIT_NOTIFICATIONS' | translate }}</span>
+          </div>
+          <div class="benefit-item">
+            <ion-icon name="home-outline" class="benefit-icon"></ion-icon>
+            <span class="benefit-text">{{ 'INSTALL.BENEFIT_HOME' | translate }}</span>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="install-prompt-actions">
+          <ion-button 
+            (click)="installApp()" 
+            expand="block" 
+            class="install-button"
+            size="large"
+          >
+            <ion-icon name="download-outline" slot="start"></ion-icon>
+            {{ 'INSTALL.INSTALL_BUTTON' | translate }}
+          </ion-button>
+          <ion-button 
+            (click)="dismissPrompt()" 
+            fill="clear" 
+            expand="block"
+            class="dismiss-button"
+          >
+            {{ 'INSTALL.NOT_NOW' | translate }}
+          </ion-button>
+        </div>
+      </div>
+    </ion-card-content>
+  </ion-card>
+</div>
+

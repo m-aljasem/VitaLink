@@ -183,6 +183,9 @@
     "REMINDERS": "リマインダー",
     "REMINDERS_DESC": "健康リマインダーを設定",
     "PROFILE": "プロフィール",
+    "PROFILE_UPDATE_SUBTITLE": "個人情報を更新",
+    "PROFILE_PERSONAL_INFO": "個人情報",
+    "PROFILE_LOCATION": "場所",
     "LANGUAGE": "言語",
     "SWITCH_MODE": "モードを切り替え",
     "ABOUT": "について",
@@ -252,6 +255,7 @@
     "YEARS_AGO": "{{count}}年前"
   },
   "COMMON": {
+    "BACK": "戻る",
     "CANCEL": "キャンセル",
     "CONFIRM": "確認",
     "DELETE": "削除",
@@ -265,6 +269,18 @@
     "RETRY": "再試行",
     "OPTIONAL": "オプション",
     "NEXT": "次へ"
+  },
+  "INSTALL": {
+    "TITLE": "VitaLinkをインストール",
+    "SUBTITLE": "アプリ体験を入手",
+    "DESCRIPTION": "デバイスにVitaLinkをインストールして、より高速なアクセス、オフラインサポート、より良い体験を実現しましょう！",
+    "BENEFIT_FAST": "⚡ 高速アクセス",
+    "BENEFIT_OFFLINE": "📱 オフラインで動作",
+    "BENEFIT_NOTIFICATIONS": "🔔 プッシュ通知",
+    "BENEFIT_HOME": "🏠 ホーム画面アイコン",
+    "INSTALL_BUTTON": "今すぐインストール",
+    "NOT_NOW": "今はしない",
+    "LATER": "後で"
   }
 }
 

@@ -1,0 +1,50 @@
+.country-selector-item {
+  --padding-start: 0;
+  --padding-end: 0;
+  --inner-padding-end: 0;
+  --inner-padding-start: 0;
+  --min-height: auto;
+  margin-bottom: 16px;
+  width: 100% !important;
+  display: block;
+  max-width: 100%;
+  
+  ion-label {
+    width: 100%;
+    margin-bottom: 8px;
+  }
+}
+
+.country-select {
+  width: 100% !important;
+  max-width: 100% !important;
+  --width: 100% !important;
+  flex: 1 1 100%;
+}
+
+.country-display {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  padding: 8px 12px;
+  background: var(--ion-color-light);
+  border-radius: 8px;
+}
+
+.country-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.country-flag {
+  font-size: 1.2em;
+  line-height: 1;
+  display: inline-block;
+}
+
+.country-name {
+  flex: 1;
+}
+

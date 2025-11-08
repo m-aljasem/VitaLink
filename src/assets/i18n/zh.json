@@ -183,6 +183,9 @@
     "REMINDERS": "提醒",
     "REMINDERS_DESC": "设置健康提醒",
     "PROFILE": "个人资料",
+    "PROFILE_UPDATE_SUBTITLE": "更新您的个人信息",
+    "PROFILE_PERSONAL_INFO": "个人信息",
+    "PROFILE_LOCATION": "位置",
     "LANGUAGE": "语言",
     "SWITCH_MODE": "切换模式",
     "ABOUT": "关于",
@@ -252,6 +255,7 @@
     "YEARS_AGO": "{{count}}年前"
   },
   "COMMON": {
+    "BACK": "返回",
     "CANCEL": "取消",
     "CONFIRM": "确认",
     "DELETE": "删除",
@@ -265,6 +269,18 @@
     "RETRY": "重试",
     "OPTIONAL": "可选",
     "NEXT": "下一步"
+  },
+  "INSTALL": {
+    "TITLE": "安装 VitaLink",
+    "SUBTITLE": "获得应用体验",
+    "DESCRIPTION": "在您的设备上安装 VitaLink，以获得更快的访问速度、离线支持和更好的体验！",
+    "BENEFIT_FAST": "⚡ 更快访问",
+    "BENEFIT_OFFLINE": "📱 离线工作",
+    "BENEFIT_NOTIFICATIONS": "🔔 推送通知",
+    "BENEFIT_HOME": "🏠 主屏幕图标",
+    "INSTALL_BUTTON": "立即安装",
+    "NOT_NOW": "现在不",
+    "LATER": "稍后再说"
   }
 }
 

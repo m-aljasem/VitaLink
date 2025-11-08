@@ -1,0 +1,299 @@
+<ion-content [fullscreen]="true" class="pdf-export-content">
+  <div class="pdf-export-container ion-padding">
+    <div class="back-button-wrapper">
+      <ion-button fill="clear" (click)="goBack()" class="back-button">
+        <ion-icon name="arrow-back" slot="start"></ion-icon>
+        {{ 'COMMON.BACK' | translate }}
+      </ion-button>
+    </div>
+    <div class="pdf-export-header">
+      <div class="header-icon">
+        <ion-icon name="document-text"></ion-icon>
+      </div>
+      <h1>{{ 'CONNECT.EXPORT_PDF' | translate }}</h1>
+      <p class="subtitle">{{ 'PDF_EXPORT.SUBTITLE' | translate }}</p>
+    </div>
+
+    <!-- Metric Selection Section -->
+    <ion-card class="export-section-card">
+      <ion-card-content>
+        <div class="section-header" (click)="toggleMetricsExpanded()">
+          <div class="section-title-wrapper">
+            <ion-icon name="pulse" class="section-icon"></ion-icon>
+            <h3 class="section-title">{{ 'CONNECT.SELECT_METRICS' | translate }}</h3>
+          </div>
+          <ion-icon 
+            [name]="metricsExpanded ? 'chevron-up' : 'chevron-down'" 
+            class="expand-icon">
+          </ion-icon>
+        </div>
+        
+        <div class="metrics-container" *ngIf="metricsExpanded">
+          <div class="metrics-grid">
+            <ion-item 
+              class="metric-checkbox-item" 
+              button 
+              (click)="togglePdfMetric('bp')">
+              <ion-icon 
+                [name]="getMetricIcon('bp')" 
+                slot="start" 
+                class="metric-icon" 
+                [style.color]="getMetricColor('bp')">
+              </ion-icon>
+              <ion-label>{{ getMetricName('bp') }}</ion-label>
+              <ion-checkbox
+                [checked]="pdfExportMetrics.bp"
+                (ionChange)="togglePdfMetric('bp')"
+                slot="end"
+              ></ion-checkbox>
+            </ion-item>
+
+            <ion-item 
+              class="metric-checkbox-item" 
+              button 
+              (click)="togglePdfMetric('glucose')">
+              <ion-icon 
+                [name]="getMetricIcon('glucose')" 
+                slot="start" 
+                class="metric-icon" 
+                [style.color]="getMetricColor('glucose')">
+              </ion-icon>
+              <ion-label>{{ getMetricName('glucose') }}</ion-label>
+              <ion-checkbox
+                [checked]="pdfExportMetrics.glucose"
+                (ionChange)="togglePdfMetric('glucose')"
+                slot="end"
+              ></ion-checkbox>
+            </ion-item>
+
+            <ion-item 
+              class="metric-checkbox-item" 
+              button 
+              (click)="togglePdfMetric('spo2')">
+              <ion-icon 
+                [name]="getMetricIcon('spo2')" 
+                slot="start" 
+                class="metric-icon" 
+                [style.color]="getMetricColor('spo2')">
+              </ion-icon>
+              <ion-label>{{ getMetricName('spo2') }}</ion-label>
+              <ion-checkbox
+                [checked]="pdfExportMetrics.spo2"
+                (ionChange)="togglePdfMetric('spo2')"
+                slot="end"
+              ></ion-checkbox>
+            </ion-item>
+
+            <ion-item 
+              class="metric-checkbox-item" 
+              button 
+              (click)="togglePdfMetric('hr')">
+              <ion-icon 
+                [name]="getMetricIcon('hr')" 
+                slot="start" 
+                class="metric-icon" 
+                [style.color]="getMetricColor('hr')">
+              </ion-icon>
+              <ion-label>{{ getMetricName('hr') }}</ion-label>
+              <ion-checkbox
+                [checked]="pdfExportMetrics.hr"
+                (ionChange)="togglePdfMetric('hr')"
+                slot="end"
+              ></ion-checkbox>
+            </ion-item>
+
+            <ion-item 
+              class="metric-checkbox-item" 
+              button 
+              (click)="togglePdfMetric('pain')">
+              <ion-icon 
+                [name]="getMetricIcon('pain')" 
+                slot="start" 
+                class="metric-icon" 
+                [style.color]="getMetricColor('pain')">
+              </ion-icon>
+              <ion-label>{{ getMetricName('pain') }}</ion-label>
+              <ion-checkbox
+                [checked]="pdfExportMetrics.pain"
+                (ionChange)="togglePdfMetric('pain')"
+                slot="end"
+              ></ion-checkbox>
+            </ion-item>
+
+            <ion-item 
+              class="metric-checkbox-item" 
+              button 
+              (click)="togglePdfMetric('weight')">
+              <ion-icon 
+                [name]="getMetricIcon('weight')" 
+                slot="start" 
+                class="metric-icon" 
+                [style.color]="getMetricColor('weight')">
+              </ion-icon>
+              <ion-label>{{ getMetricName('weight') }}</ion-label>
+              <ion-checkbox
+                [checked]="pdfExportMetrics.weight"
+                (ionChange)="togglePdfMetric('weight')"
+                slot="end"
+              ></ion-checkbox>
+            </ion-item>
+          </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Date Range Selection -->
+    <ion-card class="export-section-card">
+      <ion-card-content>
+        <h3 class="section-title">
+          <ion-icon name="calendar-outline" class="section-icon"></ion-icon>
+          {{ 'PDF_EXPORT.DATE_RANGE' | translate }}
+        </h3>
+        
+        <div class="date-range-buttons">
+          <ion-button 
+            expand="block" 
+            fill="outline" 
+            (click)="selectAllData()"
+            [class.selected]="dateRangeMode === 'all'"
+            class="date-range-button">
+            <ion-icon name="calendar-outline" slot="start"></ion-icon>
+            {{ 'PDF_EXPORT.ALL_DATA' | translate }}
+          </ion-button>
+
+          <ion-button 
+            expand="block" 
+            fill="outline" 
+            (click)="selectSpecificDateRange()"
+            [class.selected]="dateRangeMode === 'specific'"
+            class="date-range-button">
+            <ion-icon name="calendar-outline" slot="start"></ion-icon>
+            {{ 'PDF_EXPORT.SPECIFIC_DATE_RANGE' | translate }}
+          </ion-button>
+        </div>
+
+        <!-- Date Pickers (shown only when specific date range is selected) -->
+        <div class="date-pickers-container" *ngIf="dateRangeMode === 'specific'">
+          <div class="date-picker-wrapper">
+            <label class="date-picker-label">{{ 'PDF_EXPORT.FROM' | translate }}</label>
+            <ion-button 
+              expand="block" 
+              fill="outline" 
+              (click)="openStartDatePicker()"
+              class="date-input-button">
+              <ion-icon name="calendar-outline" slot="start"></ion-icon>
+              <span>{{ formatDate(pdfStartDate) }}</span>
+              <ion-icon name="chevron-down" slot="end"></ion-icon>
+            </ion-button>
+          </div>
+
+          <div class="date-picker-wrapper">
+            <label class="date-picker-label">{{ 'PDF_EXPORT.TO' | translate }}</label>
+            <ion-button 
+              expand="block" 
+              fill="outline" 
+              (click)="openEndDatePicker()"
+              class="date-input-button">
+              <ion-icon name="calendar-outline" slot="start"></ion-icon>
+              <span>{{ formatDate(pdfEndDate) }}</span>
+              <ion-icon name="chevron-down" slot="end"></ion-icon>
+            </ion-button>
+          </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Export Options -->
+    <ion-card class="export-section-card">
+      <ion-card-content>
+        <h3 class="section-title">
+          <ion-icon name="settings-outline" class="section-icon"></ion-icon>
+          {{ 'CONNECT.EXPORT_OPTIONS' | translate }}
+        </h3>
+        
+        <ion-item class="option-item">
+          <ion-label>
+            <h3>{{ 'CONNECT.INCLUDE_SUMMARY' | translate }}</h3>
+            <p>{{ 'CONNECT.INCLUDE_SUMMARY_DESC' | translate }}</p>
+          </ion-label>
+          <ion-toggle [(ngModel)]="pdfIncludeSummary" slot="end"></ion-toggle>
+        </ion-item>
+
+        <ion-item class="option-item">
+          <ion-label>
+            <h3>{{ 'CONNECT.INCLUDE_CHARTS' | translate }}</h3>
+            <p>{{ 'CONNECT.INCLUDE_CHARTS_DESC' | translate }}</p>
+          </ion-label>
+          <ion-toggle [(ngModel)]="pdfIncludeCharts" slot="end"></ion-toggle>
+        </ion-item>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Generate Button -->
+    <ion-button 
+      expand="block" 
+      (click)="generatePdf()" 
+      [disabled]="pdfExporting || !dateRangeMode"
+      class="generate-pdf-button"
+      size="large"
+    >
+      <ion-icon name="download" slot="start" *ngIf="!pdfExporting"></ion-icon>
+      <ion-spinner name="crescent" *ngIf="pdfExporting"></ion-spinner>
+      <span *ngIf="!pdfExporting">{{ 'CONNECT.GENERATE_PDF' | translate }}</span>
+      <span *ngIf="pdfExporting">{{ 'CONNECT.GENERATING' | translate }}</span>
+    </ion-button>
+  </div>
+
+  <!-- Start Date Picker Modal -->
+  <ion-modal [isOpen]="showStartDatePicker" (didDismiss)="cancelStartDatePicker()">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>{{ 'PDF_EXPORT.FROM' | translate }}</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="cancelStartDatePicker()">{{ 'COMMON.CANCEL' | translate }}</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <ion-datetime
+          presentation="date"
+          [(ngModel)]="tempStartDate"
+          [max]="pdfEndDate"
+          [preferWheel]="true"
+          [showDefaultButtons]="false"
+        ></ion-datetime>
+        <ion-button expand="block" (click)="confirmStartDate()" class="ion-margin-top">
+          {{ 'COMMON.CONFIRM' | translate }}
+        </ion-button>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+  <!-- End Date Picker Modal -->
+  <ion-modal [isOpen]="showEndDatePicker" (didDismiss)="cancelEndDatePicker()">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>{{ 'PDF_EXPORT.TO' | translate }}</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="cancelEndDatePicker()">{{ 'COMMON.CANCEL' | translate }}</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <ion-datetime
+          presentation="date"
+          [(ngModel)]="tempEndDate"
+          [max]="pdfMaxDate"
+          [preferWheel]="true"
+          [showDefaultButtons]="false"
+        ></ion-datetime>
+        <ion-button expand="block" (click)="confirmEndDate()" class="ion-margin-top">
+          {{ 'COMMON.CONFIRM' | translate }}
+        </ion-button>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+</ion-content>
+

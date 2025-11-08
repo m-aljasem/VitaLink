@@ -11,6 +11,7 @@ import { addIcons } from 'ionicons';
 import { person, personOutline, locationOutline, medicalOutline, checkmarkCircle, arrowBack } from 'ionicons/icons';
 import { AuthService, Profile } from '../../../core/auth.service';
 import { ProfileService } from '../../../core/profile.service';
+import { CountrySelectorComponent } from '../../../shared/components/country-selector/country-selector.component';
 
 @Component({
   selector: 'app-profile',
@@ -20,7 +21,8 @@ import { ProfileService } from '../../../core/profile.service';
   imports: [
     CommonModule, FormsModule,
     IonContent, IonButton, IonInput, IonItem, IonLabel,
-    IonSelect, IonSelectOption, IonChip, IonCard, IonCardContent, IonIcon, TranslateModule
+    IonSelect, IonSelectOption, IonChip, IonCard, IonCardContent, IonIcon, TranslateModule,
+    CountrySelectorComponent
   ],
 })
 export class ProfilePage implements OnInit {
@@ -28,8 +30,8 @@ export class ProfilePage implements OnInit {
   editedProfile: Partial<Profile> = {};
 
   availableConditions = [
-    'Hypertension', 'Diabetes', 'Heart Problems', 'Stress', 'Headache',
-    'Back Pain', 'Obesity', 'Depression', 'Respiratory Issues'
+    'HYPERTENSION', 'DIABETES', 'HEART_PROBLEMS', 'STRESS', 'HEADACHE',
+    'BACK_PAIN', 'OBESITY', 'DEPRESSION', 'RESPIRATORY_ISSUES'
   ];
 
   constructor(

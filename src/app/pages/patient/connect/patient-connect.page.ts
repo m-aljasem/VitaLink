@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { 
   IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonButtons, IonItem, IonLabel,
   IonText, IonToggle, IonModal, IonCard, IonCardContent, IonIcon, ToastController, AlertController,
@@ -82,7 +83,8 @@ export class PatientConnectPage implements OnInit {
     private toastController: ToastController,
     private alertController: AlertController,
     private translate: TranslateService,
-    private pdfExportService: PdfExportService
+    private pdfExportService: PdfExportService,
+    private router: Router
   ) {
     addIcons({ 
       people, peopleOutline, shareSocial, addCircle, person, medical, timeOutline, 
@@ -227,7 +229,7 @@ export class PatientConnectPage implements OnInit {
   }
 
   showPdfExport() {
-    this.showPdfExportModal = true;
+    this.router.navigate(['/tabs/settings/pdf-export']);
   }
 
   togglePdfMetric(metric: MetricType) {

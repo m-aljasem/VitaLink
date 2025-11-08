@@ -1,0 +1,101 @@
+<ion-content [fullscreen]="true" class="export-options-content">
+  <div class="export-options-container ion-padding">
+    <div class="back-button-wrapper">
+      <ion-button fill="clear" (click)="goBack()" class="back-button">
+        <ion-icon name="arrow-back" slot="start"></ion-icon>
+        {{ 'COMMON.BACK' | translate }}
+      </ion-button>
+    </div>
+    <div class="export-options-header">
+      <div class="header-icon">
+        <ion-icon name="download"></ion-icon>
+      </div>
+      <h1>{{ 'SETTINGS.EXPORT_DATA' | translate }}</h1>
+      <p class="subtitle">{{ 'SETTINGS.EXPORT_OPTIONS_DESC' | translate }}</p>
+    </div>
+
+    <!-- Export Options -->
+    <div class="export-options-list">
+      <!-- CSV Export -->
+      <ion-card class="export-option-card" button (click)="exportCSV()" [disabled]="exporting">
+        <ion-card-content>
+          <div class="export-option-item">
+            <div class="export-icon-wrapper icon-csv">
+              <ion-icon name="document-text"></ion-icon>
+            </div>
+            <div class="export-content">
+              <h3>{{ 'SETTINGS.EXPORT_CSV' | translate }}</h3>
+              <p>{{ 'SETTINGS.EXPORT_CSV_DESC' | translate }}</p>
+            </div>
+            <ion-icon name="chevron-forward" class="arrow-icon"></ion-icon>
+          </div>
+        </ion-card-content>
+      </ion-card>
+
+      <!-- FHIR Export -->
+      <ion-card class="export-option-card" button (click)="exportFHIR()" [disabled]="exporting">
+        <ion-card-content>
+          <div class="export-option-item">
+            <div class="export-icon-wrapper icon-fhir">
+              <ion-icon name="medical"></ion-icon>
+            </div>
+            <div class="export-content">
+              <h3>{{ 'SETTINGS.EXPORT_FHIR' | translate }}</h3>
+              <p>{{ 'SETTINGS.EXPORT_FHIR_DESC' | translate }}</p>
+            </div>
+            <ion-icon name="chevron-forward" class="arrow-icon"></ion-icon>
+          </div>
+        </ion-card-content>
+      </ion-card>
+
+      <!-- PDF Export -->
+      <ion-card class="export-option-card" button (click)="exportPDF()" [disabled]="exporting">
+        <ion-card-content>
+          <div class="export-option-item">
+            <div class="export-icon-wrapper icon-pdf">
+              <ion-icon name="document"></ion-icon>
+            </div>
+            <div class="export-content">
+              <h3>{{ 'SETTINGS.EXPORT_PDF' | translate }}</h3>
+              <p>{{ 'SETTINGS.EXPORT_PDF_DESC' | translate }}</p>
+            </div>
+            <ion-icon name="chevron-forward" class="arrow-icon"></ion-icon>
+          </div>
+        </ion-card-content>
+      </ion-card>
+
+      <!-- Google Fit -->
+      <ion-card class="export-option-card" button (click)="connectGoogleFit()" [disabled]="exporting">
+        <ion-card-content>
+          <div class="export-option-item">
+            <div class="export-icon-wrapper icon-google">
+              <ion-icon name="logo-google"></ion-icon>
+            </div>
+            <div class="export-content">
+              <h3>{{ 'SETTINGS.CONNECT_GOOGLE_FIT' | translate }}</h3>
+              <p>{{ 'SETTINGS.CONNECT_GOOGLE_FIT_DESC' | translate }}</p>
+            </div>
+            <ion-icon name="chevron-forward" class="arrow-icon"></ion-icon>
+          </div>
+        </ion-card-content>
+      </ion-card>
+
+      <!-- Apple Health -->
+      <ion-card class="export-option-card" button (click)="connectAppleHealth()" [disabled]="exporting">
+        <ion-card-content>
+          <div class="export-option-item">
+            <div class="export-icon-wrapper icon-apple">
+              <ion-icon name="logo-apple"></ion-icon>
+            </div>
+            <div class="export-content">
+              <h3>{{ 'SETTINGS.CONNECT_APPLE_HEALTH' | translate }}</h3>
+              <p>{{ 'SETTINGS.CONNECT_APPLE_HEALTH_DESC' | translate }}</p>
+            </div>
+            <ion-icon name="chevron-forward" class="arrow-icon"></ion-icon>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+  </div>
+</ion-content>
+
