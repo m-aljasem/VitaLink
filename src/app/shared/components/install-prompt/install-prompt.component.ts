@@ -4,6 +4,8 @@ import { IonButton, IonIcon, IonCard, IonCardContent } from '@ionic/angular/stan
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { addIcons } from 'ionicons';
 import { downloadOutline, closeOutline, phonePortraitOutline, flashOutline, notificationsOutline, homeOutline } from 'ionicons/icons';
+import { PwaInstallService } from '../../../core/pwa-install.service';
+import { Subscription } from 'rxjs';
 
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>;
@@ -21,8 +23,12 @@ export class InstallPromptComponent implements OnInit, OnDestroy {
   showPrompt = false;
   private deferredPrompt: BeforeInstallPromptEvent | null = null;
   private dismissedKey = 'pwa-install-dismissed';
+  private promptSubscription?: Subscription;
 
-  constructor(private translate: TranslateService) {
+  constructor(
+    private translate: TranslateService,
+    private pwaInstallService: PwaInstallService
+  ) {
     addIcons({ 
       'download-outline': downloadOutline, 
       'close-outline': closeOutline,
@@ -34,6 +40,11 @@ export class InstallPromptComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    // Check if app is already installed
+    if (this.isInstalled()) {
+      return;
+    }
+
     // Check if user has already dismissed the prompt
     const dismissed = localStorage.getItem(this.dismissedKey);
     if (dismissed) {
@@ -45,28 +56,24 @@ export class InstallPromptComponent implements OnInit, OnDestroy {
       }
     }
 
-    // Listen for the beforeinstallprompt event
-    window.addEventListener('beforeinstallprompt', this.handleBeforeInstallPrompt.bind(this));
-    
-    // Check if app is already installed
-    if (this.isInstalled()) {
-      return;
-    }
+    // Subscribe to the deferred prompt from the service
+    // The service captures the event early, even before this component initializes
+    // BehaviorSubject will emit the current value immediately if it exists
+    this.promptSubscription = this.pwaInstallService.deferredPrompt$.subscribe((prompt) => {
+      if (prompt) {
+        this.deferredPrompt = prompt;
+        // Show our custom prompt with a slight delay for better UX
+        setTimeout(() => {
+          this.showPrompt = true;
+        }, 2000);
+      }
+    });
   }
 
   ngOnDestroy() {
-    window.removeEventListener('beforeinstallprompt', this.handleBeforeInstallPrompt.bind(this));
-  }
-
-  private handleBeforeInstallPrompt(e: Event) {
-    // Prevent the default browser install prompt
-    e.preventDefault();
-    // Store the event for later use
-    this.deferredPrompt = e as BeforeInstallPromptEvent;
-    // Show our custom prompt with a slight delay for better UX
-    setTimeout(() => {
-      this.showPrompt = true;
-    }, 2000);
+    if (this.promptSubscription) {
+      this.promptSubscription.unsubscribe();
+    }
   }
 
   async installApp() {
@@ -89,6 +96,7 @@ export class InstallPromptComponent implements OnInit, OnDestroy {
     // Clear the deferred prompt
     this.deferredPrompt = null;
     this.showPrompt = false;
+    this.pwaInstallService.clearDeferredPrompt();
   }
 
   dismissPrompt() {

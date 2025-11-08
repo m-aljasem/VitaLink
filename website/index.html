@@ -2,36 +2,49 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     
     <!-- SEO Meta Tags -->
     <title>VitaLink - Global Health Tracker | Monitor Health Metrics Anytime, Anywhere</title>
     <meta name="description" content="VitaLink is a revolutionary health tracking app that breaks language barriers, allowing families to monitor loved ones' health globally. Track vital signs, share with healthcare providers, and stay connected across borders.">
-    <meta name="keywords" content="health tracker, medical app, health monitoring, patient health data, PGHD, healthcare technology, family health, remote health monitoring, multilingual health app">
+    <meta name="keywords" content="health tracker, medical app, health monitoring, patient health data, PGHD, healthcare technology, family health, remote health monitoring, multilingual health app, health research, patient-generated health data">
     <meta name="author" content="Mohamad AlJasem MD MPH MSc">
+    <meta name="theme-color" content="#667eea">
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://vitalink.app/">
-    <meta property="og:title" content="VitaLink - Global Health Tracker">
-    <meta property="og:description" content="Monitor your loved ones' health from anywhere in the world. Breaking language barriers in healthcare.">
-    <meta property="og:image" content="https://vitalink.app/assets/og-image.jpg">
+    <meta property="og:title" content="VitaLink - Global Health Tracker | Monitor Health Metrics Anytime, Anywhere">
+    <meta property="og:description" content="Monitor your loved ones' health from anywhere in the world. Breaking language barriers in healthcare. Real-time tracking, 9 languages, secure & FHIR-compatible.">
+    <meta property="og:image" content="https://vitalink.app/assets/og-image.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="VitaLink - Global Health Tracker App">
+    <meta property="og:site_name" content="VitaLink">
+    <meta property="og:locale" content="en_US">
     
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://vitalink.app/">
-    <meta property="twitter:title" content="VitaLink - Global Health Tracker">
-    <meta property="twitter:description" content="Monitor your loved ones' health from anywhere in the world. Breaking language barriers in healthcare.">
-    <meta property="twitter:image" content="https://vitalink.app/assets/twitter-image.jpg">
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://vitalink.app/">
+    <meta name="twitter:title" content="VitaLink - Global Health Tracker">
+    <meta name="twitter:description" content="Monitor your loved ones' health from anywhere in the world. Breaking language barriers in healthcare. Real-time tracking, 9 languages, secure & FHIR-compatible.">
+    <meta name="twitter:image" content="https://vitalink.app/assets/twitter-image.png">
+    <meta name="twitter:image:alt" content="VitaLink - Global Health Tracker App">
+    <meta name="twitter:creator" content="@vitalink">
+    <meta name="twitter:site" content="@vitalink">
     
     <!-- Additional SEO -->
-    <meta name="robots" content="index, follow">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <meta name="googlebot" content="index, follow">
     <meta name="language" content="English">
     <meta name="revisit-after" content="7 days">
+    <meta name="rating" content="general">
     <link rel="canonical" href="https://vitalink.app/">
     
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="../src/assets/icon/favicon.png">
+    <link rel="icon" type="image/png" href="assets/vitalink.png">
+    <link rel="apple-touch-icon" href="assets/vitalink.png">
+    <link rel="shortcut icon" href="assets/vitalink.png">
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -50,7 +63,7 @@
         <div class="container">
             <div class="nav-content">
                 <div class="logo">
-                    <img src="../src/assets/icon/vitalink.png" alt="VitaLink Logo" class="logo-image">
+                    <img src="assets/vitalink.png" alt="VitaLink Logo" class="logo-image">
                     <span class="logo-text">VitaLink</span>
                 </div>
                 <ul class="nav-links">
@@ -58,6 +71,7 @@
                     <li><a href="#story">Our Story</a></li>
                     <li><a href="#screenshots">Screenshots</a></li>
                     <li><a href="#technical">Technical</a></li>
+                    <li><a href="#research">Research</a></li>
                     <li><a href="#about">About</a></li>
                     <li><a href="https://github.com/m-aljasem/VitaLink" target="_blank" class="btn-github">GitHub</a></li>
                 </ul>
@@ -85,26 +99,18 @@
                         <span class="gradient-text">Always Within Reach</span>
                     </h1>
                     <p class="hero-subtitle">
-                        Monitor loved ones' health globally. Real-time tracking, 9 languages, secure & offline-first.
+                        Monitor loved ones' health globally. Real-time tracking, 9 languages, secure & FHIR-compatible.
                     </p>
-                    <div class="hero-badges">
-                        <span class="badge"><i class="fas fa-globe"></i> Multilingual</span>
-                        <span class="badge"><i class="fas fa-lock"></i> Secure</span>
-                        <span class="badge"><i class="fas fa-mobile-alt"></i> Offline-First</span>
-                        <span class="badge"><i class="fas fa-bolt"></i> Real-Time</span>
-                    </div>
                     <div class="hero-cta">
                         <div class="download-buttons">
                             <a href="#" class="btn btn-download btn-android" id="download-android">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M17.523 15.3414c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.5511 0 .9993.4482.9993.9993.0001.5511-.4482.9997-.9993.9997m-11.046 0c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.551 0 .9993.4482.9993.9993 0 .5511-.4483.9997-.9993.9997m11.4045-6.8558l-1.9973-3.4592a.416.416 0 00-.1521-.1637.416.416 0 00-.1936-.0518c-.049 0-.0971.0098-.1427.0295l-2.2953 1.0365c-.6368-.4892-1.4342-.7792-2.3055-.7792s-1.6688.29-2.3055.7792L3.8422 4.7635a.4254.4254 0 00-.1427-.0295c-.049 0-.0971.0098-.1427.0295a.416.416 0 00-.1521.1637.416.416 0 00-.0518.1936c0 .0508.0098.0971.0295.1427l1.9973 3.4592C2.6889 9.9588 1.9993 11.3065 1.9993 12.8356v1.9558c0 .6442.5225 1.1667 1.1667 1.1667h15.6681c.6442 0 1.1667-.5225 1.1667-1.1667v-1.9558c0-1.5291-.6896-2.8768-1.7727-3.8492M3.4097 15.2685v-2.4329c0-1.5291.6896-2.8768 1.7727-3.8492l1.4916-2.5849 2.4341 1.0992c.6368.4892 1.4342.7792 2.3055.7792s1.6688-.29 2.3055-.7792l2.4341-1.0992 1.4916 2.5849c1.0831.9724 1.7727 2.3201 1.7727 3.8492v2.4329H3.4097z"/>
-                                </svg>
+                                <i class="fab fa-android"></i>
                                 <span>
                                     <span class="btn-label">Download for</span>
                                     <span class="btn-platform">Android</span>
                                 </span>
                             </a>
-                            <a href="#" class="btn btn-download btn-web" id="download-web">
+                            <a href="https://vitalinkapp.aljasem.eu.org" class="btn btn-download btn-web" id="download-web">
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
                                     <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
                                 </svg>
@@ -114,15 +120,7 @@
                                 </span>
                             </a>
                         </div>
-                        <div class="hero-cta-secondary">
-                            <a href="https://github.com/m-aljasem/VitaLink" target="_blank" class="btn btn-secondary">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-                                </svg>
-                                View on GitHub
-                            </a>
-                            <a href="#features" class="btn btn-outline">Explore Features</a>
-                        </div>
+             
                     </div>
                 </div>
                 <div class="hero-image">
@@ -166,9 +164,9 @@
                     <p>Share health data securely with healthcare teams. You control what to share and with whom.</p>
                 </div>
                 <div class="feature-card">
-                    <div class="feature-icon"><i class="fas fa-mobile-alt"></i></div>
-                    <h3>Offline-First</h3>
-                    <p>Works without internet, automatically syncing when reconnected. Your health records always with you.</p>
+                    <div class="feature-icon"><i class="fas fa-file-export"></i></div>
+                    <h3>Data Export & FHIR</h3>
+                    <p>Export your health data in multiple formats including FHIR (Fast Healthcare Interoperability Resources) for seamless integration with healthcare systems.</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon"><i class="fas fa-chart-bar"></i></div>
@@ -180,16 +178,7 @@
                     <h3>Smart Reminders</h3>
                     <p>Personalized reminders for medications, check-ups, and health metrics.</p>
                 </div>
-                <div class="feature-card">
-                    <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
-                    <h3>Bank-Level Security</h3>
-                    <p>End-to-end encryption ensures your health data stays private and secure.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon"><i class="fas fa-users"></i></div>
-                    <h3>Global Connection</h3>
-                    <p>Monitor family health from anywhere in the world, bringing peace of mind across distances.</p>
-                </div>
+        
             </div>
         </div>
     </section>
@@ -301,6 +290,97 @@
                     <p>Never miss health check-ups</p>
                 </div>
             </div>
+            <div class="screenshots-slider-container">
+                <div class="screenshots-slider" id="screenshots-slider">
+                    <div class="screenshot-slide">
+                        <div class="screenshot-placeholder-large">
+                            <img src="assets/placeholder-dashboard.png" alt="Home Dashboard" class="screenshot-image" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="placeholder-fallback" style="display: none;">
+                                <i class="fas fa-home"></i>
+                                <p>Home Dashboard</p>
+                            </div>
+                        </div>
+                        <div class="slide-content">
+                            <h4>Home Dashboard</h4>
+                            <p>Quick overview of all health metrics</p>
+                        </div>
+                    </div>
+                    <div class="screenshot-slide">
+                        <div class="screenshot-placeholder-large">
+                            <img src="assets/placeholder-analytics.png" alt="Analytics" class="screenshot-image" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="placeholder-fallback" style="display: none;">
+                                <i class="fas fa-chart-line"></i>
+                                <p>Metrics Detail</p>
+                            </div>
+                        </div>
+                        <div class="slide-content">
+                            <h4>Detailed Analytics</h4>
+                            <p>Track trends with beautiful charts</p>
+                        </div>
+                    </div>
+                    <div class="screenshot-slide">
+                        <div class="screenshot-placeholder-large">
+                            <img src="assets/placeholder-provider.png" alt="Provider View" class="screenshot-image" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="placeholder-fallback" style="display: none;">
+                                <i class="fas fa-user-md"></i>
+                                <p>Provider View</p>
+                            </div>
+                        </div>
+                        <div class="slide-content">
+                            <h4>Provider Dashboard</h4>
+                            <p>Monitor multiple patients</p>
+                        </div>
+                    </div>
+                    <div class="screenshot-slide">
+                        <div class="screenshot-placeholder-large">
+                            <img src="assets/placeholder-language.png" alt="Language Selection" class="screenshot-image" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="placeholder-fallback" style="display: none;">
+                                <i class="fas fa-globe"></i>
+                                <p>Language Selection</p>
+                            </div>
+                        </div>
+                        <div class="slide-content">
+                            <h4>Multilingual Interface</h4>
+                            <p>Switch between 9 languages</p>
+                        </div>
+                    </div>
+                    <div class="screenshot-slide">
+                        <div class="screenshot-placeholder-large">
+                            <img src="assets/placeholder-entry.png" alt="Add Record" class="screenshot-image" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="placeholder-fallback" style="display: none;">
+                                <i class="fas fa-edit"></i>
+                                <p>Add Record</p>
+                            </div>
+                        </div>
+                        <div class="slide-content">
+                            <h4>Easy Data Entry</h4>
+                            <p>Log health metrics quickly</p>
+                        </div>
+                    </div>
+                    <div class="screenshot-slide">
+                        <div class="screenshot-placeholder-large">
+                            <img src="assets/placeholder-reminders.png" alt="Reminders" class="screenshot-image" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="placeholder-fallback" style="display: none;">
+                                <i class="fas fa-bell"></i>
+                                <p>Reminders</p>
+                            </div>
+                        </div>
+                        <div class="slide-content">
+                            <h4>Smart Reminders</h4>
+                            <p>Never miss health check-ups</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="slider-controls">
+                    <button class="slider-btn slider-prev" id="slider-prev" aria-label="Previous">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <div class="slider-dots" id="slider-dots"></div>
+                    <button class="slider-btn slider-next" id="slider-next" aria-label="Next">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -338,16 +418,12 @@
                     </div>
                 </div>
                 <div class="global-visual">
-                    <div class="language-grid">
-                        <div class="language-badge">EN</div>
-                        <div class="language-badge">ES</div>
-                        <div class="language-badge">FR</div>
-                        <div class="language-badge">DE</div>
-                        <div class="language-badge">AR</div>
-                        <div class="language-badge">FA</div>
-                        <div class="language-badge">UR</div>
-                        <div class="language-badge">ZH</div>
-                        <div class="language-badge">JA</div>
+                    <div class="globe-placeholder">
+                        <img src="assets/placeholder-globe.png" alt="Global Health Map" class="globe-image" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="placeholder-fallback" style="display: none;">
+                            <i class="fas fa-globe"></i>
+                            <p>Global Health Map</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -358,46 +434,96 @@
     <section id="technical" class="technical">
         <div class="container">
             <div class="section-header">
-                <h2 class="section-title">Built with Modern Technology</h2>
-                <p class="section-subtitle">Production-grade stack for reliable, scalable health tracking</p>
+                <h2 class="section-title">Powered by Open Source</h2>
+                <p class="section-subtitle">We believe in the power of open source technologies to create accessible, innovative healthcare solutions for everyone.</p>
             </div>
-            <div class="technical-grid">
-                <div class="technical-category">
-                    <h3><i class="fas fa-code"></i> Frontend</h3>
-                    <ul>
-                        <li><strong>Angular 20.0</strong> - Modern web framework</li>
-                        <li><strong>Ionic 8.0</strong> - Cross-platform UI components</li>
-                        <li><strong>TypeScript 5.8</strong> - Type-safe development</li>
-                        <li><strong>Chart.js 4.5</strong> - Data visualizations</li>
-                        <li><strong>Tailwind CSS 4.1</strong> - Utility-first styling</li>
-                    </ul>
+            <div class="tech-icons-grid">
+                <div class="tech-icon-item">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/angularjs/angularjs-original.svg" alt="Angular" class="tech-icon">
+                    <span class="tech-name">Angular</span>
                 </div>
-                <div class="technical-category">
-                    <h3><i class="fas fa-server"></i> Backend</h3>
-                    <ul>
-                        <li><strong>Supabase 2.80</strong> - Backend as a Service</li>
-                        <li><strong>PostgreSQL</strong> - Relational database</li>
-                        <li><strong>Row-Level Security</strong> - Data protection</li>
-                        <li><strong>Real-time Subscriptions</strong> - Live updates</li>
-                        <li><strong>OTP Authentication</strong> - Secure login</li>
-                    </ul>
+                <div class="tech-icon-item">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/ionic/ionic-original.svg" alt="Ionic" class="tech-icon">
+                    <span class="tech-name">Ionic</span>
                 </div>
-                <div class="technical-category">
-                    <h3><i class="fas fa-mobile-alt"></i> Mobile</h3>
-                    <ul>
-                        <li><strong>Capacitor 7.4</strong> - Native runtime</li>
-                        <li><strong>Local Notifications</strong> - Health reminders</li>
-                        <li><strong>Offline Storage</strong> - PWA capabilities</li>
-                        <li><strong>Haptics</strong> - Enhanced UX</li>
-                    </ul>
+                <div class="tech-icon-item">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg" alt="PostgreSQL" class="tech-icon">
+                    <span class="tech-name">PostgreSQL</span>
                 </div>
-                <div class="technical-category">
-                    <h3><i class="fas fa-globe"></i> Internationalization</h3>
-                    <ul>
-                        <li><strong>ngx-translate 17.0</strong> - Multi-language support</li>
-                        <li><strong>RTL Support</strong> - Arabic, Farsi, Urdu</li>
-                        <li><strong>9 Languages</strong> - Global accessibility</li>
-                    </ul>
+                <div class="tech-icon-item">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg" alt="HTML5" class="tech-icon">
+                    <span class="tech-name">HTML5</span>
+                </div>
+                <div class="tech-icon-item">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg" alt="TypeScript" class="tech-icon">
+                    <span class="tech-name">TypeScript</span>
+                </div>
+                <div class="tech-icon-item">
+                    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/android/android-original.svg" alt="Android" class="tech-icon">
+                    <span class="tech-name">Android</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Research Section -->
+    <section id="research" class="research">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Research & Impact</h2>
+                <p class="section-subtitle">Advancing healthcare through patient-generated health data and multilingual accessibility</p>
+            </div>
+            <div class="research-content">
+                <div class="research-grid">
+                    <div class="research-card">
+                        <div class="research-icon research-icon-1">
+                            <i class="fas fa-microscope"></i>
+                        </div>
+                        <h3>Patient-Generated Health Data</h3>
+                        <p>VitaLink enables collection of real-world health data (PGHD) for research purposes. Patients can voluntarily contribute anonymized data to advance medical knowledge.</p>
+                    </div>
+                    <div class="research-card">
+                        <div class="research-icon research-icon-2">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h3>Longitudinal Health Studies</h3>
+                        <p>Track health metrics over time to identify patterns, trends, and correlations. Support research in chronic disease management and preventive care.</p>
+                    </div>
+                    <div class="research-card">
+                        <div class="research-icon research-icon-3">
+                            <i class="fas fa-globe-americas"></i>
+                        </div>
+                        <h3>Global Health Equity</h3>
+                        <p>Breaking language barriers enables participation in health research from diverse populations, ensuring more inclusive and representative studies.</p>
+                    </div>
+                    <div class="research-card">
+                        <div class="research-icon research-icon-4">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h3>Family Health Patterns</h3>
+                        <p>Study intergenerational health patterns and family health dynamics across different cultural and geographical contexts.</p>
+                    </div>
+                    <div class="research-card">
+                        <div class="research-icon research-icon-5">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h3>Privacy-First Research</h3>
+                        <p>All research participation is opt-in with full transparency. Data is anonymized and participants maintain complete control over their information.</p>
+                    </div>
+                    <div class="research-card">
+                        <div class="research-icon research-icon-6">
+                            <i class="fas fa-handshake"></i>
+                        </div>
+                        <h3>Research Partnerships</h3>
+                        <p>Open to collaborations with academic institutions, healthcare organizations, and research groups interested in patient-generated health data.</p>
+                    </div>
+                </div>
+                <div class="research-cta">
+                    <p>Interested in research collaboration or data access?</p>
+                    <a href="mailto:research@vitalink.app" class="btn btn-primary">
+                        <i class="fas fa-envelope"></i>
+                        Contact Research Team
+                    </a>
                 </div>
             </div>
         </div>
@@ -442,7 +568,7 @@
             <div class="footer-content">
                 <div class="footer-section">
                     <div class="footer-logo">
-                        <img src="../src/assets/icon/vitalink.png" alt="VitaLink Logo" class="logo-image">
+                        <img src="assets/vitalink.png" alt="VitaLink Logo" class="logo-image">
                         <span class="logo-text">VitaLink</span>
                     </div>
                     <p class="footer-tagline">Connecting families to health, globally.</p>
@@ -453,6 +579,7 @@
                         <li><a href="https://github.com/m-aljasem/VitaLink" target="_blank">GitHub Repository</a></li>
                         <li><a href="#features">Features</a></li>
                         <li><a href="#story">Our Story</a></li>
+                        <li><a href="#research">Research</a></li>
                         <li><a href="#technical">Technical</a></li>
                     </ul>
                 </div>

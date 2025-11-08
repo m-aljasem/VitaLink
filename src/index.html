@@ -21,6 +21,17 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   <meta name="theme-color" content="#667eea" />
+  
+  <!-- Capture beforeinstallprompt event early, before Angular bootstraps -->
+  <script>
+    // Store the deferred prompt event globally so Angular service can access it
+    window.addEventListener('beforeinstallprompt', function(e) {
+      // Prevent the default browser install prompt
+      e.preventDefault();
+      // Store the event globally
+      window.__deferredPrompt = e;
+    });
+  </script>
 </head>
 
 <body>

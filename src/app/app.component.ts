@@ -10,6 +10,7 @@ import { InstallPromptComponent } from './shared/components/install-prompt/insta
 import { I18nService } from './core/i18n.service';
 import { AuthService } from './core/auth.service';
 import { DateFormatService } from './core/date-format.service';
+import { PwaInstallService } from './core/pwa-install.service';
 
 @Component({
   selector: 'app-root',
@@ -23,7 +24,8 @@ export class AppComponent implements OnInit {
     private syncService: SyncService,
     private i18nService: I18nService,
     private authService: AuthService,
-    private dateFormatService: DateFormatService
+    private dateFormatService: DateFormatService,
+    private pwaInstallService: PwaInstallService // Initialize early to capture beforeinstallprompt event
   ) {}
 
   async ngOnInit() {
