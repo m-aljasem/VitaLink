@@ -7,7 +7,7 @@ workflows:
       # android_signing:
       #   - keystore_reference  # Uncomment and set up keystore in Codemagic UI for signed APK
       groups:
-        - Supabase Group
+        - Supabase
       vars:
         PACKAGE_NAME: "org.aljasem.vitalink"
       node: 20.18.0
