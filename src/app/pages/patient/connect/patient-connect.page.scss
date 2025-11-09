@@ -500,7 +500,7 @@
     font-weight: 700;
     letter-spacing: 0.5rem;
     text-align: center;
-    --border-radius: 14px;
+    --border-radius: 20px;
     --background: #ffffff;
     --border-color: #e5e7eb;
     --border-width: 2px;
@@ -508,12 +508,18 @@
     --color: var(--ion-color-dark);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
+    border-radius: 20px;
 
     &:focus-within {
       --border-color: var(--ion-color-primary);
       --background: #ffffff;
       box-shadow: 0 6px 20px rgba(102, 126, 234, 0.2);
       transform: translateY(-2px) scale(1.02);
+    }
+
+    &[disabled] {
+      opacity: 0.6;
+      cursor: not-allowed;
     }
   }
 
@@ -576,13 +582,23 @@
     font-size: 1rem;
     box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
     margin-top: 1rem;
+    transition: all 0.3s ease;
 
     &:active {
       transform: scale(0.98);
     }
 
+    &[disabled] {
+      opacity: 0.7;
+    }
+
     ion-icon {
       font-size: 1.25rem;
+    }
+
+    ion-spinner {
+      width: 1.25rem;
+      height: 1.25rem;
     }
   }
 }

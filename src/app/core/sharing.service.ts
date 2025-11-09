@@ -63,12 +63,17 @@ export class SharingService {
     }
 
     // Check if link already exists
-    const { data: existingLink } = await this.supabase
+    const { data: existingLink, error: existingLinkError } = await this.supabase
       .from('provider_links')
       .select('*')
       .eq('provider_id', token.provider_id)
       .eq('patient_id', patientId)
-      .single();
+      .maybeSingle();
+    
+    // If there's an error (other than "not found"), return it
+    if (existingLinkError && existingLinkError.code !== 'PGRST116') {
+      return { error: existingLinkError };
+    }
 
     let link: ProviderLink;
     if (existingLink) {

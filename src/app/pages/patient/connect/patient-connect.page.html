@@ -119,6 +119,7 @@
           inputmode="numeric"
           pattern="[0-9]*"
           (ionInput)="onCodeInput($event)"
+          [disabled]="addingProvider"
           class="otp-input"
         ></ion-input>
         
@@ -163,9 +164,11 @@
           </ion-card-content>
         </ion-card>
 
-        <ion-button expand="block" (click)="redeemCode()" [disabled]="code.length !== 6" class="confirm-button">
-          <ion-icon name="checkmark-circle" slot="start"></ion-icon>
-          {{ 'COMMON.CONFIRM' | translate }}
+        <ion-button expand="block" (click)="redeemCode()" [disabled]="code.length !== 6 || addingProvider" class="confirm-button">
+          <ion-spinner name="crescent" *ngIf="addingProvider" slot="start"></ion-spinner>
+          <ion-icon name="checkmark-circle" *ngIf="!addingProvider" slot="start"></ion-icon>
+          <span *ngIf="!addingProvider">{{ 'COMMON.CONFIRM' | translate }}</span>
+          <span *ngIf="addingProvider">{{ getAddingProviderText() }}</span>
         </ion-button>
       </ion-content>
     </ng-template>

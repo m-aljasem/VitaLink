@@ -6,7 +6,7 @@
         <ion-icon name="people"></ion-icon>
       </div>
       <h1>{{ 'CONNECT.PROVIDER_GENERATE' | translate }}</h1>
-      <p class="subtitle">Connect with patients to receive their health data</p>
+      <p class="subtitle">{{ 'CONNECT.PROVIDER_SUBTITLE' | translate }}</p>
     </div>
 
     <!-- Generate Code Button -->
@@ -19,20 +19,29 @@
       <ion-icon name="qr-code" slot="start" *ngIf="!generatingCode"></ion-icon>
       <ion-spinner name="crescent" *ngIf="generatingCode" slot="start"></ion-spinner>
       <span *ngIf="!generatingCode">{{ 'CONNECT.PROVIDER_GENERATE' | translate }}</span>
-      <span *ngIf="generatingCode">Generating...</span>
+      <span *ngIf="generatingCode">{{ getGeneratingText() }}</span>
     </ion-button>
 
     <!-- Current Token Display -->
-    <ion-card *ngIf="currentToken" class="token-card">
+    <ion-card *ngIf="currentToken" class="token-card" [class.fading]="tokenCardFading">
       <ion-card-content>
         <div class="token-header">
           <div class="token-icon-wrapper">
             <ion-icon name="qr-code"></ion-icon>
           </div>
-          <h3>Connection Code</h3>
+          <h3>{{ 'CONNECT.CONNECTION_CODE' | translate }}</h3>
         </div>
         <div class="token-display">
-          <div class="token-code">{{ currentToken.code }}</div>
+          <div class="token-code-wrapper">
+            <div class="token-code" (click)="copyCode($event)">{{ currentToken.code }}</div>
+            <ion-button 
+              fill="clear" 
+              size="small" 
+              (click)="copyCode($event)" 
+              class="copy-button">
+              <ion-icon [name]="codeCopied ? 'checkmark' : 'copy'"></ion-icon>
+            </ion-button>
+          </div>
           <div class="token-expiry">
             <ion-icon name="time-outline"></ion-icon>
             <span>{{ 'CONNECT.PROVIDER_EXPIRES' | translate }}: {{ formatTimeRemaining(timeRemaining) }}</span>
@@ -44,7 +53,7 @@
           (click)="shareViaOS()" 
           class="share-button">
           <ion-icon name="share" slot="start"></ion-icon>
-          {{ 'CONNECT.SHARE_VIA_OS' | translate }}
+          {{ 'CONNECT.SHARE_INVITATION' | translate }}
         </ion-button>
         <ion-button 
           expand="block" 
@@ -52,7 +61,7 @@
           (click)="cancelToken()" 
           class="cancel-button">
           <ion-icon name="close-circle" slot="start"></ion-icon>
-          Cancel Code
+          {{ 'CONNECT.CANCEL_CODE' | translate }}
         </ion-button>
       </ion-card-content>
     </ion-card>
@@ -95,12 +104,12 @@
                     {{ patient.patientProfile?.first_name }} {{ patient.patientProfile?.last_name }}
                   </span>
                   <span *ngIf="!patient.patientProfile?.first_name && !patient.patientProfile?.last_name">
-                    Patient {{ patient.patient_id.substring(0, 8) }}
+                    {{ 'CONNECT.PATIENT' | translate }} {{ patient.patient_id.substring(0, 8) }}
                   </span>
                 </h3>
                 <p class="connected-date">
                   <ion-icon name="time-outline"></ion-icon>
-                  Connected: {{ formatDate(patient.created_at) }}
+                  {{ 'CONNECT.CONNECTED' | translate }}: {{ formatDate(patient.created_at) }}
                 </p>
               </div>
               <ion-button 

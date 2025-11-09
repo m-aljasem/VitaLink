@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { 
   IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonButtons, IonItem, IonLabel,
-  IonText, IonToggle, IonModal, IonCard, IonCardContent, IonIcon, IonInput, ToastController, AlertController
+  IonText, IonToggle, IonModal, IonCard, IonCardContent, IonIcon, IonInput, IonSpinner, ToastController, AlertController
 } from '@ionic/angular/standalone';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { CommonModule } from '@angular/common';
@@ -28,7 +28,7 @@ import { MetricType } from '../../../core/observation.service';
   imports: [
     CommonModule, FormsModule,
     IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonButtons, IonItem, IonLabel,
-    IonText, IonToggle, IonModal, IonCard, IonCardContent, IonIcon, IonInput, TranslateModule
+    IonText, IonToggle, IonModal, IonCard, IonCardContent, IonIcon, IonInput, IonSpinner, TranslateModule
   ],
 })
 export class PatientConnectPage implements OnInit {
@@ -73,6 +73,7 @@ export class PatientConnectPage implements OnInit {
   pdfIncludeCharts = true;
   pdfIncludeSummary = true;
   pdfExporting = false;
+  addingProvider = false;
 
   constructor(
     private authService: AuthService,
@@ -157,48 +158,100 @@ export class PatientConnectPage implements OnInit {
 
   async redeemCode() {
     if (this.code.length !== 6) {
-      const toast = await this.toastController.create({
-        message: this.translate.instant('CONNECT.INVALID_CODE'),
-        duration: 2000,
-        color: 'danger',
+      const alert = await this.alertController.create({
+        header: this.translate.instant('CONNECT.ERROR_TITLE') || 'Error',
+        message: this.translate.instant('CONNECT.INVALID_CODE_LENGTH') || 'Please enter a valid 6-digit code.',
+        buttons: [this.translate.instant('COMMON.OK') || 'OK'],
       });
-      await toast.present();
+      await alert.present();
       return;
     }
 
     const user = this.authService.getCurrentUser();
     if (!user) return;
 
-    const { data: link, error } = await this.sharingService.redeemToken(this.code, user.id);
-    
-    if (error) {
-      const toast = await this.toastController.create({
-        message: error.message || this.translate.instant('CONNECT.CODE_INVALID_EXPIRED'),
-        duration: 3000,
-        color: 'danger',
-      });
-      await toast.present();
-    } else {
-      // Update sharing settings if link was created
-      if (link) {
-        await this.sharingService.updateSharing(link.id, this.newProviderSharing);
+    this.addingProvider = true;
+
+    try {
+      const { data: link, error } = await this.sharingService.redeemToken(this.code, user.id);
+      
+      if (error) {
+        // Determine error type
+        let errorMessage = '';
+        const errorCode = error.code || '';
+        const errorMsg = error.message || '';
+
+        // Check for specific error types
+        if (errorCode === 'PGRST116' || errorMsg.includes('No rows') || errorMsg.includes('not found')) {
+          // Code not found
+          errorMessage = this.translate.instant('CONNECT.CODE_INCORRECT') || 'The 6-digit code you entered is incorrect. Please check and try again.';
+        } else if (errorMsg.includes('expired') || errorMsg.includes('Invalid or expired')) {
+          // OTP timeout
+          errorMessage = this.translate.instant('CONNECT.CODE_EXPIRED') || 'The code has expired. Please ask your provider for a new code.';
+        } else if (errorCode === 'PGRST301' || errorMsg.includes('network') || errorMsg.includes('fetch')) {
+          // Network/server error
+          errorMessage = this.translate.instant('CONNECT.SERVER_ERROR') || 'Unable to connect to the server. Please check your internet connection and try again.';
+        } else {
+          // Generic error
+          errorMessage = errorMsg || this.translate.instant('CONNECT.CODE_INVALID_EXPIRED') || 'An error occurred while adding the provider. Please try again.';
+        }
+
+        const alert = await this.alertController.create({
+          header: this.translate.instant('CONNECT.ERROR_TITLE') || 'Error',
+          message: errorMessage,
+          buttons: [this.translate.instant('COMMON.OK') || 'OK'],
+        });
+        await alert.present();
+      } else {
+        // Success - get provider profile to show name
+        let providerName = 'Provider';
+        if (link) {
+          await this.sharingService.updateSharing(link.id, this.newProviderSharing);
+          
+          // Load provider profile to get name
+          const { data: profile } = await this.profileService.getProfile(link.provider_id);
+          if (profile) {
+            if (profile.first_name || profile.last_name) {
+              providerName = `${profile.first_name || ''} ${profile.last_name || ''}`.trim();
+            } else {
+              providerName = profile.provider_kind || 'Provider';
+            }
+          }
+        }
+
+        // Reset form
+        this.showCodeModal = false;
+        this.code = '';
+        this.newProviderSharing = {
+          share_bp: false,
+          share_glucose: false,
+          share_spo2: false,
+          share_hr: false,
+          share_pain: false,
+          share_weight: false,
+        };
+        
+        // Reload providers list
+        await this.loadProviders();
+
+        // Show success alert with provider name
+        const alert = await this.alertController.create({
+          header: this.translate.instant('CONNECT.SUCCESS_TITLE') || 'Success',
+          message: `${providerName} ${this.translate.instant('CONNECT.ADDED_SUCCESSFULLY') || 'added successfully!'}`,
+          buttons: [this.translate.instant('COMMON.OK') || 'OK'],
+        });
+        await alert.present();
       }
-      this.showCodeModal = false;
-      this.newProviderSharing = {
-        share_bp: false,
-        share_glucose: false,
-        share_spo2: false,
-        share_hr: false,
-        share_pain: false,
-        share_weight: false,
-      };
-      await this.loadProviders();
-      const toast = await this.toastController.create({
-        message: this.translate.instant('CONNECT.PROVIDER_ADDED_SUCCESS'),
-        duration: 2000,
-        color: 'success',
+    } catch (err: any) {
+      // Catch any unexpected errors
+      const alert = await this.alertController.create({
+        header: this.translate.instant('CONNECT.ERROR_TITLE') || 'Error',
+        message: this.translate.instant('CONNECT.SERVER_ERROR') || 'An unexpected error occurred. Please try again later.',
+        buttons: [this.translate.instant('COMMON.OK') || 'OK'],
       });
-      await toast.present();
+      await alert.present();
+    } finally {
+      this.addingProvider = false;
     }
   }
 
@@ -314,6 +367,11 @@ export class PatientConnectPage implements OnInit {
       weight: 'Weight',
     };
     return names[metric] || metric;
+  }
+
+  getAddingProviderText(): string {
+    const translated = this.translate.instant('CONNECT.ADDING_PROVIDER');
+    return translated !== 'CONNECT.ADDING_PROVIDER' ? translated : 'Adding Provider...';
   }
 }
 
