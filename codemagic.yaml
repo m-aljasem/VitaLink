@@ -4,13 +4,21 @@ workflows:
     max_build_duration: 120
     instance_type: mac_mini_m2
     environment:
-      android_signing:
-        - vitalink_keystore
-        # Note: Configure the keystore in Codemagic UI under "Code signing identities"
-        # 1. Go to Codemagic → Your App → Code signing identities
-        # 2. Add Android keystore with name: "vitalink_keystore"
-        # 3. Upload your .jks or .keystore file and enter credentials
-        # Codemagic will automatically use this keystore for signing
+      # android_signing:
+      #   - vitalink_keystore
+      # 
+      # TO ENABLE AUTOMATIC SIGNING:
+      # 1. Go to Codemagic → Your App → Code signing identities
+      # 2. Add Android keystore with name: "vitalink_keystore"
+      # 3. Upload your .jks or .keystore file and enter credentials:
+      #    - Keystore password
+      #    - Key alias
+      #    - Key password
+      # 4. Uncomment the android_signing lines above
+      # 5. Save and rebuild
+      #
+      # Note: Without signing, you'll get unsigned APKs (fine for testing)
+      #       Signed APKs are required for Play Store distribution
       groups:
         - Supabase
       vars:
