@@ -4,8 +4,15 @@ workflows:
     max_build_duration: 120
     instance_type: mac_mini_m2
     environment:
-      # android_signing:
-      #   - keystore_reference  # Uncomment and set up keystore in Codemagic UI for signed APK
+      android_signing:
+        - keystore_reference: vitalink_keystore
+          # Note: Configure the keystore in Codemagic UI under "Code signing identities"
+          # The keystore_reference name should match what you set in Codemagic UI
+          # Codemagic will automatically provide:
+          # - CM_KEYSTORE_PATH
+          # - CM_KEYSTORE_PASSWORD  
+          # - CM_KEY_ALIAS
+          # - CM_KEY_PASSWORD
       groups:
         - Supabase
       vars:
@@ -44,38 +51,69 @@ workflows:
         script: |
           mkdir -p "$CM_BUILD_DIR/android"
           echo "sdk.dir=$ANDROID_SDK_ROOT" > "$CM_BUILD_DIR/android/local.properties"
-      - name: Replace Android app icon with custom icon
+      - name: Replace Android app icon with custom icon (remove Capacitor default)
         script: |
           cd $CM_BUILD_DIR
-          # Copy custom icons to Android mipmap folders with appropriate sizes
-          if [ -f "src/assets/icon/icon-72x72.png" ]; then
-            mkdir -p android/app/src/main/res/mipmap-mdpi
-            mkdir -p android/app/src/main/res/mipmap-hdpi
-            mkdir -p android/app/src/main/res/mipmap-xhdpi
-            mkdir -p android/app/src/main/res/mipmap-xxhdpi
-            mkdir -p android/app/src/main/res/mipmap-xxxhdpi
-            
-            # Copy appropriately sized icons to each density
-            # mdpi: 48x48 (using 72x72 as closest available)
-            cp src/assets/icon/icon-72x72.png android/app/src/main/res/mipmap-mdpi/ic_launcher.png 2>/dev/null || cp src/assets/icon/icon-192x192.png android/app/src/main/res/mipmap-mdpi/ic_launcher.png
-            # hdpi: 72x72
-            cp src/assets/icon/icon-72x72.png android/app/src/main/res/mipmap-hdpi/ic_launcher.png 2>/dev/null || cp src/assets/icon/icon-192x192.png android/app/src/main/res/mipmap-hdpi/ic_launcher.png
-            # xhdpi: 96x96
-            cp src/assets/icon/icon-96x96.png android/app/src/main/res/mipmap-xhdpi/ic_launcher.png 2>/dev/null || cp src/assets/icon/icon-192x192.png android/app/src/main/res/mipmap-xhdpi/ic_launcher.png
-            # xxhdpi: 144x144
-            cp src/assets/icon/icon-144x144.png android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png 2>/dev/null || cp src/assets/icon/icon-192x192.png android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png
-            # xxxhdpi: 192x192
-            cp src/assets/icon/icon-192x192.png android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png
-            
-            # Also replace round icons if they exist
-            if [ -f "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png" ]; then
-              cp src/assets/icon/icon-72x72.png android/app/src/main/res/mipmap-mdpi/ic_launcher_round.png 2>/dev/null || cp src/assets/icon/icon-192x192.png android/app/src/main/res/mipmap-mdpi/ic_launcher_round.png
-              cp src/assets/icon/icon-72x72.png android/app/src/main/res/mipmap-hdpi/ic_launcher_round.png 2>/dev/null || cp src/assets/icon/icon-192x192.png android/app/src/main/res/mipmap-hdpi/ic_launcher_round.png
-              cp src/assets/icon/icon-96x96.png android/app/src/main/res/mipmap-xhdpi/ic_launcher_round.png 2>/dev/null || cp src/assets/icon/icon-192x192.png android/app/src/main/res/mipmap-xhdpi/ic_launcher_round.png
-              cp src/assets/icon/icon-144x144.png android/app/src/main/res/mipmap-xxhdpi/ic_launcher_round.png 2>/dev/null || cp src/assets/icon/icon-192x192.png android/app/src/main/res/mipmap-xxhdpi/ic_launcher_round.png
-              cp src/assets/icon/icon-192x192.png android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png
-            fi
+          echo "=== Replacing Capacitor default icons with custom VitaLink icons ==="
+          
+          # Ensure icon source exists
+          if [ ! -f "src/assets/icon/icon-192x192.png" ]; then
+            echo "ERROR: Custom icon not found at src/assets/icon/icon-192x192.png"
+            exit 1
           fi
+          
+          # Create all mipmap directories
+          mkdir -p android/app/src/main/res/mipmap-mdpi
+          mkdir -p android/app/src/main/res/mipmap-hdpi
+          mkdir -p android/app/src/main/res/mipmap-xhdpi
+          mkdir -p android/app/src/main/res/mipmap-xxhdpi
+          mkdir -p android/app/src/main/res/mipmap-xxxhdpi
+          
+          # Replace standard launcher icons (force overwrite)
+          echo "Replacing standard launcher icons..."
+          cp -f src/assets/icon/icon-72x72.png android/app/src/main/res/mipmap-mdpi/ic_launcher.png
+          cp -f src/assets/icon/icon-72x72.png android/app/src/main/res/mipmap-hdpi/ic_launcher.png
+          cp -f src/assets/icon/icon-96x96.png android/app/src/main/res/mipmap-xhdpi/ic_launcher.png
+          cp -f src/assets/icon/icon-144x144.png android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png
+          cp -f src/assets/icon/icon-192x192.png android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png
+          
+          # Replace round launcher icons (force overwrite)
+          echo "Replacing round launcher icons..."
+          cp -f src/assets/icon/icon-72x72.png android/app/src/main/res/mipmap-mdpi/ic_launcher_round.png
+          cp -f src/assets/icon/icon-72x72.png android/app/src/main/res/mipmap-hdpi/ic_launcher_round.png
+          cp -f src/assets/icon/icon-96x96.png android/app/src/main/res/mipmap-xhdpi/ic_launcher_round.png
+          cp -f src/assets/icon/icon-144x144.png android/app/src/main/res/mipmap-xxhdpi/ic_launcher_round.png
+          cp -f src/assets/icon/icon-192x192.png android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png
+          
+          # Replace adaptive icon foregrounds if they exist
+          echo "Replacing adaptive icon foregrounds..."
+          for density in mdpi hdpi xhdpi xxhdpi xxxhdpi; do
+            if [ -d "android/app/src/main/res/mipmap-${density}" ]; then
+              # Adaptive icons use foreground and background layers
+              if [ -f "android/app/src/main/res/mipmap-${density}/ic_launcher_foreground.png" ]; then
+                cp -f src/assets/icon/icon-192x192.png android/app/src/main/res/mipmap-${density}/ic_launcher_foreground.png
+              fi
+              if [ -f "android/app/src/main/res/mipmap-${density}/ic_launcher_round_foreground.png" ]; then
+                cp -f src/assets/icon/icon-192x192.png android/app/src/main/res/mipmap-${density}/ic_launcher_round_foreground.png
+              fi
+            fi
+          done
+          
+          # Verify icons were replaced
+          echo "Verifying icon replacement..."
+          if [ -f "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" ]; then
+            echo "✓ Standard launcher icon replaced successfully"
+          else
+            echo "✗ WARNING: Standard launcher icon replacement may have failed"
+          fi
+          
+          if [ -f "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png" ]; then
+            echo "✓ Round launcher icon replaced successfully"
+          else
+            echo "✗ WARNING: Round launcher icon replacement may have failed"
+          fi
+          
+          echo "=== Icon replacement complete ==="
       - name: Verify build files and environment
         script: |
           cd $CM_BUILD_DIR
@@ -107,13 +145,25 @@ workflows:
           ./gradlew assembleDebug \
             -PversionCode=$BUILD_NUMBER \
             -PversionName=0.0.1.$BUILD_NUMBER
-      - name: Build Android release APK
+      - name: Build Android release APK (signed)
         script: |
           cd $CM_BUILD_DIR/android
           chmod +x ./gradlew
+          # Build signed release APK using keystore from Codemagic
           ./gradlew assembleRelease \
             -PversionCode=$BUILD_NUMBER \
             -PversionName=0.0.1.$BUILD_NUMBER
+          echo "✓ Release APK built successfully"
+          
+      - name: Build Android App Bundle (AAB) for Play Store
+        script: |
+          cd $CM_BUILD_DIR/android
+          chmod +x ./gradlew
+          # Build signed AAB for Google Play Store
+          ./gradlew bundleRelease \
+            -PversionCode=$BUILD_NUMBER \
+            -PversionName=0.0.1.$BUILD_NUMBER
+          echo "✓ Release AAB built successfully"
     artifacts:
       - android/app/build/outputs/**/*.apk
       - android/app/build/outputs/**/*.aab
