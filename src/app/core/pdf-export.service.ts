@@ -305,9 +305,24 @@ export class PdfExportService {
 
   private formatValue(obs: Observation, metric: MetricType): string {
     if (metric === 'bp') {
-      return `${obs.systolic || 'N/A'}/${obs.diastolic || 'N/A'} ${obs.unit || 'mmHg'}`;
+      const unit = this.translate.instant('METRICS.MMHG');
+      return `${obs.systolic || 'N/A'}/${obs.diastolic || 'N/A'} ${unit}`;
     }
-    return `${obs.numeric_value || 'N/A'} ${obs.unit || ''}`;
+    // Get unit translation key based on metric type
+    const unitKey = this.getUnitTranslationKey(metric);
+    const unit = unitKey ? this.translate.instant(unitKey) : (obs.unit || '');
+    return `${obs.numeric_value || 'N/A'} ${unit}`;
+  }
+
+  private getUnitTranslationKey(metric: string): string | null {
+    const unitMap: { [key: string]: string } = {
+      glucose: 'METRICS.MGDL',
+      spo2: 'METRICS.PERCENT',
+      hr: 'METRICS.BPM',
+      pain: 'METRICS.SCALE_1_10',
+      weight: 'METRICS.KG',
+    };
+    return unitMap[metric] || null;
   }
 }
 

@@ -236,9 +236,24 @@ export class PatientHomePage implements OnInit, ViewWillEnter, OnDestroy {
 
   formatMetricValue(obs: Observation): string {
     if (obs.metric === 'bp') {
-      return `${obs.systolic}/${obs.diastolic} mmHg`;
+      const unit = this.translate.instant('METRICS.MMHG');
+      return `${obs.systolic}/${obs.diastolic} ${unit}`;
     }
-    return `${obs.numeric_value} ${obs.unit || ''}`;
+    // Get unit translation key based on metric type
+    const unitKey = this.getUnitTranslationKey(obs.metric);
+    const unit = unitKey ? this.translate.instant(unitKey) : (obs.unit || '');
+    return `${obs.numeric_value} ${unit}`;
+  }
+
+  private getUnitTranslationKey(metric: string): string | null {
+    const unitMap: { [key: string]: string } = {
+      glucose: 'METRICS.MGDL',
+      spo2: 'METRICS.PERCENT',
+      hr: 'METRICS.BPM',
+      pain: 'METRICS.SCALE_1_10',
+      weight: 'METRICS.KG',
+    };
+    return unitMap[metric] || null;
   }
 
   formatTime(dateString: string): string {

@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import {
   IonContent, IonHeader, IonToolbar, IonButton, IonButtons, IonIcon, IonCard, IonCardContent, IonText, IonChip, IonRefresher, IonRefresherContent
 } from '@ionic/angular/standalone';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { CommonModule } from '@angular/common';
 import { addIcons } from 'ionicons';
 import { arrowBack, pulse, water, pulseOutline, heart, sad, scale, calendarOutline, timeOutline, barChartOutline, documentOutline } from 'ionicons/icons';
@@ -61,7 +61,8 @@ export class ProviderMetricDetailPage implements OnInit {
     private profileService: ProfileService,
     private sharingService: SharingService,
     private observationService: ObservationService,
-    private dateFormatService: DateFormatService
+    private dateFormatService: DateFormatService,
+    private translate: TranslateService
   ) {
     addIcons({ arrowBack, pulse, water, pulseOutline, heart, sad, scale, calendarOutline, timeOutline, barChartOutline, documentOutline });
   }
@@ -170,9 +171,24 @@ export class ProviderMetricDetailPage implements OnInit {
 
   formatValue(obs: Observation): string {
     if (obs.metric === 'bp') {
-      return `${obs.systolic}/${obs.diastolic} ${obs.unit || 'mmHg'}`;
+      const unit = this.translate.instant('METRICS.MMHG');
+      return `${obs.systolic}/${obs.diastolic} ${unit}`;
     }
-    return `${obs.numeric_value} ${obs.unit || ''}`;
+    // Get unit translation key based on metric type
+    const unitKey = this.getUnitTranslationKey(obs.metric);
+    const unit = unitKey ? this.translate.instant(unitKey) : (obs.unit || '');
+    return `${obs.numeric_value} ${unit}`;
+  }
+
+  private getUnitTranslationKey(metric: string): string | null {
+    const unitMap: { [key: string]: string } = {
+      glucose: 'METRICS.MGDL',
+      spo2: 'METRICS.PERCENT',
+      hr: 'METRICS.BPM',
+      pain: 'METRICS.SCALE_1_10',
+      weight: 'METRICS.KG',
+    };
+    return unitMap[metric] || null;
   }
 
   formatDate(dateString: string): string {
