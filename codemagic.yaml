@@ -59,11 +59,27 @@ workflows:
             fi
           done
           cd android
-          # Update app/build.gradle to use Java 17
+          # Update app/build.gradle to use Java 17 - comprehensive patching
           if [ -f "app/build.gradle" ]; then
+            # Replace all Java 21 references with Java 17
             sed -i.bak 's/JavaVersion\.VERSION_21/JavaVersion.VERSION_17/g' app/build.gradle
             sed -i.bak 's/JavaLanguageVersion\.of(21)/JavaLanguageVersion.of(17)/g' app/build.gradle
-            rm -f app/build.gradle.bak
+            sed -i.bak 's/sourceCompatibility.*21/sourceCompatibility JavaVersion.VERSION_17/g' app/build.gradle
+            sed -i.bak 's/targetCompatibility.*21/targetCompatibility JavaVersion.VERSION_17/g' app/build.gradle
+            sed -i.bak 's/sourceCompatibility = 21/sourceCompatibility = JavaVersion.VERSION_17/g' app/build.gradle
+            sed -i.bak 's/targetCompatibility = 21/targetCompatibility = JavaVersion.VERSION_17/g' app/build.gradle
+            # Force Java 17 - ensure compileOptions block exists and uses Java 17
+            # Add compileOptions if it doesn't exist
+            if ! grep -q "compileOptions" app/build.gradle && grep -q "android {" app/build.gradle; then
+              awk '/android \{/ {print; print "    compileOptions {"; print "        sourceCompatibility JavaVersion.VERSION_17"; print "        targetCompatibility JavaVersion.VERSION_17"; print "    }"; next}1' app/build.gradle > app/build.gradle.tmp && mv app/build.gradle.tmp app/build.gradle
+            fi
+            # Update compileOptions to use Java 17 (only within compileOptions block)
+            awk '/compileOptions \{/,/^    \}/ { 
+              gsub(/sourceCompatibility.*/, "sourceCompatibility JavaVersion.VERSION_17")
+              gsub(/targetCompatibility.*/, "targetCompatibility JavaVersion.VERSION_17")
+              gsub(/JavaVersion\.VERSION_21/, "JavaVersion.VERSION_17")
+            }1' app/build.gradle > app/build.gradle.tmp && mv app/build.gradle.tmp app/build.gradle
+            rm -f app/build.gradle.bak app/build.gradle.tmp 2>/dev/null || true
           fi
           # Update root build.gradle
           if [ -f "build.gradle" ]; then
