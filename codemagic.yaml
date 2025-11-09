@@ -2,7 +2,7 @@ workflows:
   vitalink-android-workflow:
     name: VitaLink Android Build
     max_build_duration: 120
-    instance_type: mac_mini_m2
+    instance_type: linux_x2
     environment:
       # android_signing:
       #   - keystore_reference  # Uncomment and set up keystore in Codemagic UI for signed APK
@@ -44,6 +44,69 @@ workflows:
         script: |
           mkdir -p "$CM_BUILD_DIR/android"
           echo "sdk.dir=$ANDROID_SDK_ROOT" > "$CM_BUILD_DIR/android/local.properties"
+      - name: Replace Android app icon with custom icon
+        script: |
+          cd $CM_BUILD_DIR
+          # Copy custom icons to Android mipmap folders with appropriate sizes
+          if [ -f "src/assets/icon/icon-72x72.png" ]; then
+            mkdir -p android/app/src/main/res/mipmap-mdpi
+            mkdir -p android/app/src/main/res/mipmap-hdpi
+            mkdir -p android/app/src/main/res/mipmap-xhdpi
+            mkdir -p android/app/src/main/res/mipmap-xxhdpi
+            mkdir -p android/app/src/main/res/mipmap-xxxhdpi
+            
+            # Copy appropriately sized icons to each density
+            # mdpi: 48x48 (using 72x72 as closest available)
+            cp src/assets/icon/icon-72x72.png android/app/src/main/res/mipmap-mdpi/ic_launcher.png 2>/dev/null || cp src/assets/icon/icon-192x192.png android/app/src/main/res/mipmap-mdpi/ic_launcher.png
+            # hdpi: 72x72
+            cp src/assets/icon/icon-72x72.png android/app/src/main/res/mipmap-hdpi/ic_launcher.png 2>/dev/null || cp src/assets/icon/icon-192x192.png android/app/src/main/res/mipmap-hdpi/ic_launcher.png
+            # xhdpi: 96x96
+            cp src/assets/icon/icon-96x96.png android/app/src/main/res/mipmap-xhdpi/ic_launcher.png 2>/dev/null || cp src/assets/icon/icon-192x192.png android/app/src/main/res/mipmap-xhdpi/ic_launcher.png
+            # xxhdpi: 144x144
+            cp src/assets/icon/icon-144x144.png android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png 2>/dev/null || cp src/assets/icon/icon-192x192.png android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png
+            # xxxhdpi: 192x192
+            cp src/assets/icon/icon-192x192.png android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png
+            
+            # Also replace round icons if they exist
+            if [ -f "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png" ]; then
+              cp src/assets/icon/icon-72x72.png android/app/src/main/res/mipmap-mdpi/ic_launcher_round.png 2>/dev/null || cp src/assets/icon/icon-192x192.png android/app/src/main/res/mipmap-mdpi/ic_launcher_round.png
+              cp src/assets/icon/icon-72x72.png android/app/src/main/res/mipmap-hdpi/ic_launcher_round.png 2>/dev/null || cp src/assets/icon/icon-192x192.png android/app/src/main/res/mipmap-hdpi/ic_launcher_round.png
+              cp src/assets/icon/icon-96x96.png android/app/src/main/res/mipmap-xhdpi/ic_launcher_round.png 2>/dev/null || cp src/assets/icon/icon-192x192.png android/app/src/main/res/mipmap-xhdpi/ic_launcher_round.png
+              cp src/assets/icon/icon-144x144.png android/app/src/main/res/mipmap-xxhdpi/ic_launcher_round.png 2>/dev/null || cp src/assets/icon/icon-192x192.png android/app/src/main/res/mipmap-xxhdpi/ic_launcher_round.png
+              cp src/assets/icon/icon-192x192.png android/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png
+            fi
+          fi
+      - name: Verify build files and environment
+        script: |
+          cd $CM_BUILD_DIR
+          echo "=== Build Verification ==="
+          echo "Checking www folder contents:"
+          ls -la www/ | head -20
+          echo ""
+          echo "Checking if index.html exists:"
+          [ -f "www/index.html" ] && echo "✓ index.html found" || echo "✗ index.html MISSING"
+          echo ""
+          echo "Checking environment files:"
+          [ -f "src/environments/environment.prod.ts" ] && echo "✓ environment.prod.ts found" || echo "✗ environment.prod.ts MISSING"
+          if [ -f "src/environments/environment.prod.ts" ]; then
+            echo "Environment file contents (hiding sensitive data):"
+            grep -E "(supabaseUrl|supabaseAnonKey)" src/environments/environment.prod.ts | sed 's/\(anonKey.*\):.*/\1: [REDACTED]/'
+          fi
+          echo ""
+          echo "Checking Android assets:"
+          [ -d "android/app/src/main/assets/public" ] && echo "✓ Android assets directory exists" || echo "✗ Android assets directory MISSING"
+          if [ -d "android/app/src/main/assets/public" ]; then
+            echo "Assets directory contents:"
+            ls -la android/app/src/main/assets/public/ | head -10
+          fi
+      - name: Build Android debug APK (for easier debugging)
+        script: |
+          cd $CM_BUILD_DIR/android
+          chmod +x ./gradlew
+          # Build debug APK first for easier debugging
+          ./gradlew assembleDebug \
+            -PversionCode=$BUILD_NUMBER \
+            -PversionName=0.0.1.$BUILD_NUMBER
       - name: Build Android release APK
         script: |
           cd $CM_BUILD_DIR/android
@@ -53,6 +116,7 @@ workflows:
             -PversionName=0.0.1.$BUILD_NUMBER
     artifacts:
       - android/app/build/outputs/**/*.apk
+      - android/app/build/outputs/**/*.aab
     publishing:
       email:
         recipients:
