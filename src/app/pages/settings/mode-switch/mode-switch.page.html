@@ -1,9 +1,9 @@
 <ion-content [fullscreen]="true" class="mode-switch-content">
-  <div class="mode-switch-container ion-padding">
+  <div class="mode-switch-container">
     <div class="back-button-wrapper">
       <ion-button fill="clear" (click)="goBack()" class="back-button">
         <ion-icon name="arrow-back" slot="start"></ion-icon>
-        Back
+        {{ 'COMMON.BACK' | translate }}
       </ion-button>
     </div>
     <div class="mode-switch-header">
@@ -25,7 +25,7 @@
               <ion-icon name="person"></ion-icon>
             </div>
             <h3>{{ 'ONBOARDING.PATIENT' | translate }}</h3>
-            <p>Track your health metrics</p>
+            <p>{{ 'SETTINGS.PATIENT_DESC' | translate }}</p>
           </div>
 
           <div 
@@ -36,14 +36,15 @@
               <ion-icon name="people"></ion-icon>
             </div>
             <h3>{{ 'ONBOARDING.PROVIDER' | translate }}</h3>
-            <p>Monitor your patients</p>
+            <p>{{ 'SETTINGS.PROVIDER_DESC' | translate }}</p>
           </div>
         </div>
       </ion-card-content>
     </ion-card>
 
-    <ion-button expand="block" (click)="switchRole()" class="save-button">
-      <ion-icon name="checkmark-circle" slot="start"></ion-icon>
+    <ion-button expand="block" (click)="switchRole()" class="save-button" [disabled]="loading">
+      <ion-spinner *ngIf="loading" name="crescent" slot="start"></ion-spinner>
+      <ion-icon *ngIf="!loading" name="checkmark-circle" slot="start"></ion-icon>
       {{ 'COMMON.SAVE' | translate }}
     </ion-button>
   </div>

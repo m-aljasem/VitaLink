@@ -104,6 +104,45 @@
       </ion-card>
     </div>
 
+    <!-- App Updates Section -->
+    <div class="settings-section">
+      <h2 class="section-title">{{ 'SETTINGS.APP_UPDATES' | translate }}</h2>
+      <ion-card class="settings-card">
+        <ion-card-content>
+          <div class="setting-item">
+            <div class="setting-icon-wrapper icon-update">
+              <ion-icon name="refresh-outline"></ion-icon>
+            </div>
+            <div class="setting-content">
+              <h3>{{ 'SETTINGS.CHECK_FOR_UPDATES' | translate }}</h3>
+              <p>{{ 'SETTINGS.CHECK_FOR_UPDATES_DESC' | translate }}</p>
+            </div>
+            <ion-button 
+              *ngIf="!updateAvailable" 
+              fill="outline" 
+              size="small"
+              (click)="checkForUpdate()"
+              [disabled]="checkingUpdate || updating"
+              class="update-button">
+              <ion-spinner *ngIf="checkingUpdate" name="crescent" size="small"></ion-spinner>
+              <span *ngIf="!checkingUpdate">{{ 'SETTINGS.CHECK' | translate }}</span>
+            </ion-button>
+            <ion-button 
+              *ngIf="updateAvailable" 
+              fill="solid" 
+              color="success"
+              size="small"
+              (click)="applyUpdate()"
+              [disabled]="updating"
+              class="update-button">
+              <ion-spinner *ngIf="updating" name="crescent" size="small"></ion-spinner>
+              <span *ngIf="!updating">{{ 'SETTINGS.UPDATE_NOW' | translate }}</span>
+            </ion-button>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+
     <!-- About Section -->
     <div class="settings-section">
       <ion-card class="settings-card" button routerLink="about">

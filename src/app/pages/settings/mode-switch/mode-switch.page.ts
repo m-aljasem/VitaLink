@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import {
-  IonContent, IonButton, ToastController, IonCard, IonCardContent, IonIcon
+  IonContent, IonButton, ToastController, IonCard, IonCardContent, IonIcon, IonSpinner
 } from '@ionic/angular/standalone';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { CommonModule } from '@angular/common';
@@ -18,12 +18,13 @@ import { ProfileService } from '../../../core/profile.service';
   standalone: true,
   imports: [
     CommonModule, FormsModule,
-    IonContent, IonButton, IonCard, IonCardContent, IonIcon, TranslateModule
+    IonContent, IonButton, IonCard, IonCardContent, IonIcon, IonSpinner, TranslateModule
   ],
 })
 export class ModeSwitchPage implements OnInit {
   profile: Profile | null = null;
   currentRole: 'patient' | 'provider' = 'patient';
+  loading: boolean = false;
 
   constructor(
     private authService: AuthService,
@@ -54,9 +55,13 @@ export class ModeSwitchPage implements OnInit {
       return;
     }
 
+    this.loading = true;
+
     const { error } = await this.profileService.updateProfile(this.profile.id, {
       role: this.currentRole,
     });
+
+    this.loading = false;
 
     if (error) {
       const toast = await this.toastController.create({

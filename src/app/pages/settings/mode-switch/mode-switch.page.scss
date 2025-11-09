@@ -5,12 +5,13 @@
 .mode-switch-container {
   max-width: 700px;
   margin: 0 auto;
-  padding-bottom: 2rem;
+  padding: 0.5rem;
+  padding-bottom: 0.75rem;
 }
 
 .back-button-wrapper {
-  margin-bottom: 1rem;
-  padding-top: 0.5rem;
+  margin-bottom: 0.25rem;
+  padding-top: 0;
 
   .back-button {
     --color: var(--ion-color-primary);
@@ -27,30 +28,30 @@
 
 .mode-switch-header {
   text-align: center;
-  margin-bottom: 2rem;
-  padding-top: 1rem;
+  margin-bottom: 0.75rem;
+  padding-top: 0;
 
   .header-icon {
-    width: 80px;
-    height: 80px;
-    margin: 0 auto 1.5rem;
-    border-radius: 20px;
+    width: 48px;
+    height: 48px;
+    margin: 0 auto 0.5rem;
+    border-radius: 12px;
     background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 8px 20px rgba(67, 233, 123, 0.3);
+    box-shadow: 0 2px 8px rgba(67, 233, 123, 0.3);
 
     ion-icon {
-      font-size: 2.5rem;
+      font-size: 1.5rem;
       color: white;
     }
   }
 
   h1 {
-    font-size: 2rem;
+    font-size: 1.25rem;
     font-weight: 700;
-    margin: 0 0 0.5rem 0;
+    margin: 0 0 0.25rem 0;
     background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -58,7 +59,7 @@
   }
 
   .subtitle {
-    font-size: 1rem;
+    font-size: 0.8125rem;
     color: var(--ion-color-medium);
     margin: 0;
     font-weight: 400;
@@ -66,24 +67,24 @@
 }
 
 .mode-card {
-  margin: 0 0 2rem 0;
-  border-radius: 20px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  margin: 0 0 0.75rem 0;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   border: 1px solid rgba(67, 233, 123, 0.1);
   overflow: hidden;
 
   ion-card-content {
-    padding: 1.5rem;
+    padding: 0.75rem;
   }
 
   .mode-selection {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
+    gap: 0.5rem;
 
     .mode-option {
-      padding: 1.5rem;
-      border-radius: 16px;
+      padding: 0.75rem;
+      border-radius: 10px;
       border: 2px solid #e5e7eb;
       background: #ffffff;
       text-align: center;
@@ -109,10 +110,10 @@
       }
 
       .mode-icon-wrapper {
-        width: 64px;
-        height: 64px;
-        margin: 0 auto 1rem;
-        border-radius: 16px;
+        width: 40px;
+        height: 40px;
+        margin: 0 auto 0.5rem;
+        border-radius: 10px;
         background: linear-gradient(135deg, rgba(67, 233, 123, 0.1) 0%, rgba(56, 249, 215, 0.1) 100%);
         display: flex;
         align-items: center;
@@ -120,23 +121,24 @@
         transition: all 0.3s ease;
 
         ion-icon {
-          font-size: 2rem;
+          font-size: 1.25rem;
           color: #43e97b;
           transition: all 0.3s ease;
         }
       }
 
       h3 {
-        font-size: 1.125rem;
+        font-size: 0.9375rem;
         font-weight: 600;
-        margin: 0 0 0.5rem 0;
+        margin: 0 0 0.25rem 0;
         color: var(--ion-color-dark);
       }
 
       p {
-        font-size: 0.875rem;
+        font-size: 0.75rem;
         color: var(--ion-color-medium);
         margin: 0;
+        line-height: 1.3;
       }
 
       &.selected {
@@ -170,31 +172,38 @@
 .save-button {
   --background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
   --color: white;
-  --border-radius: 16px;
-  --padding-top: 16px;
-  --padding-bottom: 16px;
+  --border-radius: 12px;
+  --padding-top: 10px;
+  --padding-bottom: 10px;
   font-weight: 600;
-  font-size: 1rem;
-  box-shadow: 0 4px 15px rgba(67, 233, 123, 0.3);
+  font-size: 0.875rem;
+  box-shadow: 0 2px 8px rgba(67, 233, 123, 0.3);
   transition: all 0.3s ease;
+  margin-top: 0.25rem;
 
-  &:active {
+  &:active:not(:disabled) {
     transform: scale(0.98);
   }
 
-  ion-icon {
-    font-size: 1.25rem;
+  &:disabled {
+    opacity: 0.7;
+  }
+
+  ion-icon,
+  ion-spinner {
+    font-size: 1rem;
+    margin-right: 0.375rem;
   }
 }
 
 // Responsive design
 @media (min-width: 768px) {
   .mode-switch-container {
-    padding: 2rem;
+    padding: 0.75rem;
   }
 
   .mode-switch-header h1 {
-    font-size: 2.5rem;
+    font-size: 1.375rem;
   }
 }
 

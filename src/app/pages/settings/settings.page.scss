@@ -101,6 +101,10 @@
         background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
       }
 
+      &.icon-update {
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      }
+
       &.icon-about {
         background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);
       }
@@ -157,6 +161,21 @@
           ion-icon {
             margin-right: 0.25rem;
           }
+        }
+      }
+
+      .update-button {
+        --border-radius: 12px;
+        --padding-start: 1rem;
+        --padding-end: 1rem;
+        --padding-top: 0.5rem;
+        --padding-bottom: 0.5rem;
+        font-weight: 500;
+        margin: 0;
+        flex-shrink: 0;
+
+        ion-spinner {
+          margin-right: 0.5rem;
         }
       }
     }
