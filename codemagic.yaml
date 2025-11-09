@@ -48,22 +48,50 @@ workflows:
       - name: Configure Java version for Android build
         script: |
           cd $CM_BUILD_DIR/android
-          # Update app/build.gradle to use Java 17 instead of Java 21
+          # Update app/build.gradle to use Java 17
           if [ -f "app/build.gradle" ]; then
-            # Replace Java 21 with Java 17
             sed -i.bak 's/JavaVersion\.VERSION_21/JavaVersion.VERSION_17/g' app/build.gradle
             sed -i.bak 's/JavaLanguageVersion\.of(21)/JavaLanguageVersion.of(17)/g' app/build.gradle
             rm -f app/build.gradle.bak
           fi
-          # Update build.gradle (project level) if needed
+          # Update root build.gradle
           if [ -f "build.gradle" ]; then
+            sed -i.bak 's/JavaVersion\.VERSION_21/JavaVersion.VERSION_17/g' build.gradle
             sed -i.bak 's/JavaLanguageVersion\.of(21)/JavaLanguageVersion.of(17)/g' build.gradle
             rm -f build.gradle.bak
           fi
-          # Update any other gradle files that might reference Java 21
-          find . -name "*.gradle" -type f -exec sed -i.bak 's/JavaVersion\.VERSION_21/JavaVersion.VERSION_17/g' {} \; 2>/dev/null || true
-          find . -name "*.gradle" -type f -exec sed -i.bak 's/JavaLanguageVersion\.of(21)/JavaLanguageVersion.of(17)/g' {} \; 2>/dev/null || true
-          find . -name "*.gradle.bak" -type f -delete 2>/dev/null || true
+          # Patch Capacitor Android plugin's build.gradle (in node_modules)
+          CAPACITOR_ANDROID_BUILD_GRADLE="$CM_BUILD_DIR/node_modules/@capacitor/android/android/build.gradle"
+          if [ -f "$CAPACITOR_ANDROID_BUILD_GRADLE" ]; then
+            sed -i.bak 's/JavaVersion\.VERSION_21/JavaVersion.VERSION_17/g' "$CAPACITOR_ANDROID_BUILD_GRADLE"
+            sed -i.bak 's/JavaLanguageVersion\.of(21)/JavaLanguageVersion.of(17)/g' "$CAPACITOR_ANDROID_BUILD_GRADLE"
+            rm -f "$CAPACITOR_ANDROID_BUILD_GRADLE.bak"
+          fi
+          # Add global Java version override in root build.gradle
+          if [ -f "build.gradle" ] && ! grep -q "allprojects {" build.gradle; then
+            cat >> build.gradle << 'EOF'
+
+allprojects {
+    tasks.withType(JavaCompile).configureEach {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+}
+
+subprojects {
+    afterEvaluate { project ->
+        if (project.hasProperty('android')) {
+            project.android {
+                compileOptions {
+                    sourceCompatibility JavaVersion.VERSION_17
+                    targetCompatibility JavaVersion.VERSION_17
+                }
+            }
+        }
+    }
+}
+EOF
+          fi
       - name: Build Android release APK
         script: |
           # BUILD_NUMBER is a Codemagic built-in variable tracking the number
