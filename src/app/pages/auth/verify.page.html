@@ -16,10 +16,16 @@
 
     <!-- Code Input -->
     <div class="code-input-wrapper">
-      <app-six-digit-input
-        [(code)]="code"
-        (codeComplete)="onCodeComplete($event)"
-      ></app-six-digit-input>
+      <ion-input
+        type="tel"
+        [(ngModel)]="code"
+        maxlength="6"
+        placeholder="000000"
+        inputmode="numeric"
+        pattern="[0-9]*"
+        (ionInput)="onCodeInput($event)"
+        class="otp-input"
+      ></ion-input>
     </div>
 
     <!-- Verify Button -->

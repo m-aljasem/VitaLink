@@ -111,7 +111,16 @@
           </div>
           <p class="modal-description">{{ 'CONNECT.ENTER_CODE' | translate }}</p>
         </div>
-        <app-six-digit-input [(code)]="code" (codeComplete)="redeemCode()"></app-six-digit-input>
+        <ion-input
+          type="tel"
+          [(ngModel)]="code"
+          maxlength="6"
+          placeholder="000000"
+          inputmode="numeric"
+          pattern="[0-9]*"
+          (ionInput)="onCodeInput($event)"
+          class="otp-input"
+        ></ion-input>
         
         <ion-card class="sharing-options-card">
           <ion-card-content>

@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { 
-  IonContent, IonButton, IonSpinner, IonIcon,
+  IonContent, IonButton, IonSpinner, IonIcon, IonInput,
   ToastController
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
@@ -10,7 +11,6 @@ import { lockClosed } from 'ionicons/icons';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../../core/auth.service';
 import { ProfileService } from '../../core/profile.service';
-import { SixDigitInputComponent } from '../../shared/components/six-digit-input/six-digit-input.component';
 
 @Component({
   selector: 'app-verify',
@@ -18,9 +18,9 @@ import { SixDigitInputComponent } from '../../shared/components/six-digit-input/
   styleUrls: ['./verify.page.scss'],
   standalone: true,
   imports: [
-    CommonModule,
-    IonContent, IonButton, IonSpinner, IonIcon,
-    TranslateModule, SixDigitInputComponent
+    CommonModule, FormsModule,
+    IonContent, IonButton, IonSpinner, IonIcon, IonInput,
+    TranslateModule
   ],
 })
 export class VerifyPage implements OnInit {
@@ -48,9 +48,20 @@ export class VerifyPage implements OnInit {
     }
   }
 
-  async onCodeComplete(code: string) {
-    this.code = code;
-    await this.verify();
+  onCodeInput(event: any) {
+    // Only allow numeric input
+    const value = event.target.value.replace(/\D/g, '').slice(0, 6);
+    this.code = value;
+    
+    // Update the input value to ensure it's synced
+    if (event.target.value !== value) {
+      event.target.value = value;
+    }
+    
+    // Auto-verify when 6 digits are entered
+    if (this.code.length === 6 && !this.loading) {
+      setTimeout(() => this.verify(), 100);
+    }
   }
 
   async verify() {

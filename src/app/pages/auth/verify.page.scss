@@ -92,31 +92,34 @@
   margin-bottom: 1.5rem;
   animation: fadeInUp 0.6s ease-out 0.4s both;
 
-  ::ng-deep .six-digit-container {
-    gap: 0.75rem;
-    margin: 0;
+  .otp-input {
+    width: 100%;
+    max-width: 280px;
+    margin: 0 auto;
+    --padding-start: 1.5rem;
+    --padding-end: 1.5rem;
+    --padding-top: 1rem;
+    --padding-bottom: 1rem;
+    height: 3.5rem;
+    font-size: 1.75rem;
+    font-weight: 700;
+    letter-spacing: 0.5rem;
+    text-align: center;
+    --border-radius: 14px;
+    --background: rgba(255, 255, 255, 0.95);
+    --border-color: rgba(255, 255, 255, 0.5);
+    --border-width: 2px;
+    --border-style: solid;
+    --color: #667EEA;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
 
-    .digit-input {
-      width: 3.25rem;
-      height: 3.25rem;
-      font-size: 1.5rem;
-      font-weight: 700;
-      --border-radius: 14px;
-      --background: rgba(255, 255, 255, 0.95);
-      --border-color: rgba(255, 255, 255, 0.5);
-      --border-width: 2px;
-      --border-style: solid;
-      --color: #667EEA;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-      backdrop-filter: blur(10px);
-      transition: all 0.3s ease;
-
-      &:focus-within {
-        --border-color: rgba(255, 255, 255, 0.8);
-        --background: #ffffff;
-        box-shadow: 0 6px 20px rgba(255, 255, 255, 0.4);
-        transform: translateY(-2px) scale(1.05);
-      }
+    &:focus-within {
+      --border-color: rgba(255, 255, 255, 0.8);
+      --background: #ffffff;
+      box-shadow: 0 6px 20px rgba(255, 255, 255, 0.4);
+      transform: translateY(-2px) scale(1.02);
     }
   }
 }

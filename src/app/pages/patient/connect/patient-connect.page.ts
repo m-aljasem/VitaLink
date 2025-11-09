@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { 
   IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonButtons, IonItem, IonLabel,
-  IonText, IonToggle, IonModal, IonCard, IonCardContent, IonIcon, ToastController, AlertController
+  IonText, IonToggle, IonModal, IonCard, IonCardContent, IonIcon, IonInput, ToastController, AlertController
 } from '@ionic/angular/standalone';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { CommonModule } from '@angular/common';
@@ -17,7 +17,6 @@ import { AuthService } from '../../../core/auth.service';
 import { SharingService, ProviderLink } from '../../../core/sharing.service';
 import { ProfileService } from '../../../core/profile.service';
 import { DateFormatService } from '../../../core/date-format.service';
-import { SixDigitInputComponent } from '../../../shared/components/six-digit-input/six-digit-input.component';
 import { PdfExportService } from '../../../core/pdf-export.service';
 import { MetricType } from '../../../core/observation.service';
 
@@ -29,7 +28,7 @@ import { MetricType } from '../../../core/observation.service';
   imports: [
     CommonModule, FormsModule,
     IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonButtons, IonItem, IonLabel,
-    IonText, IonToggle, IonModal, IonCard, IonCardContent, IonIcon, TranslateModule, SixDigitInputComponent
+    IonText, IonToggle, IonModal, IonCard, IonCardContent, IonIcon, IonInput, TranslateModule
   ],
 })
 export class PatientConnectPage implements OnInit {
@@ -143,6 +142,17 @@ export class PatientConnectPage implements OnInit {
   showAddProviderModal() {
     this.code = '';
     this.showCodeModal = true;
+  }
+
+  onCodeInput(event: any) {
+    // Only allow numeric input
+    const value = event.target.value.replace(/\D/g, '').slice(0, 6);
+    this.code = value;
+    
+    // Update the input value to ensure it's synced
+    if (event.target.value !== value) {
+      event.target.value = value;
+    }
   }
 
   async redeemCode() {
