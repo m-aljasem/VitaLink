@@ -28,6 +28,11 @@ workflows:
           npm install
       - name: Compile web code to www folder
         script: npm run build -- --configuration production
+      - name: Add Android platform if not exists
+        script: |
+          if [ ! -d "android" ]; then
+            npx cap add android
+          fi
       - name: Update dependencies and copy web assets to native project
         script: |
           # npx cap copy # <- use this is you don't need to update native dependencies
@@ -41,6 +46,11 @@ workflows:
           # BUILD_NUMBER is a Codemagic built-in variable tracking the number
           # of times this workflow has been built
           cd $CM_BUILD_DIR/android
+          if [ ! -f "./gradlew" ]; then
+            echo "Error: gradlew not found. Android project may not be initialized properly."
+            exit 1
+          fi
+          chmod +x ./gradlew
           ./gradlew assembleRelease \
             -PversionCode=$BUILD_NUMBER \
             -PversionName=0.0.1.$BUILD_NUMBER
