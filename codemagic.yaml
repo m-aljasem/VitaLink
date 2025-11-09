@@ -31,6 +31,10 @@ workflows:
       - name: Add Android platform if not exists
         script: |
           if [ ! -d "android" ]; then
+            # Install @capacitor/android if not already installed
+            if ! npm list @capacitor/android > /dev/null 2>&1; then
+              npm install @capacitor/android@^7.0.0
+            fi
             npx cap add android
           fi
       - name: Update dependencies and copy web assets to native project
