@@ -37,7 +37,7 @@ export class PwaUpdateService {
 
   /**
    * Check for updates manually
-   * Returns true if an update check was initiated, false otherwise
+   * Returns true if an update is available, false otherwise
    */
   async checkForUpdates(): Promise<boolean> {
     if (!this.swUpdate.isEnabled) {
@@ -48,29 +48,43 @@ export class PwaUpdateService {
       // Initiate update check
       const updateCheckInitiated = await this.swUpdate.checkForUpdate();
       
-      if (updateCheckInitiated) {
-        // Wait a bit for the version update event to fire
-        // Check if update becomes available within 2 seconds
-        return new Promise<boolean>((resolve) => {
-          const timeout = setTimeout(() => {
-            resolve(this.updateAvailable);
-          }, 2000);
+      if (!updateCheckInitiated) {
+        return false;
+      }
 
-          // If update becomes available before timeout, resolve immediately
-          this.swUpdate.versionUpdates
-            .pipe(
-              filter((evt): evt is VersionReadyEvent => evt.type === 'VERSION_READY'),
-              first()
-            )
-            .subscribe(() => {
+      // Wait for version update event with proper timeout and cleanup
+      return new Promise<boolean>((resolve) => {
+        let resolved = false;
+        const timeout = setTimeout(() => {
+          if (!resolved) {
+            resolved = true;
+            resolve(this.updateAvailable);
+          }
+        }, 3000); // Increased timeout to 3 seconds
+
+        // Subscribe to version updates
+        const subscription = this.swUpdate.versionUpdates
+          .pipe(
+            filter((evt): evt is VersionReadyEvent => evt.type === 'VERSION_READY'),
+            first()
+          )
+          .subscribe(() => {
+            if (!resolved) {
+              resolved = true;
               clearTimeout(timeout);
               this.updateAvailable = true;
+              subscription.unsubscribe();
               resolve(true);
-            });
-        });
-      }
-      
-      return false;
+            }
+          });
+
+        // Cleanup subscription if timeout fires
+        setTimeout(() => {
+          if (!resolved) {
+            subscription.unsubscribe();
+          }
+        }, 3000);
+      });
     } catch (error) {
       console.error('Error checking for updates:', error);
       return false;

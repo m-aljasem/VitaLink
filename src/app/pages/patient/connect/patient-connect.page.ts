@@ -13,7 +13,7 @@ import {
   chevronForward, keypad, shareSocialOutline, pulse, water, pulseOutline, heart, scale,
   checkmarkCircle, medicalOutline, calendarOutline, trash, documentText, download, settingsOutline
 } from 'ionicons/icons';
-import { AuthService } from '../../../core/auth.service';
+import { AuthService, Profile } from '../../../core/auth.service';
 import { SharingService, ProviderLink } from '../../../core/sharing.service';
 import { ProfileService } from '../../../core/profile.service';
 import { DateFormatService } from '../../../core/date-format.service';
@@ -128,7 +128,9 @@ export class PatientConnectPage implements OnInit {
 
   async doRefresh(event: any) {
     await this.loadProviders();
-    event.target.complete();
+    if (event.detail) {
+      event.detail.complete();
+    }
   }
 
   async shareViaOS() {
@@ -150,14 +152,17 @@ export class PatientConnectPage implements OnInit {
     this.showCodeModal = true;
   }
 
-  onCodeInput(event: any) {
+  onCodeInput(event: Event) {
     // Only allow numeric input
-    const value = event.target.value.replace(/\D/g, '').slice(0, 6);
+    const target = event.target as HTMLInputElement;
+    if (!target) return;
+    
+    const value = target.value.replace(/\D/g, '').slice(0, 6);
     this.code = value;
     
     // Update the input value to ensure it's synced
-    if (event.target.value !== value) {
-      event.target.value = value;
+    if (target.value !== value) {
+      target.value = value;
     }
   }
 
@@ -247,7 +252,7 @@ export class PatientConnectPage implements OnInit {
         });
         await alert.present();
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       // Catch any unexpected errors
       const alert = await this.alertController.create({
         header: this.translate.instant('CONNECT.ERROR_TITLE') || 'Error',
@@ -260,13 +265,13 @@ export class PatientConnectPage implements OnInit {
     }
   }
 
-  showProviderDetails(provider: ProviderLink & { providerProfile?: any }) {
+  showProviderDetails(provider: ProviderLink & { providerProfile?: Profile }) {
     this.selectedProvider = provider;
     this.showProviderDetail = true;
   }
 
   async updateSharing(linkId: string, field: keyof ProviderLink, value: boolean) {
-    const updates: any = { [field]: value };
+    const updates: Partial<ProviderLink> = { [field]: value };
     await this.sharingService.updateSharing(linkId, updates);
     await this.loadProviders();
   }
@@ -350,9 +355,10 @@ export class PatientConnectPage implements OnInit {
       });
       await toast.present();
       this.showPdfExportModal = false;
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       const toast = await this.toastController.create({
-        message: error.message || this.translate.instant('CONNECT.PDF_EXPORT_ERROR') || 'Error generating PDF',
+        message: errorMessage || this.translate.instant('CONNECT.PDF_EXPORT_ERROR') || 'Error generating PDF',
         duration: 3000,
         color: 'danger',
       });

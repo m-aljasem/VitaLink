@@ -6,7 +6,7 @@
       </ion-button>
     </ion-buttons>
     <ion-text *ngIf="patientProfile" class="header-title">
-      {{ patientProfile.first_name }} {{ patientProfile.last_name }}
+      {{ ((patientProfile.first_name || '') + ' ' + (patientProfile.last_name || '')).trim() }}
     </ion-text>
   </ion-toolbar>
 </ion-header>

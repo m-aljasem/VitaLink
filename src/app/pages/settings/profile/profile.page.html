@@ -89,7 +89,7 @@
               (countrySelected)="onCountrySelected($event)"
               style="width: 100%; display: block;"
               [excludeCountries] = "['IL']"
-              [searchAllLanguages]="true"
+              git
             ></ng-country-select>
           </ion-item>
 
@@ -122,9 +122,11 @@
       </ion-card-content>
     </ion-card>
 
-    <ion-button expand="block" (click)="save()" class="save-button">
-      <ion-icon name="checkmark-circle" slot="start"></ion-icon>
-      {{ 'COMMON.SAVE' | translate }}
+    <ion-button expand="block" (click)="save()" class="save-button" [disabled]="saving">
+      <ion-spinner *ngIf="saving" name="crescent" slot="start"></ion-spinner>
+      <ion-icon *ngIf="!saving" name="checkmark-circle" slot="start"></ion-icon>
+      <span *ngIf="!saving">{{ 'COMMON.SAVE' | translate }}</span>
+      <span *ngIf="saving">{{ 'COMMON.SAVING' | translate }}</span>
     </ion-button>
   </div>
 </ion-content>

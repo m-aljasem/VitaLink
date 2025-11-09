@@ -9,7 +9,7 @@ import { addIcons } from 'ionicons';
 import { qrCode, share, people, peopleOutline, person, timeOutline, closeCircle, copy, checkmark } from 'ionicons/icons';
 import { AuthService } from '../../../core/auth.service';
 import { SharingService, ProviderLink, LinkToken } from '../../../core/sharing.service';
-import { ProfileService } from '../../../core/profile.service';
+import { ProfileService, Profile } from '../../../core/profile.service';
 import { getSupabaseClient } from '../../../core/supabase.client';
 import { RealtimeChannel } from '@supabase/supabase-js';
 
@@ -25,16 +25,16 @@ import { RealtimeChannel } from '@supabase/supabase-js';
   ],
 })
 export class ProviderConnectPage implements OnInit, OnDestroy {
-  patients: (ProviderLink & { patientProfile?: any })[] = [];
+  patients: (ProviderLink & { patientProfile?: Profile })[] = [];
   currentToken: LinkToken | null = null;
-  tokenExpiryTimer: any;
+  tokenExpiryTimer: ReturnType<typeof setInterval> | null = null;
   timeRemaining = 0;
   loading = true;
   generatingCode = false;
   codeCopied = false;
   tokenSubscription: RealtimeChannel | null = null;
   tokenCardFading = false;
-  tokenPollingInterval: any = null;
+  tokenPollingInterval: ReturnType<typeof setInterval> | null = null;
 
   constructor(
     private authService: AuthService,
@@ -54,12 +54,14 @@ export class ProviderConnectPage implements OnInit, OnDestroy {
   ngOnDestroy() {
     if (this.tokenExpiryTimer) {
       clearInterval(this.tokenExpiryTimer);
+      this.tokenExpiryTimer = null;
     }
     if (this.tokenSubscription) {
       this.tokenSubscription.unsubscribe();
     }
     if (this.tokenPollingInterval) {
       clearInterval(this.tokenPollingInterval);
+      this.tokenPollingInterval = null;
     }
   }
 
@@ -79,7 +81,7 @@ export class ProviderConnectPage implements OnInit, OnDestroy {
           if (error) {
             console.error('Error loading patient profile:', error);
           }
-          return { ...link, patientProfile: profile || null };
+          return { ...link, patientProfile: profile || undefined };
         })
       );
     } else {
@@ -90,7 +92,9 @@ export class ProviderConnectPage implements OnInit, OnDestroy {
 
   async doRefresh(event: any) {
     await this.loadPatients();
-    event.target.complete();
+    if (event.detail) {
+      event.detail.complete();
+    }
   }
 
   async generateCode() {
@@ -443,11 +447,15 @@ export class ProviderConnectPage implements OnInit, OnDestroy {
   startExpiryTimer() {
     if (this.tokenExpiryTimer) {
       clearInterval(this.tokenExpiryTimer);
+      this.tokenExpiryTimer = null;
     }
 
     this.tokenExpiryTimer = setInterval(() => {
       if (!this.currentToken) {
-        clearInterval(this.tokenExpiryTimer);
+        if (this.tokenExpiryTimer) {
+          clearInterval(this.tokenExpiryTimer);
+          this.tokenExpiryTimer = null;
+        }
         return;
       }
 
@@ -459,7 +467,9 @@ export class ProviderConnectPage implements OnInit, OnDestroy {
 
       if (remaining === 0) {
         this.currentToken = null;
-        clearInterval(this.tokenExpiryTimer);
+        if (this.tokenExpiryTimer) {
+          clearInterval(this.tokenExpiryTimer);
+        }
       }
     }, 1000);
   }

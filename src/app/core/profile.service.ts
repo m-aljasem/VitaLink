@@ -27,7 +27,7 @@ export class ProfileService {
     return this.syncService;
   }
 
-  async createProfile(profile: Partial<Profile>): Promise<{ data?: Profile; error?: any }> {
+  async createProfile(profile: Partial<Profile>): Promise<{ data?: Profile; error?: Error | null }> {
     const fullProfile = profile as Profile;
 
     // Always save to offline storage first
@@ -54,7 +54,7 @@ export class ProfileService {
     return { data: fullProfile, error: null };
   }
 
-  async updateProfile(userId: string, updates: Partial<Profile>): Promise<{ data?: Profile; error?: any }> {
+  async updateProfile(userId: string, updates: Partial<Profile>): Promise<{ data?: Profile; error?: Error | null }> {
     // Get existing profile from offline storage
     const existingProfile = await this.offlineStorage.getProfile(userId);
     const updatedProfile = { ...existingProfile, ...updates } as Profile;
@@ -74,16 +74,18 @@ export class ProfileService {
 
         if (!error && data) {
           await this.offlineStorage.saveProfile(data as Profile);
-          return { data: data as Profile, error };
+          return { data: data as Profile, error: null };
         } else {
           // Queue for sync
           await this.getSyncService().queueForSync('profiles', 'update', updates);
-          return { data: updatedProfile, error };
+          const updateError = error instanceof Error ? error : new Error('Update failed');
+          return { data: updatedProfile, error: updateError };
         }
       } catch (err) {
         // Queue for sync
         await this.getSyncService().queueForSync('profiles', 'update', updates);
-        return { data: updatedProfile, error: err };
+        const error = err instanceof Error ? err : new Error('Unknown error');
+        return { data: updatedProfile, error };
       }
     } else {
       // Queue for sync when back online
@@ -92,7 +94,7 @@ export class ProfileService {
     }
   }
 
-  async getProfile(userId: string): Promise<{ data?: Profile; error?: any }> {
+  async getProfile(userId: string): Promise<{ data?: Profile; error?: Error | null }> {
     // Try to get from server if online
     if (this.networkService.isOnline()) {
       try {

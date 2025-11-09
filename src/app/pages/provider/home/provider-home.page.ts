@@ -15,7 +15,7 @@ import {
 import { AuthService, Profile } from '../../../core/auth.service';
 import { SharingService, ProviderLink } from '../../../core/sharing.service';
 import { ProfileService } from '../../../core/profile.service';
-import { ObservationService } from '../../../core/observation.service';
+import { ObservationService, MetricType } from '../../../core/observation.service';
 import { DateFormatService } from '../../../core/date-format.service';
 import { I18nService } from '../../../core/i18n.service';
 
@@ -125,7 +125,7 @@ export class ProviderHomePage implements OnInit {
           // Get most recent observation across all shared metrics
           const observations = await Promise.all(
             sharedMetrics.map(metric =>
-              this.observationService.getLatestObservation(link.patient_id, metric as any)
+              this.observationService.getLatestObservation(link.patient_id, metric as MetricType)
             )
           );
           
@@ -166,7 +166,9 @@ export class ProviderHomePage implements OnInit {
 
   async doRefresh(event: any) {
     await this.loadData();
-    event.target.complete();
+    if (event.detail) {
+      event.detail.complete();
+    }
   }
 
   navigateToPatient(patientId: string) {
@@ -198,7 +200,7 @@ export class ProviderHomePage implements OnInit {
     return icons[metric] || 'ellipse';
   }
 
-  onSearchChange(event: any) {
+  onSearchChange(event: CustomEvent) {
     this.searchTerm = event.detail.value || '';
     this.filterPatients();
   }

@@ -218,10 +218,26 @@ export class OnboardingPage implements OnInit {
     };
 
     // Update existing profile or create new one
-    if (existingProfile.data) {
-      await this.profileService.updateProfile(this.user.id, profileData);
-    } else {
-      await this.profileService.createProfile(profileData);
+    try {
+      if (existingProfile.data) {
+        const { error } = await this.profileService.updateProfile(this.user.id, profileData);
+        if (error) {
+          console.error('Error updating profile:', error);
+          this.loading = false;
+          return;
+        }
+      } else {
+        const { error } = await this.profileService.createProfile(profileData);
+        if (error) {
+          console.error('Error creating profile:', error);
+          this.loading = false;
+          return;
+        }
+      }
+    } catch (error) {
+      console.error('Error saving profile:', error);
+      this.loading = false;
+      return;
     }
 
     // Save initial observations (only if values are valid)

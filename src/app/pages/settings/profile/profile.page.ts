@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import {
   IonContent, IonButton, IonInput, IonItem, IonLabel,
-  IonSelect, IonSelectOption, IonChip, ToastController, IonCard, IonCardContent, IonIcon
+  IonSelect, IonSelectOption, IonChip, ToastController, IonCard, IonCardContent, IonIcon, IonSpinner
 } from '@ionic/angular/standalone';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { CommonModule } from '@angular/common';
@@ -23,7 +23,7 @@ import { CountrySelectComponent, Country } from '@wlucha/ng-country-select';
   imports: [
     CommonModule, FormsModule,
     IonContent, IonButton, IonInput, IonItem, IonLabel,
-    IonChip, IonCard, IonCardContent, IonIcon, TranslateModule,
+    IonChip, IonCard, IonCardContent, IonIcon, IonSpinner, TranslateModule,
     CountrySelectComponent
   ],
 })
@@ -81,12 +81,36 @@ export class ProfilePage implements OnInit {
     this.router.navigate(['/tabs/settings']);
   }
 
+  saving = false;
+
   async save() {
-    if (!this.profile) return;
+    if (!this.profile || this.saving) return;
+
+    // Validate first name
+    if (!this.editedProfile.first_name || this.editedProfile.first_name.trim().length === 0) {
+      const toast = await this.toastController.create({
+        message: this.translate.instant('SETTINGS.FIRST_NAME_REQUIRED') || 'First name is required',
+        duration: 2000,
+        color: 'danger',
+      });
+      await toast.present();
+      return;
+    }
+
+    // Validate last name
+    if (!this.editedProfile.last_name || this.editedProfile.last_name.trim().length === 0) {
+      const toast = await this.toastController.create({
+        message: this.translate.instant('SETTINGS.LAST_NAME_REQUIRED') || 'Last name is required',
+        duration: 2000,
+        color: 'danger',
+      });
+      await toast.present();
+      return;
+    }
 
     // Validate age if provided
     if (this.editedProfile.age !== null && this.editedProfile.age !== undefined) {
-      if (this.editedProfile.age < 0 || this.editedProfile.age > 150) {
+      if (this.editedProfile.age < 0 || this.editedProfile.age > 150 || !Number.isInteger(this.editedProfile.age)) {
         const toast = await this.toastController.create({
           message: this.translate.instant('SETTINGS.AGE_RANGE_ERROR') || 'Age must be between 0 and 150',
           duration: 2000,
@@ -97,26 +121,39 @@ export class ProfilePage implements OnInit {
       }
     }
 
-    const { error } = await this.profileService.updateProfile(this.profile.id, this.editedProfile);
+    this.saving = true;
 
-    if (error) {
+    try {
+      const { error } = await this.profileService.updateProfile(this.profile.id, this.editedProfile);
+
+      if (error) {
+        const toast = await this.toastController.create({
+          message: this.translate.instant('SETTINGS.UPDATE_PROFILE_ERROR') || 'Failed to update profile',
+          duration: 2000,
+          color: 'danger',
+        });
+        await toast.present();
+      } else {
+        const toast = await this.toastController.create({
+          message: this.translate.instant('SETTINGS.UPDATE_PROFILE_SUCCESS') || 'Profile updated successfully',
+          duration: 2000,
+          color: 'success',
+        });
+        await toast.present();
+        await this.authService.loadProfile(this.profile.id);
+        // Clear date format cache so locale updates if country changed
+        this.dateFormatService.clearCache();
+        this.router.navigate(['/tabs/settings'], { replaceUrl: true });
+      }
+    } catch (error) {
       const toast = await this.toastController.create({
-        message: this.translate.instant('SETTINGS.UPDATE_PROFILE_ERROR'),
+        message: this.translate.instant('SETTINGS.UPDATE_PROFILE_ERROR') || 'Failed to update profile',
         duration: 2000,
         color: 'danger',
       });
       await toast.present();
-    } else {
-      const toast = await this.toastController.create({
-        message: this.translate.instant('SETTINGS.UPDATE_PROFILE_SUCCESS'),
-        duration: 2000,
-        color: 'success',
-      });
-      await toast.present();
-      await this.authService.loadProfile(this.profile.id);
-      // Clear date format cache so locale updates if country changed
-      this.dateFormatService.clearCache();
-      this.router.navigate(['/tabs/settings'], { replaceUrl: true });
+    } finally {
+      this.saving = false;
     }
   }
 }

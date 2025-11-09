@@ -14,7 +14,7 @@ import {
 } from 'ionicons/icons';
 import { AuthService, Profile } from '../../core/auth.service';
 import { ProfileService } from '../../core/profile.service';
-import { I18nService } from '../../core/i18n.service';
+import { I18nService, SupportedLanguage } from '../../core/i18n.service';
 import { ReminderService } from '../../core/reminder.service';
 import { PwaUpdateService } from '../../core/pwa-update.service';
 
@@ -64,8 +64,9 @@ export class SettingsPage implements OnInit {
   }
 
   async changeLanguage(lang: string) {
-    this.i18nService.setLanguage(lang as any);
-    this.currentLanguage = lang;
+    const supportedLang = this.isValidLanguage(lang) ? lang as SupportedLanguage : 'en';
+    this.i18nService.setLanguage(supportedLang);
+    this.currentLanguage = supportedLang;
     
     // Update profile
     if (this.profile) {
@@ -100,6 +101,11 @@ export class SettingsPage implements OnInit {
     });
 
     await alert.present();
+  }
+
+  private isValidLanguage(lang: string): lang is SupportedLanguage {
+    const validLanguages: SupportedLanguage[] = ['en', 'es', 'fr', 'de', 'ar', 'fa', 'ur', 'zh', 'ja'];
+    return validLanguages.includes(lang as SupportedLanguage);
   }
 
   async checkForUpdate() {

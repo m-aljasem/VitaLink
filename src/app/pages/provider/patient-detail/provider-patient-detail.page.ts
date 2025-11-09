@@ -137,7 +137,9 @@ export class ProviderPatientDetailPage implements OnInit {
 
   async doRefresh(event: any) {
     await this.loadData(false);
-    event.target.complete();
+    if (event.detail) {
+      event.detail.complete();
+    }
   }
 
   getSharingStatus(metric: MetricType): boolean {

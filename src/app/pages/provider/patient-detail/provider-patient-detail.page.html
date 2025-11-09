@@ -23,7 +23,14 @@
               <ion-icon [name]="getGenderIcon()" class="avatar-icon"></ion-icon>
             </div>
             <div class="patient-info">
-              <h2 class="patient-name">{{ patientProfile.first_name }} {{ patientProfile.last_name }}</h2>
+              <h2 class="patient-name">
+                <span *ngIf="patientProfile.first_name || patientProfile.last_name">
+                  {{ (patientProfile.first_name || '') + ' ' + (patientProfile.last_name || '') }}
+                </span>
+                <span *ngIf="!patientProfile.first_name && !patientProfile.last_name">
+                  Patient {{ patientProfile.id.substring(0, 8) }}
+                </span>
+              </h2>
               <div class="patient-details">
                 <div class="detail-item" *ngIf="patientProfile.age">
                   <ion-icon name="calendar-outline"></ion-icon>

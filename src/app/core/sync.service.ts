@@ -5,7 +5,7 @@ import { ProfileService } from './profile.service';
 import { ObservationService } from './observation.service';
 import { SharingService } from './sharing.service';
 import { ReminderService } from './reminder.service';
-import { AuthService } from './auth.service';
+import { AuthService, Profile } from './auth.service';
 
 @Injectable({
   providedIn: 'root',
@@ -96,7 +96,7 @@ export class SyncService {
             .single();
           
           if (!error && data) {
-            await this.offlineStorage.saveProfile(data as any);
+            await this.offlineStorage.saveProfile(data as Profile);
           } else {
             throw error || new Error('Profile update failed');
           }
@@ -113,7 +113,7 @@ export class SyncService {
             .single();
           
           if (!error && data) {
-            await this.offlineStorage.saveObservation(data as any);
+            await this.offlineStorage.saveObservation(data);
           } else {
             throw error || new Error('Observation create failed');
           }
