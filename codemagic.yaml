@@ -1,0 +1,54 @@
+workflows:
+  vitalink-android-workflow:
+    name: VitaLink Android Build
+    max_build_duration: 120
+    instance_type: mac_mini_m2
+    environment:
+      android_signing:
+        - keystore_reference
+      groups:
+        - Supabase Group
+      vars:
+        PACKAGE_NAME: "org.aljasem.vitalink"
+      node: 20.18.0
+    triggering:
+      events:
+        - push
+        - tag
+      branch_patterns:
+        - pattern: main
+          include: true
+          source: true
+        - pattern: develop
+          include: true
+          source: true
+    scripts:
+      - name: Set Android SDK location
+        script: |
+          echo "sdk.dir=$ANDROID_SDK_ROOT" > "$CM_BUILD_DIR/android/local.properties"
+      - name: Install npm dependencies for Ionic project
+        script: |
+          npm install
+      - name: Compile web code to www folder
+        script: npm run build -- --configuration production
+      - name: Update dependencies and copy web assets to native project
+        script: |
+          # npx cap copy # <- use this is you don't need to update native dependencies
+          npx cap sync # <- update native dependencies and copy web assets to native project
+      - name: Build Android release APK
+        script: |
+          # BUILD_NUMBER is a Codemagic built-in variable tracking the number
+          # of times this workflow has been built
+          cd $CM_BUILD_DIR/android
+          ./gradlew assembleRelease \
+            -PversionCode=$BUILD_NUMBER \
+            -PversionName=0.0.1.$BUILD_NUMBER
+    artifacts:
+      - android/app/build/outputs/**/*.apk
+    publishing:
+      email:
+        recipients:
+          ionic-builds@blondmail.com
+        notify:
+          success: true
+          failure: true
