@@ -61,6 +61,32 @@ export class I18nService {
     return this.currentLanguage$.value;
   }
 
+  /**
+   * Get language code for country selector component
+   * Maps app languages to country selector supported languages
+   * Country selector supports: English, French, Spanish, Italian, German, Arabic, Chinese, Hindi, Bengali, Portuguese, Russian
+   * 
+   * Mapping strategy:
+   * - Direct matches: en, es, fr, de, ar, zh → use as-is
+   * - All other languages → fallback to English
+   */
+  getCountrySelectorLanguage(): string {
+    const currentLang = this.getCurrentLanguage();
+    
+    // Direct mappings (supported by country selector)
+    const supportedLanguages: Record<string, string> = {
+      'en': 'en', // English
+      'es': 'es', // Spanish
+      'fr': 'fr', // French
+      'de': 'de', // German
+      'ar': 'ar', // Arabic
+      'zh': 'zh', // Chinese
+    };
+
+    // Return supported language or fallback to English
+    return supportedLanguages[currentLang] || 'en';
+  }
+
   isRTL(): boolean {
     return this.rtlLanguages.includes(this.currentLanguage$.value);
   }

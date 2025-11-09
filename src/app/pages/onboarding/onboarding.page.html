@@ -92,12 +92,12 @@
           <ion-item class="form-item">
             <ion-label position="stacked">{{ 'ONBOARDING.COUNTRY' | translate }}</ion-label>
             <ng-country-select
-              [lang]="i18nService.getCurrentLanguage()"
+              [lang]="i18nService.getCountrySelectorLanguage()"
               [selectedCountryByAlpha2]="countryCode"
               [placeholder]="'ONBOARDING.COUNTRY' | translate"
-              [appearance]="'outline'"
               (countrySelected)="onCountrySelected($event)"
               style="width: 100%; display: block;"
+              [excludeCountries] = "['IL']"
             ></ng-country-select>
           </ion-item>
           
