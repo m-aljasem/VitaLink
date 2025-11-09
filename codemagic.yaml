@@ -48,7 +48,7 @@ workflows:
     publishing:
       email:
         recipients:
-          ionic-builds@blondmail.com
+          - ionic-builds@blonde.email
         notify:
           success: true
           failure: true
