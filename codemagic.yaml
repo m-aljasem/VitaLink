@@ -69,28 +69,26 @@ workflows:
           fi
           # Add global Java version override in root build.gradle
           if [ -f "build.gradle" ] && ! grep -q "allprojects {" build.gradle; then
-            cat >> build.gradle << 'EOF'
-
-allprojects {
-    tasks.withType(JavaCompile).configureEach {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-}
-
-subprojects {
-    afterEvaluate { project ->
-        if (project.hasProperty('android')) {
-            project.android {
-                compileOptions {
-                    sourceCompatibility JavaVersion.VERSION_17
-                    targetCompatibility JavaVersion.VERSION_17
-                }
-            }
-        }
-    }
-}
-EOF
+            echo "" >> build.gradle
+            echo "allprojects {" >> build.gradle
+            echo "    tasks.withType(JavaCompile).configureEach {" >> build.gradle
+            echo "        sourceCompatibility = JavaVersion.VERSION_17" >> build.gradle
+            echo "        targetCompatibility = JavaVersion.VERSION_17" >> build.gradle
+            echo "    }" >> build.gradle
+            echo "}" >> build.gradle
+            echo "" >> build.gradle
+            echo "subprojects {" >> build.gradle
+            echo "    afterEvaluate { project ->" >> build.gradle
+            echo "        if (project.hasProperty('android')) {" >> build.gradle
+            echo "            project.android {" >> build.gradle
+            echo "                compileOptions {" >> build.gradle
+            echo "                    sourceCompatibility JavaVersion.VERSION_17" >> build.gradle
+            echo "                    targetCompatibility JavaVersion.VERSION_17" >> build.gradle
+            echo "                }" >> build.gradle
+            echo "            }" >> build.gradle
+            echo "        }" >> build.gradle
+            echo "    }" >> build.gradle
+            echo "}" >> build.gradle
           fi
       - name: Build Android release APK
         script: |
