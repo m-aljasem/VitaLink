@@ -47,7 +47,18 @@ workflows:
           echo "sdk.dir=$ANDROID_SDK_ROOT" > "$CM_BUILD_DIR/android/local.properties"
       - name: Configure Java version for Android build
         script: |
-          cd $CM_BUILD_DIR/android
+          cd $CM_BUILD_DIR
+          # Find and patch ALL build.gradle files in node_modules/@capacitor packages
+          find node_modules/@capacitor -name "build.gradle" -type f | while read file; do
+            if [ -f "$file" ]; then
+              sed -i.bak 's/JavaVersion\.VERSION_21/JavaVersion.VERSION_17/g' "$file"
+              sed -i.bak 's/JavaLanguageVersion\.of(21)/JavaLanguageVersion.of(17)/g' "$file"
+              sed -i.bak 's/sourceCompatibility.*21/sourceCompatibility JavaVersion.VERSION_17/g' "$file"
+              sed -i.bak 's/targetCompatibility.*21/targetCompatibility JavaVersion.VERSION_17/g' "$file"
+              rm -f "${file}.bak"
+            fi
+          done
+          cd android
           # Update app/build.gradle to use Java 17
           if [ -f "app/build.gradle" ]; then
             sed -i.bak 's/JavaVersion\.VERSION_21/JavaVersion.VERSION_17/g' app/build.gradle
@@ -60,20 +71,35 @@ workflows:
             sed -i.bak 's/JavaLanguageVersion\.of(21)/JavaLanguageVersion.of(17)/g' build.gradle
             rm -f build.gradle.bak
           fi
-          # Patch Capacitor Android plugin's build.gradle (in node_modules)
-          CAPACITOR_ANDROID_BUILD_GRADLE="$CM_BUILD_DIR/node_modules/@capacitor/android/android/build.gradle"
-          if [ -f "$CAPACITOR_ANDROID_BUILD_GRADLE" ]; then
-            sed -i.bak 's/JavaVersion\.VERSION_21/JavaVersion.VERSION_17/g' "$CAPACITOR_ANDROID_BUILD_GRADLE"
-            sed -i.bak 's/JavaLanguageVersion\.of(21)/JavaLanguageVersion.of(17)/g' "$CAPACITOR_ANDROID_BUILD_GRADLE"
-            rm -f "$CAPACITOR_ANDROID_BUILD_GRADLE.bak"
-          fi
-          # Add global Java version override in root build.gradle
+          # Create Gradle init script to force Java 17 globally (in android directory)
+          mkdir -p android/.gradle/init.d
+          echo "allprojects {" > android/.gradle/init.d/java17.gradle
+          echo "    tasks.withType(JavaCompile).configureEach {" >> android/.gradle/init.d/java17.gradle
+          echo "        sourceCompatibility = JavaVersion.VERSION_17" >> android/.gradle/init.d/java17.gradle
+          echo "        targetCompatibility = JavaVersion.VERSION_17" >> android/.gradle/init.d/java17.gradle
+          echo "        options.release = 17" >> android/.gradle/init.d/java17.gradle
+          echo "    }" >> android/.gradle/init.d/java17.gradle
+          echo "}" >> android/.gradle/init.d/java17.gradle
+          echo "subprojects {" >> android/.gradle/init.d/java17.gradle
+          echo "    afterEvaluate { project ->" >> android/.gradle/init.d/java17.gradle
+          echo "        if (project.hasProperty('android')) {" >> android/.gradle/init.d/java17.gradle
+          echo "            project.android {" >> android/.gradle/init.d/java17.gradle
+          echo "                compileOptions {" >> android/.gradle/init.d/java17.gradle
+          echo "                    sourceCompatibility JavaVersion.VERSION_17" >> android/.gradle/init.d/java17.gradle
+          echo "                    targetCompatibility JavaVersion.VERSION_17" >> android/.gradle/init.d/java17.gradle
+          echo "                }" >> android/.gradle/init.d/java17.gradle
+          echo "            }" >> android/.gradle/init.d/java17.gradle
+          echo "        }" >> android/.gradle/init.d/java17.gradle
+          echo "    }" >> android/.gradle/init.d/java17.gradle
+          echo "}" >> android/.gradle/init.d/java17.gradle
+          # Add global Java version override in root build.gradle as backup
           if [ -f "build.gradle" ] && ! grep -q "allprojects {" build.gradle; then
             echo "" >> build.gradle
             echo "allprojects {" >> build.gradle
             echo "    tasks.withType(JavaCompile).configureEach {" >> build.gradle
             echo "        sourceCompatibility = JavaVersion.VERSION_17" >> build.gradle
             echo "        targetCompatibility = JavaVersion.VERSION_17" >> build.gradle
+            echo "        options.release = 17" >> build.gradle
             echo "    }" >> build.gradle
             echo "}" >> build.gradle
             echo "" >> build.gradle
