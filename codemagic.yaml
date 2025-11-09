@@ -45,6 +45,25 @@ workflows:
         script: |
           mkdir -p "$CM_BUILD_DIR/android"
           echo "sdk.dir=$ANDROID_SDK_ROOT" > "$CM_BUILD_DIR/android/local.properties"
+      - name: Configure Java version for Android build
+        script: |
+          cd $CM_BUILD_DIR/android
+          # Update app/build.gradle to use Java 17 instead of Java 21
+          if [ -f "app/build.gradle" ]; then
+            # Replace Java 21 with Java 17
+            sed -i.bak 's/JavaVersion\.VERSION_21/JavaVersion.VERSION_17/g' app/build.gradle
+            sed -i.bak 's/JavaLanguageVersion\.of(21)/JavaLanguageVersion.of(17)/g' app/build.gradle
+            rm -f app/build.gradle.bak
+          fi
+          # Update build.gradle (project level) if needed
+          if [ -f "build.gradle" ]; then
+            sed -i.bak 's/JavaLanguageVersion\.of(21)/JavaLanguageVersion.of(17)/g' build.gradle
+            rm -f build.gradle.bak
+          fi
+          # Update any other gradle files that might reference Java 21
+          find . -name "*.gradle" -type f -exec sed -i.bak 's/JavaVersion\.VERSION_21/JavaVersion.VERSION_17/g' {} \; 2>/dev/null || true
+          find . -name "*.gradle" -type f -exec sed -i.bak 's/JavaLanguageVersion\.of(21)/JavaLanguageVersion.of(17)/g' {} \; 2>/dev/null || true
+          find . -name "*.gradle.bak" -type f -delete 2>/dev/null || true
       - name: Build Android release APK
         script: |
           # BUILD_NUMBER is a Codemagic built-in variable tracking the number
