@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import {
   IonContent, IonButton, IonCard, IonCardContent,
-  IonText, ToastController, AlertController, IonIcon, IonSpinner
+  IonText, ToastController, AlertController, IonIcon, IonSpinner, IonRefresher, IonRefresherContent
 } from '@ionic/angular/standalone';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { CommonModule } from '@angular/common';
@@ -21,7 +21,7 @@ import { RealtimeChannel } from '@supabase/supabase-js';
   imports: [
     CommonModule,
     IonContent, IonButton, IonCard, IonCardContent,
-    IonText, IonIcon, IonSpinner, TranslateModule
+    IonText, IonIcon, IonSpinner, IonRefresher, IonRefresherContent, TranslateModule
   ],
 })
 export class ProviderConnectPage implements OnInit, OnDestroy {
@@ -82,8 +82,15 @@ export class ProviderConnectPage implements OnInit, OnDestroy {
           return { ...link, patientProfile: profile || null };
         })
       );
+    } else {
+      this.patients = [];
     }
     this.loading = false;
+  }
+
+  async doRefresh(event: any) {
+    await this.loadPatients();
+    event.target.complete();
   }
 
   async generateCode() {

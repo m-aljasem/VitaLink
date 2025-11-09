@@ -1,4 +1,8 @@
-<ion-content [fullscreen]="true" class="patient-connect-content">
+<ion-content [fullscreen]="true" class="patient-connect-content" style="--background: linear-gradient(180deg, #f0f4ff 0%, #ffffff 100%);">
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
   <div class="connect-container ion-padding">
     <div class="connect-header">
       <div class="header-icon">

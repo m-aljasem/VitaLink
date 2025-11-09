@@ -1,5 +1,123 @@
 .patient-connect-content {
   --background: linear-gradient(180deg, #f0f4ff 0%, #ffffff 100%);
+  background: #f2f6ff !important;
+  background-color: #f2f6ff !important;
+  
+  // Override scroll content background
+  &::part(scroll) {
+    background: #f2f6ff !important;
+  }
+  
+  &::part(native) {
+    background: #f2f6ff !important;
+  }
+  
+  // Make scroll content match when refresher is present
+  &.has-refresher {
+    .scroll-content {
+      background: #f2f6ff !important;
+      background-color: #f2f6ff !important;
+    }
+  }
+
+  // Target the refresher and its content with multiple selectors
+  ion-refresher {
+    background: #f2f6ff !important;
+    background-color: #f2f6ff !important;
+    
+    &::part(native) {
+      background: #f2f6ff !important;
+    }
+  }
+
+  ion-refresher-content {
+    background: transparent !important;
+    background-color: transparent !important;
+    
+    &::part(native) {
+      background: transparent !important;
+    }
+    
+    // Ensure spinner icon is visible
+    &::part(icon) {
+      color: var(--ion-color-primary) !important;
+      opacity: 1 !important;
+      z-index: 9999 !important;
+    }
+    
+    // Ensure spinner container is visible
+    .refresher-pulling-icon,
+    .refresher-refreshing-icon {
+      opacity: 1 !important;
+      visibility: visible !important;
+      z-index: 9999 !important;
+    }
+    
+    // Target the actual spinner element
+    ion-spinner {
+      opacity: 1 !important;
+      visibility: visible !important;
+      z-index: 9999 !important;
+    }
+  }
+
+  // Deep selectors for internal elements
+  ::ng-deep {
+    .scroll-content {
+      background: #f2f6ff !important;
+      background-color: #f2f6ff !important;
+    }
+    
+    ion-refresher {
+      background: #f2f6ff !important;
+      background-color: #f2f6ff !important;
+      
+      .refresher-pulling,
+      .refresher-refreshing {
+        background: #f2f6ff !important;
+        background-color: #f2f6ff !important;
+      }
+      
+      // Ensure spinner icons are visible
+      .refresher-pulling-icon,
+      .refresher-refreshing-icon {
+        opacity: 1 !important;
+        visibility: visible !important;
+        color: var(--ion-color-primary) !important;
+        z-index: 9999 !important;
+      }
+      
+      ion-icon {
+        opacity: 1 !important;
+        visibility: visible !important;
+        color: var(--ion-color-primary) !important;
+        z-index: 9999 !important;
+      }
+      
+      ion-spinner {
+        opacity: 1 !important;
+        visibility: visible !important;
+        z-index: 9999 !important;
+      }
+    }
+    
+    // Target any gaps or overlays
+    .refresher-native {
+      background: #f2f6ff !important;
+      background-color: #f2f6ff !important;
+    }
+    
+    // Fix any white gaps in the content area
+    .inner-scroll {
+      background: #f2f6ff !important;
+      background-color: #f2f6ff !important;
+    }
+  }
+  
+  // Ensure the content wrapper also has the background
+  .connect-container {
+    background: transparent;
+  }
 }
 
 .connect-container {
@@ -678,3 +796,4 @@
     font-size: 2.5rem;
   }
 }
+

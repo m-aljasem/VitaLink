@@ -1,0 +1,143 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="goBack()">
+        <ion-icon name="arrow-back" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-text *ngIf="patientProfile" class="header-title">
+      {{ patientProfile.first_name }} {{ patientProfile.last_name }}
+    </ion-text>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding" [style.--metric-color]="chartColor">
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <div class="metric-detail-container" *ngIf="!loading">
+    <!-- Metric Header -->
+    <div class="metric-header">
+      <div class="metric-icon-wrapper" [style.background-color]="chartColor + '20'">
+        <ion-icon [name]="getMetricIcon()" [style.color]="chartColor"></ion-icon>
+      </div>
+      <div class="metric-info">
+        <h1 class="metric-title">{{ 'METRICS.' + metric.toUpperCase() | translate }}</h1>
+        <p class="metric-subtitle">{{ observations.length }} {{ 'PROVIDER.RECORDS' | translate }}</p>
+      </div>
+    </div>
+
+    <!-- Chart Section -->
+    <ion-card class="chart-card" *ngIf="chartData.length > 0">
+      <ion-card-content>
+        <div class="chart-wrapper">
+          <app-line-chart
+            [data]="chartData"
+            [labels]="chartLabels"
+            [color]="chartColor"
+          ></app-line-chart>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- No Chart Data -->
+    <ion-card class="empty-card" *ngIf="chartData.length === 0">
+      <ion-card-content>
+        <div class="empty-state">
+          <ion-icon name="bar-chart-outline" class="empty-icon"></ion-icon>
+          <p>{{ 'HOME.NO_DATA' | translate }}</p>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Records List -->
+    <div class="records-section">
+      <h2 class="section-title">{{ 'METRICS.HISTORY' | translate }}</h2>
+      
+      <div class="records-list" *ngIf="observations.length > 0">
+        <ion-card 
+          *ngFor="let obs of observations" 
+          class="record-card"
+        >
+          <ion-card-content>
+            <div class="record-content">
+              <div class="record-main">
+                <div class="record-value">
+                  <span class="value">{{ formatValue(obs) }}</span>
+                  <span class="unit" *ngIf="obs.unit && obs.metric !== 'bp'">{{ obs.unit }}</span>
+                </div>
+                <div class="record-meta">
+                  <div class="record-date">
+                    <ion-icon name="calendar-outline"></ion-icon>
+                    <span>{{ formatDate(obs.ts) }}</span>
+                  </div>
+                  <div class="record-time">
+                    <ion-icon name="time-outline"></ion-icon>
+                    <span>{{ formatTime(obs.ts) }}</span>
+                  </div>
+                </div>
+              </div>
+              <div class="record-tags" *ngIf="obs.tags && obs.tags.length > 0">
+                <ion-chip *ngFor="let tag of obs.tags" class="tag-chip">
+                  {{ 'TAGS.' + tag | translate }}
+                </ion-chip>
+              </div>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </div>
+
+      <ion-card class="empty-card" *ngIf="observations.length === 0">
+        <ion-card-content>
+          <div class="empty-state">
+            <ion-icon name="document-outline" class="empty-icon"></ion-icon>
+            <p>{{ 'HOME.NO_DATA' | translate }}</p>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+  </div>
+
+  <!-- Skeleton Loading State -->
+  <div class="skeleton-container" *ngIf="loading">
+    <!-- Metric Header Skeleton -->
+    <div class="metric-header skeleton-header">
+      <div class="metric-icon-wrapper skeleton-icon"></div>
+      <div class="metric-info">
+        <div class="skeleton-text skeleton-title"></div>
+        <div class="skeleton-text skeleton-subtitle"></div>
+      </div>
+    </div>
+
+    <!-- Chart Skeleton -->
+    <ion-card class="chart-card skeleton-card">
+      <ion-card-content>
+        <div class="chart-wrapper skeleton-chart"></div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Records Section Skeleton -->
+    <div class="records-section">
+      <div class="skeleton-text skeleton-section-title"></div>
+      <div class="records-list">
+        <ion-card *ngFor="let i of [1,2,3,4,5]" class="record-card skeleton-card">
+          <ion-card-content>
+            <div class="record-content">
+              <div class="record-main">
+                <div class="record-value">
+                  <div class="skeleton-text skeleton-value"></div>
+                </div>
+                <div class="record-meta">
+                  <div class="skeleton-text skeleton-meta"></div>
+                  <div class="skeleton-text skeleton-meta"></div>
+                </div>
+              </div>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </div>
+    </div>
+  </div>
+</ion-content>
+

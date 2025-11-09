@@ -141,3 +141,179 @@ ion-textarea {
     box-shadow: 0 2px 8px rgba(var(--ion-color-primary-rgb), 0.2);
   }
 }
+
+/* Refresher Background - Match page backgrounds */
+ion-content.has-refresher {
+  .scroll-content {
+    background: #f2f6ff !important;
+    background-color: #f2f6ff !important;
+  }
+  
+  .inner-scroll {
+    background: #f2f6ff !important;
+    background-color: #f2f6ff !important;
+  }
+  
+  ion-refresher {
+    background: #f2f6ff !important;
+    background-color: #f2f6ff !important;
+  }
+  
+  ion-refresher-content {
+    background: transparent !important;
+    background-color: transparent !important;
+    
+    // Ensure spinner icon is visible
+    &::part(icon) {
+      color: var(--ion-color-primary) !important;
+      opacity: 1 !important;
+      z-index: 9999 !important;
+    }
+    
+    // Ensure spinner container is visible
+    .refresher-pulling-icon,
+    .refresher-refreshing-icon {
+      opacity: 1 !important;
+      visibility: visible !important;
+      z-index: 9999 !important;
+    }
+    
+    ion-icon {
+      opacity: 1 !important;
+      visibility: visible !important;
+      color: var(--ion-color-primary) !important;
+      z-index: 9999 !important;
+    }
+    
+    ion-spinner {
+      opacity: 1 !important;
+      visibility: visible !important;
+      z-index: 9999 !important;
+    }
+  }
+  
+  // Fix white gaps during pull
+  .refresher-native {
+    background: #f2f6ff !important;
+    background-color: #f2f6ff !important;
+  }
+  
+  // Ensure spinner icons are visible in refresher
+  ion-refresher {
+    .refresher-pulling-icon,
+    .refresher-refreshing-icon {
+      opacity: 1 !important;
+      visibility: visible !important;
+      color: var(--ion-color-primary) !important;
+      z-index: 9999 !important;
+    }
+    
+    ion-icon {
+      opacity: 1 !important;
+      visibility: visible !important;
+      color: var(--ion-color-primary) !important;
+      z-index: 9999 !important;
+    }
+    
+    ion-spinner {
+      opacity: 1 !important;
+      visibility: visible !important;
+      z-index: 9999 !important;
+    }
+  }
+}
+
+/* Additional refresher styling for connect pages */
+.patient-connect-content,
+.provider-connect-content {
+  // Set background on the content element itself
+  background: #f2f6ff !important;
+  background-color: #f2f6ff !important;
+  
+  ion-refresher {
+    background: #f2f6ff !important;
+    background-color: #f2f6ff !important;
+  }
+  
+  ion-refresher-content {
+    background: transparent !important;
+    background-color: transparent !important;
+    
+    // Ensure spinner icon is visible
+    &::part(icon) {
+      color: var(--ion-color-primary) !important;
+      opacity: 1 !important;
+      z-index: 9999 !important;
+    }
+    
+    // Ensure spinner container is visible
+    .refresher-pulling-icon,
+    .refresher-refreshing-icon {
+      opacity: 1 !important;
+      visibility: visible !important;
+      z-index: 9999 !important;
+    }
+    
+    ion-icon {
+      opacity: 1 !important;
+      visibility: visible !important;
+      color: var(--ion-color-primary) !important;
+      z-index: 9999 !important;
+    }
+    
+    ion-spinner {
+      opacity: 1 !important;
+      visibility: visible !important;
+      z-index: 9999 !important;
+    }
+  }
+  
+  ion-refresher {
+    // Ensure spinner icons are visible
+    .refresher-pulling-icon,
+    .refresher-refreshing-icon {
+      opacity: 1 !important;
+      visibility: visible !important;
+      color: var(--ion-color-primary) !important;
+      z-index: 9999 !important;
+    }
+    
+    ion-icon {
+      opacity: 1 !important;
+      visibility: visible !important;
+      color: var(--ion-color-primary) !important;
+      z-index: 9999 !important;
+    }
+    
+    ion-spinner {
+      opacity: 1 !important;
+      visibility: visible !important;
+      z-index: 9999 !important;
+    }
+  }
+  
+  .scroll-content {
+    background: #f2f6ff !important;
+    background-color: #f2f6ff !important;
+  }
+  
+  .inner-scroll {
+    background: #f2f6ff !important;
+    background-color: #f2f6ff !important;
+  }
+  
+  // Target any wrapper or container elements
+  .native-wrapper {
+    background: #f2f6ff !important;
+    background-color: #f2f6ff !important;
+  }
+  
+  // Fix any gaps that appear during pull
+  &::part(scroll) {
+    background: #f2f6ff !important;
+  }
+  
+  &::part(native) {
+    background: #f2f6ff !important;
+  }
+}

@@ -1,76 +1,495 @@
+:host {
+  ion-content {
+    --padding-top: 0.5rem;
+    --padding-bottom: 0.5rem;
+    --padding-start: 0.75rem;
+    --padding-end: 0.75rem;
+  }
+}
+
 .patient-detail-container {
-  max-width: 800px;
+  max-width: 1200px;
   margin: 0 auto;
+  padding-bottom: 0.5rem;
 }
 
-.patient-info {
-  margin-bottom: 2rem;
+// Patient Dashboard Section
+.patient-dashboard {
+  margin-bottom: 1rem;
 
-  h2 {
-    font-size: 1.5rem;
-    font-weight: 600;
-    margin-bottom: 0.5rem;
-  }
-
-  p {
-    color: var(--ion-text-color);
-    opacity: 0.7;
-  }
-}
-
-.shared-metrics-section {
-  h3 {
-    font-size: 1.25rem;
-    font-weight: 600;
-    margin-bottom: 1rem;
-  }
-}
-
-.metric-section {
-  margin-bottom: 1.5rem;
-
-  ion-card {
+  .dashboard-card {
     margin: 0;
-    border-radius: 16px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    background: linear-gradient(135deg, var(--ion-color-primary-tint) 0%, var(--ion-color-primary) 100%);
+    color: white;
+    overflow: hidden;
+    position: relative;
 
-    h4 {
-      font-size: 1.125rem;
-      font-weight: 600;
-      margin-bottom: 1rem;
+    ion-card-content {
+      padding: 0.75rem 1rem;
+    }
+
+    .patient-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+
+      .patient-avatar {
+        flex-shrink: 0;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        backdrop-filter: blur(10px);
+
+        .avatar-icon {
+          font-size: 20px;
+          color: white;
+        }
+      }
+
+      .patient-info {
+        flex: 1;
+        min-width: 0;
+
+        .patient-name {
+          font-size: 1rem;
+          font-weight: 700;
+          margin: 0 0 0.25rem 0;
+          color: white;
+          line-height: 1.2;
+        }
+
+        .patient-details {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 0.5rem;
+          font-size: 0.75rem;
+          opacity: 0.95;
+
+          .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+
+            ion-icon {
+              font-size: 12px;
+              opacity: 0.9;
+            }
+
+            span {
+              white-space: nowrap;
+            }
+          }
+        }
+      }
+    }
+
+    .conditions-section {
+      margin-top: 0.75rem;
+      padding-top: 0.75rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.2);
+
+      .section-title {
+        display: flex;
+        align-items: center;
+        gap: 0.375rem;
+        font-size: 0.7rem;
+        font-weight: 600;
+        margin: 0 0 0.5rem 0;
+        opacity: 0.95;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+
+        ion-icon {
+          font-size: 14px;
+        }
+      }
+
+      .conditions-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.375rem;
+
+        .condition-chip {
+          --background: rgba(255, 255, 255, 0.2);
+          --color: white;
+          backdrop-filter: blur(10px);
+          font-size: 0.65rem;
+          font-weight: 500;
+          margin: 0;
+          height: 22px;
+        }
+      }
     }
   }
 }
 
-.latest-value {
-  margin-bottom: 1rem;
-
-  .value {
-    font-size: 1.5rem;
-    font-weight: 600;
-    margin: 0;
-  }
-
-  .time {
+// Metrics Section
+.metrics-section {
+  .section-title-large {
     font-size: 0.875rem;
+    font-weight: 700;
+    margin: 0 0 0.75rem 0;
     color: var(--ion-text-color);
-    opacity: 0.6;
-    margin: 0.25rem 0 0 0;
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+
+    @media (max-width: 768px) {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.5rem;
+    }
+  }
+
+  .metric-widget {
+    margin: 0;
+    border-radius: 10px;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+    border: 1.5px solid transparent;
+    background: var(--ion-card-background, var(--ion-background-color));
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+
+    &.active {
+      border-color: var(--ion-color-primary);
+      box-shadow: 0 2px 8px rgba(var(--ion-color-primary-rgb), 0.15);
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(var(--ion-color-primary-rgb), 0.2);
+      }
+
+      &:active {
+        transform: translateY(0);
+      }
+    }
+
+    &.locked {
+      opacity: 0.6;
+      cursor: not-allowed;
+      background: var(--ion-color-light);
+
+      &:hover {
+        transform: none;
+      }
+    }
+
+    ion-card-content {
+      padding: 0.75rem;
+    }
+
+    .widget-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 0.5rem;
+
+      .widget-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform 0.2s ease;
+
+        ion-icon {
+          font-size: 18px;
+        }
+      }
+
+      .widget-info {
+        width: 100%;
+
+        .widget-label {
+          font-size: 0.7rem;
+          font-weight: 600;
+          margin: 0 0 0.25rem 0;
+          color: var(--ion-text-color);
+          line-height: 1.2;
+        }
+
+        .widget-status {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 0.125rem;
+
+          .record-count {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: var(--ion-color-primary);
+            line-height: 1;
+          }
+
+          .record-label {
+            font-size: 0.6rem;
+            color: var(--ion-color-medium);
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            font-weight: 500;
+          }
+
+          &.locked-status {
+            flex-direction: row;
+            gap: 0.25rem;
+            color: var(--ion-color-medium);
+            font-size: 0.65rem;
+            font-weight: 500;
+
+            ion-icon {
+              font-size: 12px;
+            }
+          }
+        }
+      }
+    }
+
+    &.active .widget-content .widget-icon {
+      transform: scale(1.05);
+    }
   }
 }
 
-.trend-line {
+// Delete Section
+.delete-section {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--ion-color-light);
+
+  .delete-button {
+    --border-radius: 12px;
+    font-weight: 600;
+    margin: 0 0 0.75rem 0;
+  }
+
+  .added-date {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.375rem;
+    font-size: 0.75rem;
+    color: var(--ion-color-medium);
+    padding: 0.5rem;
+    text-align: center;
+
+    ion-icon {
+      font-size: 14px;
+    }
+  }
+}
+
+// Skeleton Loading State
+.skeleton-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-bottom: 0.5rem;
+}
+
+.skeleton-card {
+  background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%) !important;
+  position: relative;
+  overflow: hidden;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.3) 50%,
+      transparent 100%
+    );
+    background-size: 1000px 100%;
+    animation: shimmer 2s infinite;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.skeleton-icon {
+  background: rgba(255, 255, 255, 0.3) !important;
+  border-radius: 8px;
+}
+
+.skeleton-text {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  height: 16px;
   margin: 0.5rem 0;
-  height: 30px;
-  display: flex;
-  align-items: center;
+  animation: shimmer 2s infinite;
 
-  svg {
-    width: 100%;
-    height: 100%;
+  &.skeleton-title {
+    height: 20px;
+    width: 150px;
+    margin-bottom: 0.75rem;
+  }
+
+  &.skeleton-subtitle {
+    height: 14px;
+    width: 100px;
+    margin-bottom: 0.5rem;
+  }
+
+  &.skeleton-section-title {
+    height: 18px;
+    width: 120px;
+    margin-bottom: 0.75rem;
+  }
+
+  &.skeleton-detail {
+    height: 14px;
+    width: 80px;
+    margin: 0.25rem 0;
+  }
+
+  &.skeleton-label {
+    height: 14px;
+    width: 70px;
+    margin: 0.25rem 0;
+  }
+
+  &.skeleton-status {
+    height: 12px;
+    width: 50px;
+    margin: 0.25rem 0;
   }
 }
 
-.chart-container {
-  margin-top: 1rem;
+.skeleton-badge {
+  background: rgba(255, 255, 255, 0.3);
+  width: 60px;
+  height: 22px;
+  border-radius: 12px;
+  display: inline-block;
+  margin-right: 0.375rem;
+  margin-bottom: 0.375rem;
+  animation: shimmer 2s infinite;
 }
 
+.skeleton-container {
+  .patient-dashboard {
+    margin-bottom: 1rem;
+
+    .dashboard-card {
+      margin: 0;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+      background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);
+      overflow: hidden;
+
+      ion-card-content {
+        padding: 0.75rem 1rem;
+      }
+
+      .patient-header {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 0.75rem;
+
+        .patient-avatar {
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+        }
+
+        .patient-info {
+          flex: 1;
+        }
+      }
+
+      .conditions-section {
+        margin-top: 0.75rem;
+        padding-top: 0.75rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.3);
+
+        .conditions-list {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 0.375rem;
+        }
+      }
+    }
+  }
+
+  .metrics-section {
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.5rem;
+
+      @media (max-width: 768px) {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.5rem;
+      }
+    }
+
+    .metric-widget {
+      margin: 0;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);
+      overflow: hidden;
+
+      ion-card-content {
+        padding: 0.75rem;
+      }
+
+      .widget-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 0.5rem;
+
+        .widget-icon {
+          width: 36px;
+          height: 36px;
+          border-radius: 8px;
+        }
+
+        .widget-info {
+          width: 100%;
+        }
+      }
+    }
+  }
+}
+
+// Dark mode adjustments
+@media (prefers-color-scheme: dark) {
+  .patient-dashboard .dashboard-card {
+    background: linear-gradient(135deg, rgba(var(--ion-color-primary-rgb), 0.3) 0%, rgba(var(--ion-color-primary-rgb), 0.5) 100%);
+  }
+
+  .metric-widget.locked {
+    background: var(--ion-color-dark);
+    opacity: 0.5;
+  }
+}

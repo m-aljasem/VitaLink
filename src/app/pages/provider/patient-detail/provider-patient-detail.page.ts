@@ -1,23 +1,24 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
-  IonContent, IonHeader, IonTitle, IonToolbar, IonCard, IonCardContent, IonText
+  IonContent, IonHeader, IonToolbar, IonCard, IonCardContent, IonText, IonIcon, IonChip, IonButton, IonButtons, AlertController, IonRefresher, IonRefresherContent
 } from '@ionic/angular/standalone';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { CommonModule } from '@angular/common';
+import { addIcons } from 'ionicons';
+import { lockClosed, pulse, water, pulseOutline, heart, sad, scale, locationOutline, personOutline, calendarOutline, male, female, medicalOutline, arrowBack, trashOutline } from 'ionicons/icons';
 import { AuthService } from '../../../core/auth.service';
 import { ProfileService, Profile } from '../../../core/profile.service';
 import { SharingService, ProviderLink } from '../../../core/sharing.service';
 import { ObservationService, MetricType, Observation } from '../../../core/observation.service';
-import { LineChartComponent } from '../../../shared/components/line-chart/line-chart.component';
 
-interface SharedMetricData {
+interface MetricWidget {
   metric: MetricType;
   label: string;
-  latestValue: Observation | null;
-  chartData: number[];
-  chartLabels: string[];
+  icon: string;
   color: string;
+  isShared: boolean;
+  recordCount: number;
 }
 
 @Component({
@@ -27,23 +28,25 @@ interface SharedMetricData {
   standalone: true,
   imports: [
     CommonModule,
-    IonContent, IonHeader, IonTitle, IonToolbar, IonCard, IonCardContent, IonText,
-    TranslateModule, LineChartComponent
+    IonContent, IonHeader, IonToolbar, IonCard, IonCardContent,
+    IonIcon, IonChip, IonButton, IonButtons, IonRefresher, IonRefresherContent,
+    TranslateModule
   ],
 })
 export class ProviderPatientDetailPage implements OnInit {
   patientId: string = '';
   patientProfile: Profile | null = null;
   link: ProviderLink | null = null;
-  sharedMetrics: SharedMetricData[] = [];
+  metricWidgets: MetricWidget[] = [];
+  loading = true;
 
-  metricColors: { [key in MetricType]: string } = {
-    bp: '#EF4444',
-    glucose: '#F59E0B',
-    spo2: '#3B82F6',
-    hr: '#10B981',
-    pain: '#8B5CF6',
-    weight: '#6366F1',
+  metricConfig: { [key in MetricType]: { label: string; icon: string; color: string } } = {
+    bp: { label: 'METRICS.BP', icon: 'pulse', color: '#EF4444' },
+    glucose: { label: 'METRICS.GLUCOSE', icon: 'water', color: '#F59E0B' },
+    spo2: { label: 'METRICS.SPO2', icon: 'pulse-outline', color: '#3B82F6' },
+    hr: { label: 'METRICS.HR', icon: 'heart', color: '#10B981' },
+    pain: { label: 'METRICS.PAIN', icon: 'sad', color: '#8B5CF6' },
+    weight: { label: 'METRICS.WEIGHT', icon: 'scale', color: '#6366F1' },
   };
 
   constructor(
@@ -52,8 +55,12 @@ export class ProviderPatientDetailPage implements OnInit {
     private authService: AuthService,
     private profileService: ProfileService,
     private sharingService: SharingService,
-    private observationService: ObservationService
-  ) {}
+    private observationService: ObservationService,
+    private alertController: AlertController,
+    private translate: TranslateService
+  ) {
+    addIcons({ lockClosed, pulse, water, pulseOutline, heart, sad, scale, locationOutline, personOutline, calendarOutline, male, female, medicalOutline, arrowBack, trashOutline });
+  }
 
   async ngOnInit() {
     this.patientId = this.route.snapshot.paramMap.get('id') || '';
@@ -65,9 +72,17 @@ export class ProviderPatientDetailPage implements OnInit {
     await this.loadData();
   }
 
-  async loadData() {
+  async loadData(showLoading: boolean = true) {
+    if (showLoading) {
+      this.loading = true;
+    }
     const user = this.authService.getCurrentUser();
-    if (!user) return;
+    if (!user) {
+      if (showLoading) {
+        this.loading = false;
+      }
+      return;
+    }
 
     // Load patient profile
     const { data: profile } = await this.profileService.getProfile(this.patientId);
@@ -79,83 +94,123 @@ export class ProviderPatientDetailPage implements OnInit {
 
     if (!this.link) {
       this.router.navigate(['/tabs/home']);
+      if (showLoading) {
+        this.loading = false;
+      }
       return;
     }
 
-    // Load shared metrics
-    const metrics: MetricType[] = [];
-    if (this.link.share_bp) metrics.push('bp');
-    if (this.link.share_glucose) metrics.push('glucose');
-    if (this.link.share_spo2) metrics.push('spo2');
-    if (this.link.share_hr) metrics.push('hr');
-    if (this.link.share_pain) metrics.push('pain');
-    if (this.link.share_weight) metrics.push('weight');
-
-    this.sharedMetrics = await Promise.all(
-      metrics.map(async (metric) => {
-        const { data: latest } = await this.observationService.getLatestObservation(
-          this.patientId,
-          metric
-        );
-
-        // Get chart data (last 7 days)
-        const { data: chartObs } = await this.observationService.getObservationsForChart(
-          this.patientId,
-          metric,
-          7
-        );
-
-        const chartData = (chartObs || []).map(o => {
-          if (metric === 'bp') return o.systolic || 0;
-          return o.numeric_value || 0;
-        });
-
-        const chartLabels = (chartObs || []).map(o => {
-          const date = new Date(o.ts);
-          return date.toLocaleDateString();
-        });
+    // Load all 6 metrics with sharing status and record counts
+    const allMetrics: MetricType[] = ['bp', 'glucose', 'spo2', 'hr', 'pain', 'weight'];
+    
+    this.metricWidgets = await Promise.all(
+      allMetrics.map(async (metric) => {
+        const config = this.metricConfig[metric];
+        const isShared = this.getSharingStatus(metric);
+        
+        let recordCount = 0;
+        if (isShared) {
+          // Get count of observations for this metric
+          const { data: observations } = await this.observationService.getObservationsByMetric(
+            this.patientId,
+            metric,
+            1000 // Large limit to get count
+          );
+          recordCount = observations?.length || 0;
+        }
 
         return {
           metric,
-          label: `METRICS.${metric.toUpperCase()}`,
-          latestValue: latest || null,
-          chartData,
-          chartLabels,
-          color: this.metricColors[metric],
+          label: config.label,
+          icon: config.icon,
+          color: config.color,
+          isShared,
+          recordCount,
         };
       })
     );
-  }
 
-  formatValue(obs: Observation): string {
-    if (obs.metric === 'bp') {
-      return `${obs.systolic}/${obs.diastolic} ${obs.unit || 'mmHg'}`;
+    if (showLoading) {
+      this.loading = false;
     }
-    return `${obs.numeric_value} ${obs.unit || ''}`;
   }
 
-  formatTime(dateString: string): string {
-    return new Date(dateString).toLocaleString();
+  async doRefresh(event: any) {
+    await this.loadData(false);
+    event.target.complete();
   }
 
-  getTrendLinePoints(data: number[]): string {
-    if (!data || data.length === 0) return '';
+  getSharingStatus(metric: MetricType): boolean {
+    if (!this.link) return false;
     
-    const width = 100;
-    const height = 30;
-    const padding = 2;
-    
-    const min = Math.min(...data);
-    const max = Math.max(...data);
-    const range = max - min || 1;
-    
-    const points = data.map((value, index) => {
-      const x = padding + (index / (data.length - 1 || 1)) * (width - 2 * padding);
-      const y = height - padding - ((value - min) / range) * (height - 2 * padding);
-      return `${x},${y}`;
+    switch (metric) {
+      case 'bp': return this.link.share_bp;
+      case 'glucose': return this.link.share_glucose;
+      case 'spo2': return this.link.share_spo2;
+      case 'hr': return this.link.share_hr;
+      case 'pain': return this.link.share_pain;
+      case 'weight': return this.link.share_weight;
+      default: return false;
+    }
+  }
+
+  onMetricClick(widget: MetricWidget) {
+    if (widget.isShared && widget.recordCount > 0) {
+      // Navigate to provider metric detail page
+      this.router.navigate(['/provider/patient', this.patientId, 'metric', widget.metric]);
+    }
+  }
+
+  getGenderIcon(): string {
+    return this.patientProfile?.gender === 'male' ? 'male' : 'female';
+  }
+
+  goBack() {
+    this.router.navigate(['/tabs/provider-home']);
+  }
+
+  formatDate(dateString: string): string {
+    const date = new Date(dateString);
+    return date.toLocaleDateString([], { year: 'numeric', month: 'short', day: 'numeric' });
+  }
+
+  async deletePatient() {
+    if (!this.link) return;
+
+    const alert = await this.alertController.create({
+      header: this.translate.instant('PROVIDER.DELETE_PATIENT_TITLE'),
+      message: this.translate.instant('PROVIDER.DELETE_PATIENT_MESSAGE'),
+      buttons: [
+        {
+          text: this.translate.instant('COMMON.CANCEL'),
+          role: 'cancel',
+        },
+        {
+          text: this.translate.instant('PROVIDER.DELETE'),
+          role: 'destructive',
+          handler: async () => {
+            await this.performDelete();
+          },
+        },
+      ],
     });
+
+    await alert.present();
+  }
+
+  async performDelete() {
+    if (!this.link) return;
+
+    const { error } = await this.sharingService.revokeLink(this.link.id);
     
-    return points.join(' ');
+    if (error) {
+      // Show error toast if needed
+      console.error('Error deleting patient:', error);
+      return;
+    }
+
+    // Navigate back to provider home
+    this.router.navigate(['/tabs/provider-home']);
   }
 }
 

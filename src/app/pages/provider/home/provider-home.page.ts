@@ -2,20 +2,22 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import {
   IonContent, IonCard, IonCardContent, IonCardHeader, IonCardTitle,
-  IonChip, IonText, IonRefresher, IonRefresherContent, IonIcon
+  IonChip, IonText, IonRefresher, IonRefresherContent, IonIcon, IonSearchbar
 } from '@ionic/angular/standalone';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { addIcons } from 'ionicons';
 import { 
   people, pulse, addCircle, warning, person, timeOutline, chevronForward, 
-  peopleOutline, heart, water, speedometer, thermometer, scale
+  peopleOutline, heart, water, speedometer, thermometer, scale, searchOutline, closeOutline
 } from 'ionicons/icons';
 import { AuthService, Profile } from '../../../core/auth.service';
 import { SharingService, ProviderLink } from '../../../core/sharing.service';
 import { ProfileService } from '../../../core/profile.service';
 import { ObservationService } from '../../../core/observation.service';
 import { DateFormatService } from '../../../core/date-format.service';
+import { I18nService } from '../../../core/i18n.service';
 
 interface PatientInfo {
   link: ProviderLink;
@@ -38,8 +40,9 @@ interface Stats {
   standalone: true,
   imports: [
     CommonModule,
+    FormsModule,
     IonContent, IonCard, IonCardContent, IonCardHeader, IonCardTitle,
-    IonChip, IonText, IonRefresher, IonRefresherContent, IonIcon, TranslateModule
+    IonChip, IonText, IonRefresher, IonRefresherContent, IonIcon, IonSearchbar, TranslateModule
   ],
 })
 export class ProviderHomePage implements OnInit {
@@ -52,6 +55,9 @@ export class ProviderHomePage implements OnInit {
     exceptions: 0,
   };
   patients: PatientInfo[] = [];
+  filteredPatients: PatientInfo[] = [];
+  searchTerm: string = '';
+  isRTL: boolean = false;
 
   constructor(
     private authService: AuthService,
@@ -59,16 +65,19 @@ export class ProviderHomePage implements OnInit {
     private profileService: ProfileService,
     private observationService: ObservationService,
     private router: Router,
-    private dateFormatService: DateFormatService
+    private dateFormatService: DateFormatService,
+    private translate: TranslateService,
+    private i18nService: I18nService
   ) {
     addIcons({ 
       people, pulse, addCircle, warning, person, timeOutline, chevronForward, 
-      peopleOutline, heart, water, speedometer, thermometer, scale 
+      peopleOutline, heart, water, speedometer, thermometer, scale, searchOutline, closeOutline
     });
   }
 
   async ngOnInit() {
     this.profile = await this.authService.getCurrentProfile();
+    this.isRTL = this.i18nService.isRTL();
     await this.loadData();
   }
 
@@ -145,6 +154,7 @@ export class ProviderHomePage implements OnInit {
     
     // Filter out any null entries (profiles that couldn't be loaded)
     this.patients = patientResults.filter((p): p is PatientInfo => p !== null);
+    this.filteredPatients = this.patients;
 
     // Calculate new links (created in last 7 days)
     this.stats.newLinks = links.filter(
@@ -164,15 +174,15 @@ export class ProviderHomePage implements OnInit {
   }
 
   formatDate(dateString: string | null): string {
-    if (!dateString) return 'Never';
+    if (!dateString) return this.translate.instant('TIME.NEVER');
     const date = new Date(dateString);
     const now = new Date();
     const diffMs = now.getTime() - date.getTime();
     const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
 
-    if (diffDays === 0) return 'Today';
-    if (diffDays === 1) return 'Yesterday';
-    if (diffDays < 7) return `${diffDays} days ago`;
+    if (diffDays === 0) return this.translate.instant('TIME.TODAY');
+    if (diffDays === 1) return this.translate.instant('TIME.YESTERDAY');
+    if (diffDays < 7) return this.translate.instant('TIME.DAYS_AGO', { count: diffDays });
     return this.dateFormatService.formatDateSync(dateString);
   }
 
@@ -186,6 +196,36 @@ export class ProviderHomePage implements OnInit {
       'weight': 'scale'
     };
     return icons[metric] || 'ellipse';
+  }
+
+  onSearchChange(event: any) {
+    this.searchTerm = event.detail.value || '';
+    this.filterPatients();
+  }
+
+  filterPatients() {
+    if (!this.searchTerm.trim()) {
+      this.filteredPatients = this.patients;
+      return;
+    }
+
+    const searchLower = this.searchTerm.toLowerCase().trim();
+    this.filteredPatients = this.patients.filter(patient => {
+      const firstName = patient.profile.first_name?.toLowerCase() || '';
+      const lastName = patient.profile.last_name?.toLowerCase() || '';
+      const fullName = `${firstName} ${lastName}`.trim();
+      const patientId = patient.profile.id.toLowerCase();
+      
+      return fullName.includes(searchLower) || 
+             firstName.includes(searchLower) || 
+             lastName.includes(searchLower) ||
+             patientId.includes(searchLower);
+    });
+  }
+
+  clearSearch() {
+    this.searchTerm = '';
+    this.filteredPatients = this.patients;
   }
 }
 

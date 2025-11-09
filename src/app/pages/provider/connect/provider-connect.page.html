@@ -1,4 +1,8 @@
-<ion-content [fullscreen]="true" class="provider-connect-content">
+<ion-content [fullscreen]="true" class="provider-connect-content" style="--background: linear-gradient(180deg, #f0f4ff 0%, #ffffff 100%);">
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
   <div class="provider-connect-container ion-padding">
     <!-- Header Section -->
     <div class="connect-header">

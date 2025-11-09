@@ -3,7 +3,7 @@
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
 
-  <div class="provider-home-container ion-padding">
+  <div class="provider-home-container">
     <div class="greeting">
       <h1>{{ 'HOME.GREETING_MORNING' | translate }}, {{ profile?.first_name || 'Provider' }}</h1>
     </div>
@@ -106,8 +106,19 @@
     <div class="patients-section">
       <div class="section-header">
         <h2>{{ 'PROVIDER.PATIENT_DETAIL' | translate }}</h2>
-        <div class="patient-count-badge" *ngIf="!loading">{{ patients.length }}</div>
+        <div class="patient-count-badge" *ngIf="!loading">{{ filteredPatients.length }}</div>
         <div class="patient-count-badge skeleton-badge" *ngIf="loading"></div>
+      </div>
+
+      <!-- Search Bar -->
+      <div class="search-container" *ngIf="!loading" [attr.dir]="isRTL ? 'rtl' : 'ltr'">
+        <ion-searchbar
+          [(ngModel)]="searchTerm"
+          (ionInput)="onSearchChange($event)"
+          [placeholder]="'PROVIDER.SEARCH_PATIENTS' | translate"
+          debounce="300"
+          class="patient-searchbar">
+        </ion-searchbar>
       </div>
       
       <!-- Loading Placeholders for Patients -->
@@ -130,9 +141,9 @@
       </div>
 
       <!-- Actual Patients List -->
-      <div class="patients-list" *ngIf="!loading && patients.length > 0">
+      <div class="patients-list" *ngIf="!loading && filteredPatients.length > 0">
         <ion-card 
-          *ngFor="let patient of patients; let i = index" 
+          *ngFor="let patient of filteredPatients; let i = index" 
           class="patient-card"
           [style.animation-delay]="(i * 0.1) + 's'"
           (click)="navigateToPatient(patient.profile.id)">
@@ -170,6 +181,13 @@
             </div>
           </ion-card-content>
         </ion-card>
+      </div>
+
+      <div class="empty-state" *ngIf="!loading && filteredPatients.length === 0 && patients.length > 0">
+        <ion-icon name="search-outline" class="empty-icon"></ion-icon>
+        <ion-text color="medium">
+          {{ 'PROVIDER.NO_PATIENTS_FOUND' | translate }}
+        </ion-text>
       </div>
 
       <div class="empty-state" *ngIf="!loading && patients.length === 0">

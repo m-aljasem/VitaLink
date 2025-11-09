@@ -85,6 +85,11 @@ export const routes: Routes = [
     canActivate: [sessionGuard],
   },
   {
+    path: 'provider/patient/:id/metric/:type',
+    loadComponent: () => import('./pages/provider/metric-detail/provider-metric-detail.page').then((m) => m.ProviderMetricDetailPage),
+    canActivate: [sessionGuard],
+  },
+  {
     path: 'metric/:type',
     loadComponent: () => import('./pages/patient/metric-detail/metric-detail.page').then((m) => m.MetricDetailPage),
     canActivate: [sessionGuard],

@@ -1,0 +1,427 @@
+:host {
+  ion-content {
+    --padding-top: 1rem;
+    --padding-bottom: 1rem;
+    --padding-start: 1rem;
+    --padding-end: 1rem;
+  }
+}
+
+ion-header {
+  ion-toolbar {
+    .header-title {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--ion-text-color);
+    }
+  }
+}
+
+.metric-detail-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+// Metric Header
+.metric-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: linear-gradient(135deg, var(--metric-color) 0%, var(--metric-color)dd 100%);
+  border-radius: 16px;
+  color: white;
+
+  .metric-icon-wrapper {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+
+    ion-icon {
+      font-size: 28px;
+      color: white;
+    }
+  }
+
+  .metric-info {
+    flex: 1;
+
+    .metric-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin: 0 0 0.25rem 0;
+      color: white;
+    }
+
+    .metric-subtitle {
+      font-size: 0.875rem;
+      margin: 0;
+      opacity: 0.9;
+    }
+  }
+}
+
+// Chart Section
+.chart-card {
+  margin: 0 0 1.5rem 0;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+
+  ion-card-content {
+    padding: 1.5rem;
+  }
+
+  .chart-wrapper {
+    height: 300px;
+    position: relative;
+  }
+}
+
+// Records Section
+.records-section {
+  .section-title {
+    font-size: 1.125rem;
+    font-weight: 700;
+    margin: 0 0 1rem 0;
+    color: var(--ion-text-color);
+  }
+
+  .records-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .record-card {
+    margin: 0;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    transition: all 0.2s ease;
+    border-left: 4px solid var(--metric-color);
+
+    &:hover {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      transform: translateY(-2px);
+    }
+
+    ion-card-content {
+      padding: 1rem;
+    }
+
+    .record-content {
+      .record-main {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 0.75rem;
+
+        .record-value {
+          display: flex;
+          align-items: baseline;
+          gap: 0.5rem;
+
+          .value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--metric-color);
+            line-height: 1;
+          }
+
+          .unit {
+            font-size: 0.875rem;
+            color: var(--ion-color-medium);
+            font-weight: 500;
+          }
+        }
+
+        .record-meta {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-end;
+          gap: 0.375rem;
+          font-size: 0.75rem;
+          color: var(--ion-color-medium);
+
+          .record-date,
+          .record-time {
+            display: flex;
+            align-items: center;
+            gap: 0.375rem;
+
+            ion-icon {
+              font-size: 14px;
+            }
+          }
+        }
+      }
+
+      .record-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+
+        .tag-chip {
+          --background: var(--metric-color);
+          --color: white;
+          opacity: 0.15;
+          font-size: 0.7rem;
+          height: 24px;
+          margin: 0;
+        }
+      }
+    }
+  }
+}
+
+// Empty State
+.empty-card {
+  margin: 0 0 1.5rem 0;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+
+  .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 1rem;
+    text-align: center;
+
+    .empty-icon {
+      font-size: 48px;
+      color: var(--ion-color-medium);
+      margin-bottom: 1rem;
+      opacity: 0.5;
+    }
+
+    p {
+      color: var(--ion-color-medium);
+      font-size: 0.875rem;
+      margin: 0;
+    }
+  }
+}
+
+// Skeleton Loading State
+.skeleton-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.skeleton-card {
+  background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%) !important;
+  position: relative;
+  overflow: hidden;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.3) 50%,
+      transparent 100%
+    );
+    background-size: 1000px 100%;
+    animation: shimmer 2s infinite;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.skeleton-header {
+  background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%) !important;
+  position: relative;
+  overflow: hidden;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.3) 50%,
+      transparent 100%
+    );
+    background-size: 1000px 100%;
+    animation: shimmer 2s infinite;
+  }
+}
+
+.skeleton-icon {
+  background: rgba(255, 255, 255, 0.3) !important;
+  border-radius: 14px;
+}
+
+.skeleton-text {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  height: 16px;
+  margin: 0.5rem 0;
+  animation: shimmer 2s infinite;
+
+  &.skeleton-title {
+    height: 24px;
+    width: 180px;
+    margin-bottom: 0.5rem;
+  }
+
+  &.skeleton-subtitle {
+    height: 16px;
+    width: 100px;
+    margin: 0;
+  }
+
+  &.skeleton-section-title {
+    height: 20px;
+    width: 120px;
+    margin-bottom: 1rem;
+  }
+
+  &.skeleton-value {
+    height: 28px;
+    width: 100px;
+    margin: 0;
+  }
+
+  &.skeleton-meta {
+    height: 14px;
+    width: 80px;
+    margin: 0.25rem 0;
+  }
+}
+
+.skeleton-chart {
+  background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.3) 50%,
+      transparent 100%
+    );
+    background-size: 1000px 100%;
+    animation: shimmer 2s infinite;
+  }
+}
+
+.skeleton-container {
+  .metric-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    border-radius: 16px;
+
+    .metric-icon-wrapper {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      flex-shrink: 0;
+    }
+
+    .metric-info {
+      flex: 1;
+    }
+  }
+
+  .chart-card {
+    margin: 0 0 1.5rem 0;
+    border-radius: 16px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+
+    ion-card-content {
+      padding: 1.5rem;
+    }
+
+    .chart-wrapper {
+      height: 300px;
+      position: relative;
+    }
+  }
+
+  .records-section {
+    .records-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .record-card {
+      margin: 0;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+      border-left: 4px solid #e5e7eb;
+
+      ion-card-content {
+        padding: 1rem;
+      }
+
+      .record-content {
+        .record-main {
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-start;
+          margin-bottom: 0.75rem;
+
+          .record-value {
+            flex: 1;
+          }
+
+          .record-meta {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 0.375rem;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Dark mode adjustments
+@media (prefers-color-scheme: dark) {
+  .metric-header {
+    background: linear-gradient(135deg, rgba(var(--ion-color-primary-rgb), 0.4) 0%, rgba(var(--ion-color-primary-rgb), 0.3) 100%);
+  }
+
+  .record-card {
+    border-left-color: var(--metric-color);
+  }
+}
+

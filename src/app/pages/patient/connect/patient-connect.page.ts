@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { 
   IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonButtons, IonItem, IonLabel,
-  IonText, IonToggle, IonModal, IonCard, IonCardContent, IonIcon, IonInput, IonSpinner, ToastController, AlertController
+  IonText, IonToggle, IonModal, IonCard, IonCardContent, IonIcon, IonInput, IonSpinner, IonRefresher, IonRefresherContent, ToastController, AlertController
 } from '@ionic/angular/standalone';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { CommonModule } from '@angular/common';
@@ -28,7 +28,7 @@ import { MetricType } from '../../../core/observation.service';
   imports: [
     CommonModule, FormsModule,
     IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonButtons, IonItem, IonLabel,
-    IonText, IonToggle, IonModal, IonCard, IonCardContent, IonIcon, IonInput, IonSpinner, TranslateModule
+    IonText, IonToggle, IonModal, IonCard, IonCardContent, IonIcon, IonInput, IonSpinner, IonRefresher, IonRefresherContent, TranslateModule
   ],
 })
 export class PatientConnectPage implements OnInit {
@@ -124,6 +124,11 @@ export class PatientConnectPage implements OnInit {
     } finally {
       this.loading = false;
     }
+  }
+
+  async doRefresh(event: any) {
+    await this.loadProviders();
+    event.target.complete();
   }
 
   async shareViaOS() {

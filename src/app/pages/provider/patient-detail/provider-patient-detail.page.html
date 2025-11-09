@@ -1,60 +1,165 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>{{ patientProfile?.first_name }} {{ patientProfile?.last_name }}</ion-title>
+    <ion-buttons slot="start">
+      <ion-button (click)="goBack()">
+        <ion-icon name="arrow-back" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true" class="ion-padding">
-  <div class="patient-detail-container">
-    <div class="patient-info">
-      <h2>{{ patientProfile?.first_name }} {{ patientProfile?.last_name }}</h2>
-      <p *ngIf="patientProfile?.age">{{ 'ONBOARDING.AGE' | translate }}: {{ patientProfile?.age }}</p>
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <div class="patient-detail-container" *ngIf="!loading && patientProfile">
+    <!-- Patient Dashboard Section -->
+    <div class="patient-dashboard">
+      <ion-card class="dashboard-card">
+        <ion-card-content>
+          <div class="patient-header">
+            <div class="patient-avatar">
+              <ion-icon [name]="getGenderIcon()" class="avatar-icon"></ion-icon>
+            </div>
+            <div class="patient-info">
+              <h2 class="patient-name">{{ patientProfile.first_name }} {{ patientProfile.last_name }}</h2>
+              <div class="patient-details">
+                <div class="detail-item" *ngIf="patientProfile.age">
+                  <ion-icon name="calendar-outline"></ion-icon>
+                  <span>{{ patientProfile.age }} {{ 'ONBOARDING.AGE' | translate }}</span>
+                </div>
+                <div class="detail-item" *ngIf="patientProfile.gender">
+                  <ion-icon [name]="getGenderIcon()"></ion-icon>
+                  <span>{{ 'ONBOARDING.' + patientProfile.gender.toUpperCase() | translate }}</span>
+                </div>
+                <div class="detail-item" *ngIf="patientProfile.country || patientProfile.city">
+                  <ion-icon name="location-outline"></ion-icon>
+                  <span>
+                    <span *ngIf="patientProfile.city">{{ patientProfile.city }}</span>
+                    <span *ngIf="patientProfile.city && patientProfile.country">, </span>
+                    <span *ngIf="patientProfile.country">{{ patientProfile.country }}</span>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Conditions Section -->
+          <div class="conditions-section" *ngIf="patientProfile.conditions && patientProfile.conditions.length > 0">
+            <h3 class="section-title">
+              <ion-icon name="medical-outline"></ion-icon>
+              {{ 'ONBOARDING.CONDITIONS_TITLE' | translate }}
+            </h3>
+            <div class="conditions-list">
+              <ion-chip *ngFor="let condition of patientProfile.conditions" class="condition-chip">
+                {{ 'ONBOARDING.' + condition | translate }}
+              </ion-chip>
+            </div>
+          </div>
+        </ion-card-content>
+      </ion-card>
     </div>
 
-    <div class="shared-metrics-section">
-      <h3>{{ 'PROVIDER.SHARED_METRICS' | translate }}</h3>
-
-      <div *ngFor="let metricData of sharedMetrics" class="metric-section">
-        <ion-card>
+    <!-- Metrics Widgets Section -->
+    <div class="metrics-section">
+      <h3 class="section-title-large">{{ 'PROVIDER.METRICS' | translate }}</h3>
+      <div class="metrics-grid">
+        <ion-card 
+          *ngFor="let widget of metricWidgets" 
+          class="metric-widget"
+          [class.active]="widget.isShared && widget.recordCount > 0"
+          [class.locked]="!widget.isShared"
+          (click)="onMetricClick(widget)"
+        >
           <ion-card-content>
-            <h4>{{ metricData.label | translate }}</h4>
-            
-            <div *ngIf="metricData.latestValue" class="latest-value">
-              <p class="value">{{ formatValue(metricData.latestValue) }}</p>
-              <p class="time">{{ formatTime(metricData.latestValue.ts) }}</p>
+            <div class="widget-content">
+              <div class="widget-icon" [style.background-color]="widget.color + '20'">
+                <ion-icon [name]="widget.icon" [style.color]="widget.color"></ion-icon>
+              </div>
+              <div class="widget-info">
+                <h4 class="widget-label">{{ widget.label | translate }}</h4>
+                <div class="widget-status" *ngIf="widget.isShared && widget.recordCount > 0">
+                  <span class="record-count">{{ widget.recordCount }}</span>
+                  <span class="record-label">{{ 'PROVIDER.RECORDS' | translate }}</span>
+                </div>
+                <div class="widget-status locked-status" *ngIf="!widget.isShared">
+                  <ion-icon name="lock-closed"></ion-icon>
+                  <span>{{ 'PROVIDER.NOT_SHARED' | translate }}</span>
+                </div>
+              </div>
             </div>
-
-            <!-- Tiny trend line (sparkline) -->
-            <div *ngIf="metricData.chartData.length > 0" class="trend-line">
-              <svg [attr.width]="100" [attr.height]="30" viewBox="0 0 100 30">
-                <polyline
-                  [attr.points]="getTrendLinePoints(metricData.chartData)"
-                  [attr.stroke]="metricData.color"
-                  fill="none"
-                  stroke-width="1.5"
-                />
-              </svg>
-            </div>
-
-            <div *ngIf="metricData.chartData.length > 0" class="chart-container">
-              <app-line-chart
-                [data]="metricData.chartData"
-                [labels]="metricData.chartLabels"
-                [color]="metricData.color"
-              ></app-line-chart>
-            </div>
-
-            <ion-text *ngIf="!metricData.latestValue" color="medium">
-              {{ 'HOME.NO_DATA' | translate }}
-            </ion-text>
           </ion-card-content>
         </ion-card>
       </div>
+    </div>
 
-      <ion-text *ngIf="sharedMetrics.length === 0" color="medium">
-        {{ 'HOME.NO_DATA' | translate }}
-      </ion-text>
+    <!-- Delete Patient Button -->
+    <div class="delete-section">
+      <ion-button 
+        expand="block" 
+        color="danger" 
+        fill="outline"
+        (click)="deletePatient()"
+        class="delete-button"
+      >
+        <ion-icon name="trash-outline" slot="start"></ion-icon>
+        {{ 'PROVIDER.DELETE_PATIENT' | translate }}
+      </ion-button>
+      
+      <!-- Added Date -->
+      <div class="added-date" *ngIf="link && link.created_at">
+        <ion-icon name="calendar-outline"></ion-icon>
+        <span>{{ 'PROVIDER.ADDED_ON' | translate }}: {{ formatDate(link.created_at) }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Skeleton Loading State -->
+  <div class="skeleton-container" *ngIf="loading">
+    <!-- Patient Dashboard Skeleton -->
+    <div class="patient-dashboard">
+      <ion-card class="dashboard-card skeleton-card">
+        <ion-card-content>
+          <div class="patient-header">
+            <div class="patient-avatar skeleton-icon"></div>
+            <div class="patient-info">
+              <div class="skeleton-text skeleton-title"></div>
+              <div class="patient-details">
+                <div class="skeleton-text skeleton-detail"></div>
+                <div class="skeleton-text skeleton-detail"></div>
+                <div class="skeleton-text skeleton-detail"></div>
+              </div>
+            </div>
+          </div>
+          <div class="conditions-section">
+            <div class="skeleton-text skeleton-subtitle"></div>
+            <div class="conditions-list">
+              <div class="skeleton-badge"></div>
+              <div class="skeleton-badge"></div>
+              <div class="skeleton-badge"></div>
+            </div>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+
+    <!-- Metrics Section Skeleton -->
+    <div class="metrics-section">
+      <div class="skeleton-text skeleton-section-title"></div>
+      <div class="metrics-grid">
+        <ion-card *ngFor="let i of [1,2,3,4,5,6]" class="metric-widget skeleton-card">
+          <ion-card-content>
+            <div class="widget-content">
+              <div class="widget-icon skeleton-icon"></div>
+              <div class="widget-info">
+                <div class="skeleton-text skeleton-label"></div>
+                <div class="skeleton-text skeleton-status"></div>
+              </div>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </div>
     </div>
   </div>
 </ion-content>
-
