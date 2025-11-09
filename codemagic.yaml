@@ -5,14 +5,17 @@ workflows:
     instance_type: mac_mini_m2
     environment:
       android_signing:
-        - keystore_reference: vitalink_keystore
+        - keystore: $CM_KEYSTORE_PATH
+          keystore_password: $CM_KEYSTORE_PASSWORD
+          key_alias: $CM_KEY_ALIAS
+          key_password: $CM_KEY_PASSWORD
           # Note: Configure the keystore in Codemagic UI under "Code signing identities"
-          # The keystore_reference name should match what you set in Codemagic UI
-          # Codemagic will automatically provide:
-          # - CM_KEYSTORE_PATH
-          # - CM_KEYSTORE_PASSWORD  
-          # - CM_KEY_ALIAS
-          # - CM_KEY_PASSWORD
+          # Upload your .jks or .keystore file and set the credentials
+          # Codemagic will automatically provide these environment variables:
+          # - CM_KEYSTORE_PATH (path to keystore file)
+          # - CM_KEYSTORE_PASSWORD (keystore password)
+          # - CM_KEY_ALIAS (key alias name)
+          # - CM_KEY_PASSWORD (key password)
       groups:
         - Supabase
       vars:
