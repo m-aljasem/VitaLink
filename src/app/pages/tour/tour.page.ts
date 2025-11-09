@@ -4,7 +4,7 @@ import { IonContent, IonButton, IonIcon } from '@ionic/angular/standalone';
 import { TranslateModule } from '@ngx-translate/core';
 import { register } from 'swiper/element/bundle';
 import { addIcons } from 'ionicons';
-import { sparkles, pulse, link, settings } from 'ionicons/icons';
+import { sparkles, pulse, people, settings } from 'ionicons/icons';
 import { I18nService } from '../../core/i18n.service';
 
 register();
@@ -28,15 +28,13 @@ export class TourPage implements OnInit {
     private router: Router,
     private i18nService: I18nService
   ) {
-    addIcons({ sparkles, pulse, link, settings });
+    addIcons({ sparkles, pulse, people, settings });
   }
 
   ngOnInit() {
     this.isRTL = this.i18nService.isRTL();
-    // For RTL, start from the last slide (index 3 for 4 slides)
-    if (this.isRTL) {
-      this.slideOpts.initialSlide = 3;
-    }
+    // Slider always goes LTR regardless of page language direction
+    // Slides remain in LTR order
   }
 
   completeTour() {

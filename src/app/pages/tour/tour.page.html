@@ -3,7 +3,7 @@
     [pagination]="true" 
     [initialSlide]="slideOpts.initialSlide" 
     [speed]="slideOpts.speed" 
-    [attr.dir]="isRTL ? 'rtl' : 'ltr'"
+    dir="ltr"
     class="tour-swiper">
     <swiper-slide>
       <div class="slide-content">
@@ -28,7 +28,7 @@
     <swiper-slide>
       <div class="slide-content">
         <div class="slide-icon-wrapper connect-icon">
-          <ion-icon name="link"></ion-icon>
+          <ion-icon name="people"></ion-icon>
         </div>
         <h1>{{ 'TOUR.CONNECT_TAB' | translate }}</h1>
         <p>{{ 'TOUR.CONNECT_DESC' | translate }}</p>

@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { IonTabs, IonTabBar, IonTabButton, IonIcon, IonLabel } from '@ionic/angular/standalone';
-import { pulse, link, settings } from 'ionicons/icons';
+import { pulse, people, settings } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
 import { AuthService, Profile } from '../../core/auth.service';
 import { TranslateModule } from '@ngx-translate/core';
@@ -22,7 +22,7 @@ export class TabsPage implements OnInit, OnDestroy {
     private authService: AuthService,
     private router: Router
   ) {
-    addIcons({ pulse, link, settings });
+    addIcons({ pulse, people, settings });
   }
 
   async ngOnInit() {
