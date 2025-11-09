@@ -23,9 +23,6 @@ workflows:
           include: true
           source: true
     scripts:
-      - name: Set Android SDK location
-        script: |
-          echo "sdk.dir=$ANDROID_SDK_ROOT" > "$CM_BUILD_DIR/android/local.properties"
       - name: Install npm dependencies for Ionic project
         script: |
           npm install
@@ -35,6 +32,10 @@ workflows:
         script: |
           # npx cap copy # <- use this is you don't need to update native dependencies
           npx cap sync # <- update native dependencies and copy web assets to native project
+      - name: Set Android SDK location
+        script: |
+          mkdir -p "$CM_BUILD_DIR/android"
+          echo "sdk.dir=$ANDROID_SDK_ROOT" > "$CM_BUILD_DIR/android/local.properties"
       - name: Build Android release APK
         script: |
           # BUILD_NUMBER is a Codemagic built-in variable tracking the number
