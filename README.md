@@ -145,8 +145,9 @@
      VITE_SUPABASE_URL=your_supabase_project_url
      VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
      ```
-   - Run the SQL schema from `supabase/schema.sql` in your Supabase SQL editor,
-     then every file in `supabase/migrations/` in order
+   - Run `supabase/schema.sql` in your Supabase SQL editor. It sets up everything
+     (tables, security policies, linking functions, Realtime) and is safe to re-run
+   - Under Authentication → Email, enable email sign-in with a 6-digit code
    - `src/environments/environment*.ts` are generated from `.env` by `npm start` / `npm run build`
 
 4. **Run the development server**

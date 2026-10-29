@@ -40,7 +40,7 @@ create policy "anyone can verify token" on public.link_tokens for select using (
 - Add rate limiting at the application level
 - Consider using a function that validates tokens server-side
 
-**Status:** ✅ Resolved in `supabase/migrations/20261030_security_hardening.sql`. Codes are generated and redeemed only through `create_link_token()` / `redeem_link_token()`; only the issuing provider can read its tokens, codes are single-use and unique, and failed redemptions are limited to 10 per 15 minutes. The same migration removes direct inserts into `provider_links`, which previously let a provider recreate a revoked link with every metric shared.
+**Status:** ✅ Resolved in `supabase/schema.sql`. Codes are generated and redeemed only through `create_link_token()` / `redeem_link_token()`; only the issuing provider can read its tokens, codes are single-use and unique, and failed redemptions are limited to 10 per 15 minutes. The schema also allows no direct inserts into `provider_links`, which previously let a provider recreate a revoked link with every metric shared.
 
 ---
 
@@ -103,7 +103,7 @@ if (!this.email || !this.email.includes('@')) {
 - Validate age ranges
 - Sanitize user inputs
 
-**Status:** 🟡 Partially resolved. The database now enforces age, height and text-length limits (see the migration). Client-side messages for these limits are still to do.
+**Status:** 🟡 Partially resolved. The database now enforces age, height and text-length limits (see `supabase/schema.sql`). Client-side messages for these limits are still to do.
 
 ---
 
