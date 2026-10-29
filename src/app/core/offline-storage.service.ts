@@ -100,6 +100,30 @@ export class OfflineStorageService {
     return this.put('observations', observation);
   }
 
+  async saveObservations(observations: Observation[]): Promise<void> {
+    if (observations.length === 0) return;
+    const store = this.getStore('observations', 'readwrite');
+    return new Promise((resolve, reject) => {
+      store.transaction.oncomplete = () => resolve();
+      store.transaction.onerror = () => reject(store.transaction.error);
+      for (const observation of observations) {
+        store.put(observation);
+      }
+    });
+  }
+
+  async deleteObservations(ids: string[]): Promise<void> {
+    if (ids.length === 0) return;
+    const store = this.getStore('observations', 'readwrite');
+    return new Promise((resolve, reject) => {
+      store.transaction.oncomplete = () => resolve();
+      store.transaction.onerror = () => reject(store.transaction.error);
+      for (const id of ids) {
+        store.delete(id);
+      }
+    });
+  }
+
   async getObservations(userId: string, metric?: string): Promise<Observation[]> {
     const store = this.getStore('observations', 'readonly');
     const index = store.index('user_id');

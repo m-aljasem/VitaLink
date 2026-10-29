@@ -1,11 +1,9 @@
 import { Injectable } from '@angular/core';
-import { NetworkService } from './network.service';
+import { NetworkService, isNetworkError } from './network.service';
 import { OfflineStorageService, SyncQueueItem } from './offline-storage.service';
 import { ProfileService } from './profile.service';
 import { ObservationService } from './observation.service';
-import { SharingService } from './sharing.service';
-import { ReminderService } from './reminder.service';
-import { AuthService, Profile } from './auth.service';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root',
@@ -20,8 +18,6 @@ export class SyncService {
     private offlineStorage: OfflineStorageService,
     private profileService: ProfileService,
     private observationService: ObservationService,
-    private sharingService: SharingService,
-    private reminderService: ReminderService,
     private authService: AuthService
   ) {
     // Initialize and start periodic sync when online
@@ -53,24 +49,30 @@ export class SyncService {
     if (this.isSyncing || !this.networkService.isOnline() || !this.isInitialized) {
       return;
     }
+    // Wait for the session to be restored; queued items belong to the signed-in user.
+    if (!this.authService.getCurrentUser()) {
+      return;
+    }
 
     this.isSyncing = true;
     try {
       const queue = await this.offlineStorage.getSyncQueue();
       
       for (const item of queue) {
-        // Skip items that have been retried too many times
-        if (item.retries > 5) {
-          await this.offlineStorage.removeFromSyncQueue(item.id);
-          continue;
-        }
-
         try {
           await this.processSyncItem(item);
           await this.offlineStorage.removeFromSyncQueue(item.id);
         } catch (error) {
-          console.error(`Sync failed for item ${item.id}:`, error);
-          await this.offlineStorage.incrementSyncRetry(item.id);
+          if (this.isRetryable(error)) {
+            // Server unreachable or session expired: keep the item (and everything after it) for the next run.
+            break;
+          }
+          // The server rejected it; retrying won't help.
+          console.error(`Sync rejected for item ${item.id}, dropping it:`, error);
+          await this.offlineStorage.removeFromSyncQueue(item.id);
+          if (item.table === 'observations' && item.type === 'create' && item.data?.id) {
+            await this.offlineStorage.delete('observations', item.data.id);
+          }
         }
       }
     } finally {
@@ -87,72 +89,31 @@ export class SyncService {
     switch (item.table) {
       case 'profiles':
         if (item.type === 'update') {
-          // Direct update to server without queuing again
-          const { data, error } = await this.profileService['supabase']
-            .from('profiles')
-            .update(item.data)
-            .eq('id', user.id)
-            .select()
-            .single();
-          
-          if (!error && data) {
-            await this.offlineStorage.saveProfile(data as Profile);
-          } else {
-            throw error || new Error('Profile update failed');
-          }
+          const { error } = await this.profileService.pushProfileUpdate(user.id, item.data);
+          if (error) throw error;
         }
         break;
 
       case 'observations':
         if (item.type === 'create') {
-          // Direct insert to server without queuing again
-          const { data, error } = await this.observationService['supabase']
-            .from('observations')
-            .insert(item.data)
-            .select()
-            .single();
-          
-          if (!error && data) {
-            await this.offlineStorage.saveObservation(data);
-          } else {
-            throw error || new Error('Observation create failed');
-          }
-        } else if (item.type === 'delete') {
-          if (item.data.id) {
-            const { error } = await this.observationService['supabase']
-              .from('observations')
-              .delete()
-              .eq('id', item.data.id);
-            
-            if (error) {
-              throw error;
-            }
-            
-            try {
-              await this.offlineStorage.delete('observations', item.data.id);
-            } catch (err) {
-              // Ignore if not found in offline storage
-            }
-          }
-        }
-        break;
-
-      case 'provider_links':
-        if (item.type === 'update') {
-          await this.sharingService.updateSharing(item.data.id, item.data);
-        }
-        break;
-
-      case 'reminders':
-        if (item.type === 'create') {
-          await this.reminderService.createReminder(item.data);
-        } else if (item.type === 'update') {
-          await this.reminderService.updateReminder(item.data.id, item.data);
-        } else if (item.type === 'delete') {
-          await this.reminderService.deleteReminder(item.data.id);
+          const { data, error } = await this.observationService.insertObservation(item.data);
+          if (error) throw error;
+          await this.offlineStorage.saveObservation(data!);
+        } else if (item.type === 'delete' && item.data.id) {
+          const { error } = await this.observationService.deleteFromServer(item.data.id);
+          if (error) throw error;
         }
         break;
     }
+  }
+
+  private isRetryable(error: any): boolean {
+    const code = `${error?.code ?? ''}`;
+    return isNetworkError(error)
+      || code === 'PGRST301' // JWT expired; the client refreshes it before the next run
+      || /jwt/i.test(error?.message ?? '')
+      || code.startsWith('08') // Postgres connection errors
+      || code.startsWith('57'); // Postgres operator intervention (e.g. shutdown)
   }
 
   private startPeriodicSync(): void {

@@ -18,7 +18,7 @@
 - Ensure `.env` files are in `.gitignore` (✅ already done)
 - Use Angular's `fileReplacements` to inject environment variables during build
 
-**Status:** ⚠️ Needs immediate attention
+**Status:** ✅ Resolved. The anon key is public by design (RLS is the security layer); `environment*.ts` are now generated from `.env`/CI variables by `scripts/generate-env.js` and are no longer tracked in git.
 
 ---
 
@@ -40,7 +40,7 @@ create policy "anyone can verify token" on public.link_tokens for select using (
 - Add rate limiting at the application level
 - Consider using a function that validates tokens server-side
 
-**Status:** ⚠️ Should be fixed
+**Status:** ✅ Resolved in `supabase/migrations/20261030_security_hardening.sql`. Codes are generated and redeemed only through `create_link_token()` / `redeem_link_token()`; only the issuing provider can read its tokens, codes are single-use and unique, and failed redemptions are limited to 10 per 15 minutes. The same migration removes direct inserts into `provider_links`, which previously let a provider recreate a revoked link with every metric shared.
 
 ---
 
@@ -64,7 +64,7 @@ if (!this.email || !this.email.includes('@')) {
 - Or use a regex pattern for email validation
 - Validate on both client and server side
 
-**Status:** ⚠️ Should be improved
+**Status:** ✅ Resolved. `auth.page.ts` now validates with a full email pattern.
 
 ---
 
@@ -83,7 +83,7 @@ if (!this.email || !this.email.includes('@')) {
 - Add client-side throttling
 - Show appropriate error messages when rate limited
 
-**Status:** ℹ️ Check if Supabase handles this automatically
+**Status:** ℹ️ Supabase Auth rate limits OTP emails per address and per IP (configurable under Authentication → Rate Limits).
 
 ---
 
@@ -103,7 +103,7 @@ if (!this.email || !this.email.includes('@')) {
 - Validate age ranges
 - Sanitize user inputs
 
-**Status:** ℹ️ Should be reviewed
+**Status:** 🟡 Partially resolved. The database now enforces age, height and text-length limits (see the migration). Client-side messages for these limits are still to do.
 
 ---
 

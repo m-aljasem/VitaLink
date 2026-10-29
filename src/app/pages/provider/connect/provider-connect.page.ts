@@ -104,7 +104,7 @@ export class ProviderConnectPage implements OnInit, OnDestroy {
     this.generatingCode = true;
     
     try {
-      const { data: token, error } = await this.sharingService.createToken(user.id);
+      const { data: token, error } = await this.sharingService.createToken();
       
       if (error) {
         const toast = await this.toastController.create({
@@ -139,6 +139,10 @@ export class ProviderConnectPage implements OnInit, OnDestroy {
     if (this.tokenPollingInterval) {
       clearInterval(this.tokenPollingInterval);
       this.tokenPollingInterval = null;
+    }
+    if (this.currentToken && !this.currentToken.used) {
+      // Invalidate the code server-side so it can't be redeemed after cancelling.
+      this.sharingService.deleteToken(this.currentToken.id);
     }
     this.currentToken = null;
     this.timeRemaining = 0;

@@ -43,6 +43,11 @@ if (fs.existsSync(envPath)) {
   console.log('🌐 Reading environment variables from process.env (Vercel/CI)');
 }
 
+if (!envVars.supabaseUrl || !envVars.supabaseAnonKey) {
+  console.warn('⚠️  SUPABASE_URL / SUPABASE_ANON_KEY are not set; the app will fail to start.');
+  console.warn('   Create a .env file (see README) or set them in your CI environment.');
+}
+
 // Generate environment.ts content
 const devEnvContent = `// This file can be replaced during build by using the \`fileReplacements\` array.
 // \`ng build\` replaces \`environment.ts\` with \`environment.prod.ts\`.

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import {
@@ -30,7 +30,7 @@ import { DateFormatService } from '../../../core/date-format.service';
     IonModal, IonHeader, IonToolbar, IonTitle, IonButtons
   ],
 })
-export class PdfExportPage implements OnInit {
+export class PdfExportPage {
   // Metric selection
   metricsExpanded = true;
   pdfExportMetrics: { [key in MetricType]: boolean } = {
@@ -75,10 +75,6 @@ export class PdfExportPage implements OnInit {
 
   goBack() {
     this.location.back();
-  }
-
-  async ngOnInit() {
-    // Component initialization
   }
 
   toggleMetricsExpanded() {

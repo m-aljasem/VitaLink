@@ -117,7 +117,8 @@
     "DELETE_RECORD_TITLE": "Delete Record",
     "DELETE_RECORD_MESSAGE": "Are you sure you want to delete this record?",
     "DELETE_RECORD_ERROR": "Failed to delete record",
-    "DELETE_RECORD_SUCCESS": "Record deleted successfully"
+    "DELETE_RECORD_SUCCESS": "Record deleted successfully",
+    "SAVED_OFFLINE": "Saved on this device. It will sync when you're back online."
   },
   "TAGS": {
     "BP_AFTER_WAKE": "After wake",
@@ -186,7 +187,8 @@
     "SERVER_ERROR": "Unable to connect to the server. Please check your internet connection and try again.",
     "SUCCESS_TITLE": "Success",
     "ADDED_SUCCESSFULLY": "added successfully!",
-    "ADDING_PROVIDER": "Adding Provider..."
+    "ADDING_PROVIDER": "Adding Provider...",
+    "TOO_MANY_ATTEMPTS": "Too many incorrect codes. Please wait 15 minutes and try again."
   },
   "SETTINGS": {
     "TITLE": "Settings",
@@ -266,7 +268,8 @@
     "PWA_UPDATE_TITLE": "Update Available",
     "PWA_UPDATE_MESSAGE": "A new version of the app is available. The app will reload to apply the update.",
     "PWA_UPDATE_CONFIRM": "Update",
-    "PWA_UPDATE_ERROR": "Failed to apply update"
+    "PWA_UPDATE_ERROR": "Failed to apply update",
+    "REMINDER_NOTIFICATION_BODY": "Time to log your health data"
   },
   "PDF_EXPORT": {
     "SUBTITLE": "Customize your PDF export options",

@@ -184,7 +184,7 @@ export class MetricDetailPage implements OnInit {
       return;
     }
 
-    let observationData: Partial<Observation> = {
+    const observationData: Partial<Observation> = {
       user_id: user.id,
       metric: this.metric,
       ts: this.selectedDateTime,
@@ -295,7 +295,7 @@ export class MetricDetailPage implements OnInit {
       else if (this.metric === 'weight') observationData.unit = 'kg';
     }
 
-    const { error } = await this.observationService.createObservation(observationData);
+    const { error, queued } = await this.observationService.createObservation(observationData);
     
     if (error) {
       const toast = await this.toastController.create({
@@ -306,7 +306,7 @@ export class MetricDetailPage implements OnInit {
       await toast.present();
     } else {
       const toast = await this.toastController.create({
-        message: this.translate.instant('METRICS.SAVE_SUCCESS'),
+        message: this.translate.instant(queued ? 'METRICS.SAVED_OFFLINE' : 'METRICS.SAVE_SUCCESS'),
         duration: 2000,
         color: 'success',
       });

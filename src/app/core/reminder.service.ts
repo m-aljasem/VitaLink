@@ -1,7 +1,18 @@
 import { Injectable } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import { getSupabaseClient } from './supabase.client';
-import { LocalNotifications } from '@capacitor/local-notifications';
+import { LocalNotifications, Weekday } from '@capacitor/local-notifications';
 import { Capacitor } from '@capacitor/core';
+
+const WEEKDAYS: { [key: string]: Weekday } = {
+  Sun: Weekday.Sunday,
+  Mon: Weekday.Monday,
+  Tue: Weekday.Tuesday,
+  Wed: Weekday.Wednesday,
+  Thu: Weekday.Thursday,
+  Fri: Weekday.Friday,
+  Sat: Weekday.Saturday,
+};
 
 export interface Reminder {
   id?: string;
@@ -19,6 +30,8 @@ export interface Reminder {
 })
 export class ReminderService {
   private supabase = getSupabaseClient();
+
+  constructor(private translate: TranslateService) {}
 
   async requestPermission(): Promise<boolean> {
     if (Capacitor.isNativePlatform()) {
@@ -61,6 +74,7 @@ export class ReminderService {
       .single();
 
     if (!error && data && Capacitor.isNativePlatform()) {
+      await this.cancelNotifications(reminderId);
       await this.scheduleNotification(data as Reminder);
     }
 
@@ -73,7 +87,51 @@ export class ReminderService {
       .delete()
       .eq('id', reminderId);
 
+    if (!error) {
+      await this.cancelNotifications(reminderId);
+    }
+
     return { error };
+  }
+
+  /** Replaces all scheduled notifications on this device with the user's enabled reminders. */
+  async syncNotifications(userId: string): Promise<void> {
+    if (!Capacitor.isNativePlatform()) return;
+
+    const { data: reminders, error } = await this.getReminders(userId);
+    if (error || !reminders) return;
+
+    await this.cancelAllNotifications();
+    for (const reminder of reminders) {
+      await this.scheduleNotification(reminder);
+    }
+  }
+
+  async cancelAllNotifications(): Promise<void> {
+    if (!Capacitor.isNativePlatform()) return;
+
+    const { notifications } = await LocalNotifications.getPending();
+    if (notifications.length > 0) {
+      await LocalNotifications.cancel({ notifications: notifications.map(n => ({ id: n.id })) });
+    }
+  }
+
+  private async cancelNotifications(reminderId: string): Promise<void> {
+    if (!Capacitor.isNativePlatform()) return;
+
+    const notifications = Object.values(WEEKDAYS).map(weekday => ({
+      id: this.notificationId(reminderId, weekday),
+    }));
+    await LocalNotifications.cancel({ notifications });
+  }
+
+  /** Stable per reminder and weekday, so the notification can be cancelled later. */
+  private notificationId(reminderId: string, weekday: Weekday): number {
+    let hash = 0;
+    for (const char of reminderId) {
+      hash = (hash * 31 + char.charCodeAt(0)) % 200_000_000;
+    }
+    return hash * 10 + weekday;
   }
 
   private async scheduleNotification(reminder: Reminder): Promise<void> {
@@ -81,36 +139,32 @@ export class ReminderService {
       return;
     }
 
-    if (Capacitor.isNativePlatform()) {
-      const [hours, minutes] = reminder.local_time.split(':').map(Number);
-      const days = reminder.days || [];
+    if (!reminder.id || !Capacitor.isNativePlatform()) {
+      // Web reminders are shown as in-app banners via checkWebReminders().
+      return;
+    }
 
-      // Schedule for each day
-      const notifications = days.map((day, index) => {
-        const dayMap: { [key: string]: number } = {
-          'Mon': 1, 'Tue': 2, 'Wed': 3, 'Thu': 4, 'Fri': 5, 'Sat': 6, 'Sun': 0
-        };
+    const [hours, minutes] = reminder.local_time.split(':').map(Number);
+    const body = this.translate.instant('SETTINGS.REMINDER_NOTIFICATION_BODY');
 
-        return {
-          title: reminder.title,
-          body: 'Time to log your health data',
-          id: parseInt(`${reminder.id?.replace(/-/g, '').substring(0, 8)}${index}`, 16) % 2147483647,
-          schedule: {
-            on: {
-              day: dayMap[day],
-              hour: hours,
-              minute: minutes,
-            },
-            repeats: true,
+    const notifications = (reminder.days || [])
+      .filter(day => day in WEEKDAYS)
+      .map(day => ({
+        title: reminder.title,
+        body,
+        id: this.notificationId(reminder.id!, WEEKDAYS[day]),
+        schedule: {
+          on: {
+            weekday: WEEKDAYS[day],
+            hour: hours,
+            minute: minutes,
           },
-        };
-      });
+          repeats: true,
+        },
+      }));
 
+    if (notifications.length > 0) {
       await LocalNotifications.schedule({ notifications });
-    } else {
-      // Web fallback: store reminder for in-app banner display
-      // This would be handled by a reminder banner service/component
-      // For now, we just store it in the database
     }
   }
 

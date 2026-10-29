@@ -183,7 +183,7 @@ export class PatientConnectPage implements OnInit {
     this.addingProvider = true;
 
     try {
-      const { data: link, error } = await this.sharingService.redeemToken(this.code, user.id);
+      const { data: link, error } = await this.sharingService.redeemToken(this.code, this.newProviderSharing);
       
       if (error) {
         // Determine error type
@@ -192,12 +192,10 @@ export class PatientConnectPage implements OnInit {
         const errorMsg = error.message || '';
 
         // Check for specific error types
-        if (errorCode === 'PGRST116' || errorMsg.includes('No rows') || errorMsg.includes('not found')) {
-          // Code not found
-          errorMessage = this.translate.instant('CONNECT.CODE_INCORRECT') || 'The 6-digit code you entered is incorrect. Please check and try again.';
-        } else if (errorMsg.includes('expired') || errorMsg.includes('Invalid or expired')) {
-          // OTP timeout
-          errorMessage = this.translate.instant('CONNECT.CODE_EXPIRED') || 'The code has expired. Please ask your provider for a new code.';
+        if (errorCode === 'INVALID_CODE') {
+          errorMessage = this.translate.instant('CONNECT.CODE_INVALID_EXPIRED') || 'Invalid or expired code';
+        } else if (errorCode === 'TOO_MANY_ATTEMPTS') {
+          errorMessage = this.translate.instant('CONNECT.TOO_MANY_ATTEMPTS') || 'Too many incorrect codes. Please wait 15 minutes and try again.';
         } else if (errorCode === 'PGRST301' || errorMsg.includes('network') || errorMsg.includes('fetch')) {
           // Network/server error
           errorMessage = this.translate.instant('CONNECT.SERVER_ERROR') || 'Unable to connect to the server. Please check your internet connection and try again.';
@@ -216,8 +214,6 @@ export class PatientConnectPage implements OnInit {
         // Success - get provider profile to show name
         let providerName = 'Provider';
         if (link) {
-          await this.sharingService.updateSharing(link.id, this.newProviderSharing);
-          
           // Load provider profile to get name
           const { data: profile } = await this.profileService.getProfile(link.provider_id);
           if (profile) {

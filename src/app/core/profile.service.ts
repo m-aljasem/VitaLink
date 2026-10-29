@@ -1,7 +1,7 @@
 import { Injectable, Injector } from '@angular/core';
 import { getSupabaseClient } from './supabase.client';
 import { Profile } from './auth.service';
-import { NetworkService } from './network.service';
+import { NetworkService, isNetworkError } from './network.service';
 import { OfflineStorageService } from './offline-storage.service';
 import { SyncService } from './sync.service';
 
@@ -62,35 +62,40 @@ export class ProfileService {
     // Always save to offline storage first
     await this.offlineStorage.saveProfile(updatedProfile);
 
-    // If online, try to sync to server
     if (this.networkService.isOnline()) {
-      try {
-        const { data, error } = await this.supabase
-          .from('profiles')
-          .update(updates)
-          .eq('id', userId)
-          .select()
-          .single();
-
-        if (!error && data) {
-          await this.offlineStorage.saveProfile(data as Profile);
-          return { data: data as Profile, error: null };
-        } else {
-          // Queue for sync
-          await this.getSyncService().queueForSync('profiles', 'update', updates);
-          const updateError = error instanceof Error ? error : new Error('Update failed');
-          return { data: updatedProfile, error: updateError };
-        }
-      } catch (err) {
-        // Queue for sync
-        await this.getSyncService().queueForSync('profiles', 'update', updates);
-        const error = err instanceof Error ? err : new Error('Unknown error');
-        return { data: updatedProfile, error };
+      const { data, error } = await this.pushProfileUpdate(userId, updates);
+      if (!error) {
+        return { data, error: null };
       }
-    } else {
-      // Queue for sync when back online
-      await this.getSyncService().queueForSync('profiles', 'update', updates);
-      return { data: updatedProfile, error: null };
+      if (!isNetworkError(error)) {
+        // The server rejected the change; restore the previous local copy.
+        if (existingProfile) {
+          await this.offlineStorage.saveProfile(existingProfile);
+        }
+        return { data: existingProfile || undefined, error: error instanceof Error ? error : new Error(error.message || 'Update failed') };
+      }
+    }
+
+    // Offline or unreachable: keep the local change and sync it later.
+    await this.getSyncService().queueForSync('profiles', 'update', updates);
+    return { data: updatedProfile, error: null };
+  }
+
+  /** Sends a profile update to the server and caches the result. */
+  async pushProfileUpdate(userId: string, updates: Partial<Profile>): Promise<{ data?: Profile; error?: any }> {
+    try {
+      const { data, error } = await this.supabase
+        .from('profiles')
+        .update(updates)
+        .eq('id', userId)
+        .select()
+        .single();
+
+      if (error) return { error };
+      await this.offlineStorage.saveProfile(data as Profile);
+      return { data: data as Profile };
+    } catch (err) {
+      return { error: err };
     }
   }
 

@@ -26,7 +26,7 @@
 
 - 🌍 **Global Healthcare Access** - Monitor family health from anywhere in the world
 - 🗣️ **9 Languages Supported** - Breaking down language barriers in healthcare
-- 🔒 **Bank-Level Security** - End-to-end encryption and secure data storage
+- 🔒 **Privacy by Design** - Database-level access control; you choose exactly what each provider sees
 - 📱 **Offline-First** - Works seamlessly without internet, syncs automatically
 - 👨‍⚕️ **Provider Integration** - Seamless sharing with healthcare teams
 - 📊 **Beautiful Analytics** - Stunning visualizations and health insights
@@ -39,7 +39,7 @@
 - ✅ **Email + OTP Authentication** - Secure 6-digit code verification
 - ✅ **Persistent Sessions** - Stay logged in across sessions
 - ✅ **Row-Level Security** - Database-level privacy enforcement
-- ✅ **End-to-End Encryption** - Your data is yours alone
+- ✅ **Single-Use Link Codes** - Provider codes expire after 15 minutes and are rate limited
 
 ### 🌐 Internationalization
 - ✅ **9 Languages** - English, Español, Français, Deutsch, العربية, فارسی, اردو, 中文, 日本語
@@ -145,13 +145,23 @@
      VITE_SUPABASE_URL=your_supabase_project_url
      VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
      ```
-   - Run the SQL schema from `supabase/schema.sql` in your Supabase SQL editor
+   - Run the SQL schema from `supabase/schema.sql` in your Supabase SQL editor,
+     then every file in `supabase/migrations/` in order
+   - `src/environments/environment*.ts` are generated from `.env` by `npm start` / `npm run build`
 
 4. **Run the development server**
    ```bash
    npm start
    ```
    The app will open at `http://localhost:4200`
+
+### Tests and Lint
+
+```bash
+npm run lint
+npm test                                              # opens Chrome
+npx ng test --watch=false --browsers=ChromeHeadlessCI # headless (CI, WSL, containers)
+```
 
 ### Building for Production
 
@@ -227,7 +237,7 @@ VitaLink/
 | العربية | `ar` | ✅ |
 | فارسی | `fa` | ✅ |
 | اردو | `ur` | ✅ |
-| 中文 | `zh` | ✅ |
+| 中文 | `zh` | ❌ |
 | 日本語 | `ja` | ❌ |
 
 ---
@@ -235,10 +245,11 @@ VitaLink/
 ## 🔒 Security & Privacy
 
 - **Row-Level Security (RLS)** - Database-level access control
-- **End-to-End Encryption** - Secure data transmission
-- **Granular Sharing Controls** - You decide what to share
-- **No Data Mining** - Your health data stays private
-- **GDPR Compliant** - Export and delete your data anytime
+- **Server-side linking** - Provider links can only be created by redeeming a valid, single-use code
+- **Encrypted in transit** - All traffic to Supabase uses HTTPS
+- **Granular Sharing Controls** - You decide what to share, per provider and per metric
+- **Data Export** - Export your data as CSV, JSON or PDF
+- **Local data cleared on logout** - Offline copies are removed from the device when you sign out
 
 ---
 

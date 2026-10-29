@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import {
   IonContent, IonButton, ToastController, IonCard, IonCardContent, IonIcon
@@ -22,7 +22,7 @@ import { ExportService } from '../../../core/export.service';
     IonContent, IonButton, IonCard, IonCardContent, IonIcon, TranslateModule
   ],
 })
-export class ExportOptionsPage implements OnInit {
+export class ExportOptionsPage {
   exporting = false;
 
   constructor(
@@ -39,10 +39,6 @@ export class ExportOptionsPage implements OnInit {
 
   goBack() {
     this.router.navigate(['/tabs/settings']);
-  }
-
-  async ngOnInit() {
-    // Component initialization
   }
 
   async exportCSV() {

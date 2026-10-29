@@ -28,3 +28,13 @@ export class NetworkService {
   }
 }
 
+
+/**
+ * True when a request failed because the server couldn't be reached (so it is
+ * worth retrying later), as opposed to the server rejecting it.
+ */
+export function isNetworkError(error: any): boolean {
+  if (!navigator.onLine) return true;
+  const message = `${error?.message ?? ''} ${error?.details ?? ''}`;
+  return /failed to fetch|network|load failed|timeout|fetch failed/i.test(message);
+}

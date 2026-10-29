@@ -14,6 +14,8 @@ export interface ProviderLink {
   created_at: string;
 }
 
+export type SharingFlags = Pick<ProviderLink, 'share_bp' | 'share_glucose' | 'share_spo2' | 'share_hr' | 'share_pain' | 'share_weight'>;
+
 export interface LinkToken {
   id: string;
   provider_id: string;
@@ -29,90 +31,39 @@ export interface LinkToken {
 export class SharingService {
   private supabase = getSupabaseClient();
 
-  async createToken(providerId: string): Promise<{ data?: LinkToken; error?: any }> {
-    const code = Math.floor(100000 + Math.random() * 900000).toString();
-    const expiresAt = new Date();
-    expiresAt.setMinutes(expiresAt.getMinutes() + 15);
-
-    const { data, error } = await this.supabase
-      .from('link_tokens')
-      .insert({
-        provider_id: providerId,
-        code,
-        expires_at: expiresAt.toISOString(),
-        used: false,
-      })
-      .select()
-      .single();
-
+  /** Generates a single-use, 15-minute code server-side for the signed-in provider. */
+  async createToken(): Promise<{ data?: LinkToken; error?: any }> {
+    const { data, error } = await this.supabase.rpc('create_link_token');
     return { data: data as LinkToken, error };
   }
 
-  async redeemToken(code: string, patientId: string): Promise<{ data?: ProviderLink; error?: any }> {
-    // Find valid token
-    const { data: token, error: tokenError } = await this.supabase
-      .from('link_tokens')
-      .select('*')
-      .eq('code', code)
-      .eq('used', false)
-      .gt('expires_at', new Date().toISOString())
-      .single();
+  /**
+   * Redeems a provider's code for the signed-in patient and applies the chosen
+   * sharing flags in the same transaction. Returns `TOO_MANY_ATTEMPTS` or
+   * `INVALID_CODE` as the error code when the code is rejected.
+   */
+  async redeemToken(code: string, sharing: SharingFlags): Promise<{ data?: ProviderLink; error?: any }> {
+    const { data, error } = await this.supabase.rpc('redeem_link_token', {
+      p_code: code,
+      p_share_bp: sharing.share_bp,
+      p_share_glucose: sharing.share_glucose,
+      p_share_spo2: sharing.share_spo2,
+      p_share_hr: sharing.share_hr,
+      p_share_pain: sharing.share_pain,
+      p_share_weight: sharing.share_weight,
+    });
 
-    if (tokenError || !token) {
-      return { error: tokenError || new Error('Invalid or expired code') };
+    if (error) {
+      if (error.message?.includes('too_many_attempts')) {
+        return { error: { ...error, code: 'TOO_MANY_ATTEMPTS' } };
+      }
+      return { error };
     }
-
-    // Check if link already exists
-    const { data: existingLink, error: existingLinkError } = await this.supabase
-      .from('provider_links')
-      .select('*')
-      .eq('provider_id', token.provider_id)
-      .eq('patient_id', patientId)
-      .maybeSingle();
-    
-    // If there's an error (other than "not found"), return it
-    if (existingLinkError && existingLinkError.code !== 'PGRST116') {
-      return { error: existingLinkError };
+    // The function returns a row of nulls when the code is invalid or expired.
+    if (!data || !(data as ProviderLink).id) {
+      return { error: { code: 'INVALID_CODE', message: 'Invalid or expired code' } };
     }
-
-    let link: ProviderLink;
-    if (existingLink) {
-      // Update existing link
-      const { data, error } = await this.supabase
-        .from('provider_links')
-        .update({})
-        .eq('id', existingLink.id)
-        .select()
-        .single();
-      link = data as ProviderLink;
-      if (error) return { error };
-    } else {
-      // Create new link
-      const { data, error } = await this.supabase
-        .from('provider_links')
-        .insert({
-          provider_id: token.provider_id,
-          patient_id: patientId,
-          share_bp: false,
-          share_glucose: false,
-          share_spo2: false,
-          share_hr: false,
-          share_pain: false,
-          share_weight: false,
-        })
-        .select()
-        .single();
-      link = data as ProviderLink;
-      if (error) return { error };
-    }
-
-    // Mark token as used
-    await this.supabase
-      .from('link_tokens')
-      .update({ used: true })
-      .eq('id', token.id);
-
-    return { data: link };
+    return { data: data as ProviderLink };
   }
 
   async getProviderLinks(providerId: string): Promise<{ data?: ProviderLink[]; error?: any }> {
@@ -133,7 +84,7 @@ export class SharingService {
     return { data: data as ProviderLink[], error };
   }
 
-  async updateSharing(linkId: string, sharing: Partial<Pick<ProviderLink, 'share_bp' | 'share_glucose' | 'share_spo2' | 'share_hr' | 'share_pain' | 'share_weight'>>): Promise<{ data?: ProviderLink; error?: any }> {
+  async updateSharing(linkId: string, sharing: Partial<SharingFlags>): Promise<{ data?: ProviderLink; error?: any }> {
     const { data, error } = await this.supabase
       .from('provider_links')
       .update(sharing)
@@ -149,6 +100,15 @@ export class SharingService {
       .from('provider_links')
       .delete()
       .eq('id', linkId);
+
+    return { error };
+  }
+
+  async deleteToken(tokenId: string): Promise<{ error?: any }> {
+    const { error } = await this.supabase
+      .from('link_tokens')
+      .delete()
+      .eq('id', tokenId);
 
     return { error };
   }

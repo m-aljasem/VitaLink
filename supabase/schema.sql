@@ -1,5 +1,7 @@
 -- VitaLink Database Schema
--- Run this in Supabase SQL Editor
+-- Run this in Supabase SQL Editor, then run every file in migrations/ in order.
+-- Links and link tokens are created only through the RPCs defined in
+-- migrations/20261030_security_hardening.sql.
 
 -- ENUMS
 create type role_type as enum ('patient','provider');
@@ -138,15 +140,11 @@ create policy "provider can see shared observations" on public.observations for 
 );
 
 create policy "providers own links" on public.provider_links for select using (provider_id = auth.uid());
-create policy "providers create links" on public.provider_links for insert with check (provider_id = auth.uid());
 create policy "patients see who can access" on public.provider_links for select using (patient_id = auth.uid());
-create policy "patients create links" on public.provider_links for insert with check (patient_id = auth.uid());
 create policy "patient update sharing toggles" on public.provider_links for update using (patient_id = auth.uid());
 create policy "provider or patient delete links" on public.provider_links for delete using (provider_id = auth.uid() or patient_id = auth.uid());
 
-create policy "provider create token" on public.link_tokens for insert with check (provider_id = auth.uid());
 create policy "provider see tokens" on public.link_tokens for select using (provider_id = auth.uid());
-create policy "anyone can verify token" on public.link_tokens for select using (true);
 
 create policy "own reminders" on public.reminders for all using (user_id = auth.uid());
 

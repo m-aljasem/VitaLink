@@ -11,6 +11,7 @@ import { I18nService } from './core/i18n.service';
 import { AuthService } from './core/auth.service';
 import { DateFormatService } from './core/date-format.service';
 import { PwaInstallService } from './core/pwa-install.service';
+import { ReminderService } from './core/reminder.service';
 
 @Component({
   selector: 'app-root',
@@ -25,7 +26,8 @@ export class AppComponent implements OnInit {
     private i18nService: I18nService,
     private authService: AuthService,
     private dateFormatService: DateFormatService,
-    private pwaInstallService: PwaInstallService // Initialize early to capture beforeinstallprompt event
+    private pwaInstallService: PwaInstallService, // Initialize early to capture beforeinstallprompt event
+    private reminderService: ReminderService
   ) {}
 
   async ngOnInit() {
@@ -47,6 +49,14 @@ export class AppComponent implements OnInit {
 
     // Initialize language from saved preference (localStorage or profile)
     await this.i18nService.initializeLanguage(profileLanguage);
+
+    // Re-create this device's reminder notifications from the server (native only).
+    const user = this.authService.getCurrentUser();
+    if (user) {
+      this.reminderService.syncNotifications(user.id).catch(error => {
+        console.error('Failed to sync reminder notifications:', error);
+      });
+    }
     
     // Initialize date format service to cache locale based on user's country
     await this.dateFormatService.getLocale();

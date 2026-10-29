@@ -170,16 +170,19 @@ export class PatientHomePage implements OnInit, ViewWillEnter, OnDestroy {
     }
     const metricTypes: MetricType[] = ['bp', 'glucose', 'spo2', 'hr', 'pain', 'weight'];
     
-    // Load all metrics in parallel instead of sequentially
+    // One request for the week's readings; older "latest" values only for metrics without recent data.
+    const [recentResult, recentActivityResult] = await Promise.all([
+      this.observationService.getRecentObservations(user.id, 7),
+      this.observationService.getAllObservations(user.id, 20),
+    ]);
+    const recent = recentResult.data || [];
+
     const metricPromises = metricTypes.map(async (metric) => {
-      const [latestResult, chartResult] = await Promise.all([
-        this.observationService.getLatestObservation(user.id, metric),
-        this.observationService.getObservationsForChart(user.id, metric, 7)
-      ]);
-      
-      const latest = latestResult.data;
-      const chartData = chartResult.data;
-      
+      const chartData = recent.filter(o => o.metric === metric);
+      const latest = chartData.length > 0
+        ? chartData[chartData.length - 1]
+        : (await this.observationService.getLatestObservation(user.id, metric)).data;
+
       let value: string | null = null;
       let trend: 'up' | 'down' | 'neutral' = 'neutral';
       let sparklineData: number[] = [];
@@ -218,13 +221,7 @@ export class PatientHomePage implements OnInit, ViewWillEnter, OnDestroy {
       };
     });
 
-    // Wait for all metrics to load, then load recent activity in parallel
-    const [metricsData, recentActivityResult] = await Promise.all([
-      Promise.all(metricPromises),
-      this.observationService.getAllObservations(user.id, 20)
-    ]);
-
-    this.metrics = metricsData;
+    this.metrics = await Promise.all(metricPromises);
     this.recentActivity = recentActivityResult.data || [];
     this.loading = false;
   }

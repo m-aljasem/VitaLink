@@ -17,6 +17,7 @@ import { ProfileService } from '../../core/profile.service';
 import { I18nService, SupportedLanguage } from '../../core/i18n.service';
 import { ReminderService } from '../../core/reminder.service';
 import { PwaUpdateService } from '../../core/pwa-update.service';
+import { SyncService } from '../../core/sync.service';
 
 @Component({
   selector: 'app-settings',
@@ -45,7 +46,8 @@ export class SettingsPage implements OnInit {
     private toastController: ToastController,
     private alertController: AlertController,
     private translate: TranslateService,
-    private pwaUpdateService: PwaUpdateService
+    private pwaUpdateService: PwaUpdateService,
+    private syncService: SyncService
   ) {
     addIcons({
       person, notifications, language, swapHorizontal, download,
@@ -93,6 +95,8 @@ export class SettingsPage implements OnInit {
           text: this.translate.instant('SETTINGS.LOGOUT'),
           role: 'destructive',
           handler: async () => {
+            // Push any offline changes before local data is wiped.
+            await this.syncService.syncNow();
             await this.authService.signOut();
             this.router.navigate(['/auth']);
           },

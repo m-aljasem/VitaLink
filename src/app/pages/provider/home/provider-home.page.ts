@@ -97,6 +97,7 @@ export class ProviderHomePage implements OnInit {
     }
 
     this.stats.totalPatients = links.length;
+    this.stats.activeThisWeek = 0;
 
     // Calculate active this week (patients with observations in last 7 days)
     const weekAgo = new Date();
@@ -120,28 +121,11 @@ export class ProviderHomePage implements OnInit {
         if (link.share_pain) sharedMetrics.push('pain');
         if (link.share_weight) sharedMetrics.push('weight');
 
-        let lastSeen: string | null = null;
-        if (sharedMetrics.length > 0) {
-          // Get most recent observation across all shared metrics
-          const observations = await Promise.all(
-            sharedMetrics.map(metric =>
-              this.observationService.getLatestObservation(link.patient_id, metric as MetricType)
-            )
-          );
-          
-          const latest = observations
-            .filter(o => o.data)
-            .map(o => o.data!.ts)
-            .sort()
-            .reverse()[0];
-          
-          lastSeen = latest || null;
-
-          // Check if active this week
-          if (lastSeen && new Date(lastSeen) > weekAgo) {
-            this.stats.activeThisWeek++;
-          }
-        }
+        const { data: latest } = await this.observationService.getLatestTimestamp(
+          link.patient_id,
+          sharedMetrics as MetricType[]
+        );
+        const lastSeen = latest || null;
 
         return {
           link,
@@ -154,6 +138,9 @@ export class ProviderHomePage implements OnInit {
     
     // Filter out any null entries (profiles that couldn't be loaded)
     this.patients = patientResults.filter((p): p is PatientInfo => p !== null);
+    this.stats.activeThisWeek = this.patients.filter(
+      p => p.lastSeen && new Date(p.lastSeen) > weekAgo
+    ).length;
     this.filteredPatients = this.patients;
 
     // Calculate new links (created in last 7 days)

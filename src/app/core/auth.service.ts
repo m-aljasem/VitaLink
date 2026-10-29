@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { getSupabaseClient } from './supabase.client';
 import { User, Session } from '@supabase/supabase-js';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { OfflineStorageService } from './offline-storage.service';
+import { ReminderService } from './reminder.service';
 
 export interface Profile {
   id: string;
@@ -31,7 +33,10 @@ export class AuthService {
   private session$ = new BehaviorSubject<Session | null>(null);
   private initializationPromise: Promise<void> | null = null;
 
-  constructor() {
+  constructor(
+    private offlineStorage: OfflineStorageService,
+    private reminderService: ReminderService
+  ) {
     this.initializationPromise = this.initializeSession();
   }
 
@@ -145,6 +150,14 @@ export class AuthService {
   }
 
   async signOut(): Promise<void> {
+    // Don't leave health data or scheduled reminders on a possibly shared device.
+    try {
+      await this.offlineStorage.init();
+      await this.offlineStorage.clearAll();
+    } catch (error) {
+      console.error('Failed to clear offline storage on sign out:', error);
+    }
+    await this.reminderService.cancelAllNotifications();
     await this.supabase.auth.signOut();
     this.currentUser$.next(null);
     this.currentProfile$.next(null);
