@@ -64,7 +64,7 @@
       font-size: 2rem;
       font-weight: 700;
       margin: 0 0 0.75rem 0;
-      background: linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%);
+      background: linear-gradient(135deg, white 0%, #f0f0f0 100%); // gradient text on the coloured header, same in both themes
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
@@ -83,7 +83,7 @@
   margin: 0 0 1rem 0;
   border-radius: 20px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(var(--app-surface-rgb), 0.95);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.3);
   transition: all 0.3s ease;
@@ -145,7 +145,7 @@
   margin: 0 0 1.5rem 0;
   border-radius: 24px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(var(--app-surface-rgb), 0.95);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.3);
   overflow: hidden;
@@ -175,13 +175,13 @@
       
       // Fix autocomplete panel background
       .mat-mdc-autocomplete-panel {
-        background: #ffffff !important;
+        background: var(--app-surface) !important;
         border-radius: 8px !important;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
         border: none !important;
         
         .mat-mdc-option {
-          background: #ffffff !important;
+          background: var(--app-surface) !important;
           border: none !important;
           
           &:hover {
@@ -209,15 +209,16 @@
     
     .gender-buttons {
       display: flex;
+      flex-wrap: wrap;
       gap: 0.75rem;
       width: 100%;
       
       .gender-button {
-        flex: 1;
+        flex: 1 1 calc(50% - 0.75rem);
         --border-radius: 16px;
         --border-width: 1px;
-        --border-color: #e5e7eb;
-        --background: #ffffff;
+        --border-color: var(--app-line);
+        --background: var(--app-surface);
         --color: var(--ion-text-color);
         margin: 0;
         height: 48px;
@@ -245,11 +246,11 @@
   }
 
   .form-item {
-    --background: #ffffff;
+    --background: var(--app-surface);
     --border-radius: 16px;
     --border-width: 1px;
     --border-style: solid;
-    --border-color: #e5e7eb;
+    --border-color: var(--app-line);
     margin-bottom: 1rem;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     transition: all 0.3s ease;
@@ -285,7 +286,7 @@
   .provider-section {
     margin-top: 1rem;
     padding-top: 1rem;
-    border-top: 1px solid #e5e7eb;
+    border-top: 1px solid var(--app-line);
   }
 }
 
@@ -293,7 +294,7 @@
   margin: 0 0 1.5rem 0;
   border-radius: 24px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(var(--app-surface-rgb), 0.95);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.3);
   overflow: hidden;
@@ -310,7 +311,7 @@
   width: 100%;
 
   .condition-chip {
-    --background: #f3f4f6;
+    --background: var(--app-surface-muted);
     --color: var(--ion-text-color);
     font-weight: 600;
     font-size: 0.875rem;

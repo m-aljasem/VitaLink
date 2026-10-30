@@ -1,5 +1,5 @@
 .pdf-export-content {
-  --background: linear-gradient(180deg, #f0f4ff 0%, #ffffff 100%);
+  --background: linear-gradient(180deg, var(--app-surface-soft-2) 0%, var(--app-surface) 100%);
 }
 
 .pdf-export-container {
@@ -229,7 +229,7 @@
     --border-width: 2px;
     --border-color: rgba(102, 126, 234, 0.2);
     --color: var(--ion-color-dark);
-    --background: white;
+    --background: var(--app-surface);
     --padding-start: 16px;
     --padding-end: 16px;
     --padding-top: 16px;

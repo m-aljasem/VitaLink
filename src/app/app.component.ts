@@ -12,6 +12,8 @@ import { AuthService } from './core/auth.service';
 import { DateFormatService } from './core/date-format.service';
 import { PwaInstallService } from './core/pwa-install.service';
 import { ReminderService } from './core/reminder.service';
+import { MedicationService } from './core/medication.service';
+import { ThemeService } from './core/theme.service';
 
 @Component({
   selector: 'app-root',
@@ -27,8 +29,12 @@ export class AppComponent implements OnInit {
     private authService: AuthService,
     private dateFormatService: DateFormatService,
     private pwaInstallService: PwaInstallService, // Initialize early to capture beforeinstallprompt event
-    private reminderService: ReminderService
-  ) {}
+    private reminderService: ReminderService,
+    private medicationService: MedicationService,
+    private themeService: ThemeService
+  ) {
+    this.themeService.init();
+  }
 
   async ngOnInit() {
     // Ensure default language is set and translations are loaded
@@ -56,7 +62,13 @@ export class AppComponent implements OnInit {
       this.reminderService.syncNotifications(user.id).catch(error => {
         console.error('Failed to sync reminder notifications:', error);
       });
+      this.medicationService.syncNotifications(user.id).catch(error => {
+        console.error('Failed to sync medication notifications:', error);
+      });
     }
+    this.medicationService
+      .initNotificationActions(() => this.authService.getCurrentUser()?.id ?? null)
+      .catch(error => console.error('Failed to register medication actions:', error));
     
     // Initialize date format service to cache locale based on user's country
     await this.dateFormatService.getLocale();

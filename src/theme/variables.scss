@@ -1,5 +1,5 @@
 // Ionic Variables and Theming
-// Light mode only - no dark mode variables
+// Light theme on :root; dark theme when <html> has `ion-palette-dark` (see ThemeService).
 
 :root {
   --ion-color-primary: #3B82F6;
@@ -35,4 +35,74 @@
   --ion-card-background: #ffffff;
   --ion-toolbar-background: #ffffff;
   --ion-item-background: #ffffff;
+
+  // App surfaces, lines and text (light values match the original design)
+  --app-surface: #FFFFFF;
+  --app-surface-rgb: 255, 255, 255;
+  --app-surface-soft: #F2F6FF;
+  --app-surface-soft-2: #F0F4FF;
+  --app-surface-subtle: #F9FAFB;
+  --app-surface-muted: #F3F4F6;
+  --app-surface-muted-2: #F0F0F0;
+  --app-line: #E5E7EB;
+  --app-line-strong: #D1D5DB;
+  --app-text-subtle: #9CA3AF;
+
+  // Reading severity (see app/core/clinical.ts)
+  --severity-normal-bg: #DCFCE7;
+  --severity-normal-fg: #166534;
+  --severity-borderline-bg: #FEF3C7;
+  --severity-borderline-fg: #92400E;
+  --severity-abnormal-bg: #FFEDD5;
+  --severity-abnormal-fg: #9A3412;
+  --severity-critical-bg: #DC2626;
+  --severity-critical-fg: #FFFFFF;
+}
+
+// Dark theme. `:root.ion-palette-dark` outranks the light :root values above;
+// Ionic's dark palette (imported in global.scss) styles its own components.
+:root.ion-palette-dark {
+  color-scheme: dark;
+
+  --ion-background-color: #0F1117;
+  --ion-background-color-rgb: 15, 17, 23;
+  --ion-text-color: #E5E7EB;
+  --ion-text-color-rgb: 229, 231, 235;
+  --ion-border-color: #2A2F3A;
+  --ion-card-background: #1A1D26;
+  --ion-toolbar-background: #151821;
+  --ion-item-background: #1A1D26;
+  --ion-color-light: #232733;
+  --ion-color-light-rgb: 35, 39, 51;
+  --ion-color-light-contrast: #E5E7EB;
+  --ion-color-light-shade: #1F222D;
+  --ion-color-light-tint: #393D48;
+
+  --app-surface: #1A1D26;
+  --app-surface-rgb: 26, 29, 38;
+  --app-surface-soft: #0F1117;
+  --app-surface-soft-2: #141722;
+  --app-surface-subtle: #161922;
+  --app-surface-muted: #232733;
+  --app-surface-muted-2: #232733;
+  --app-line: #2A2F3A;
+  --app-line-strong: #3A404D;
+  --app-text-subtle: #8B93A3;
+
+  --severity-normal-bg: #14361F;
+  --severity-normal-fg: #86EFAC;
+  --severity-borderline-bg: #3A2E0B;
+  --severity-borderline-fg: #FCD34D;
+  --severity-abnormal-bg: #3D2010;
+  --severity-abnormal-fg: #FDBA74;
+  --severity-critical-bg: #EF4444;
+  --severity-critical-fg: #FFFFFF;
+
+  body {
+    --ion-background-color: #0F1117;
+    --ion-text-color: #E5E7EB;
+    --ion-card-background: #1A1D26;
+    --ion-item-background: #1A1D26;
+    --ion-toolbar-background: #151821;
+  }
 }

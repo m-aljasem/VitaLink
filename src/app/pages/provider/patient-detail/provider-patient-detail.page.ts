@@ -11,6 +11,8 @@ import { AuthService } from '../../../core/auth.service';
 import { ProfileService, Profile } from '../../../core/profile.service';
 import { SharingService, ProviderLink } from '../../../core/sharing.service';
 import { ObservationService, MetricType, Observation } from '../../../core/observation.service';
+import { MetricFormatService } from '../../../core/metric-format.service';
+import { SeverityBadgeComponent } from '../../../shared/components/severity-badge/severity-badge.component';
 
 interface MetricWidget {
   metric: MetricType;
@@ -19,6 +21,7 @@ interface MetricWidget {
   color: string;
   isShared: boolean;
   recordCount: number;
+  latest: Observation | null;
 }
 
 @Component({
@@ -30,7 +33,7 @@ interface MetricWidget {
     CommonModule,
     IonContent, IonHeader, IonToolbar, IonCard, IonCardContent,
     IonIcon, IonChip, IonButton, IonButtons, IonRefresher, IonRefresherContent,
-    TranslateModule
+    TranslateModule, SeverityBadgeComponent
   ],
 })
 export class ProviderPatientDetailPage implements OnInit {
@@ -57,7 +60,8 @@ export class ProviderPatientDetailPage implements OnInit {
     private sharingService: SharingService,
     private observationService: ObservationService,
     private alertController: AlertController,
-    private translate: TranslateService
+    private translate: TranslateService,
+    public format: MetricFormatService
   ) {
     addIcons({ lockClosed, pulse, water, pulseOutline, heart, sad, scale, locationOutline, personOutline, calendarOutline, male, female, medicalOutline, arrowBack, trashOutline });
   }
@@ -109,14 +113,14 @@ export class ProviderPatientDetailPage implements OnInit {
         const isShared = this.getSharingStatus(metric);
         
         let recordCount = 0;
+        let latest: Observation | null = null;
         if (isShared) {
-          // Get count of observations for this metric
-          const { data: observations } = await this.observationService.getObservationsByMetric(
-            this.patientId,
-            metric,
-            1000 // Large limit to get count
-          );
-          recordCount = observations?.length || 0;
+          const [count, latestResult] = await Promise.all([
+            this.observationService.countObservations(this.patientId, metric),
+            this.observationService.getLatestObservation(this.patientId, metric),
+          ]);
+          recordCount = count;
+          latest = latestResult.data || null;
         }
 
         return {
@@ -126,6 +130,7 @@ export class ProviderPatientDetailPage implements OnInit {
           color: config.color,
           isShared,
           recordCount,
+          latest,
         };
       })
     );

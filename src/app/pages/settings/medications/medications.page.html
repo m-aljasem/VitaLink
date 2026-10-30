@@ -1,0 +1,133 @@
+<ion-content [fullscreen]="true" class="medications-content">
+  <div class="medications-container ion-padding">
+    <div class="page-header">
+      <ion-button fill="clear" (click)="goBack()" class="back-button" [attr.aria-label]="'COMMON.BACK' | translate">
+        <ion-icon [name]="backIcon"></ion-icon>
+      </ion-button>
+      <h1 class="page-title">{{ 'MEDICATIONS.TITLE' | translate }}</h1>
+    </div>
+
+    <div class="loading" *ngIf="loading">
+      <ion-spinner name="crescent"></ion-spinner>
+    </div>
+
+    <ng-container *ngIf="!loading">
+      <!-- Today -->
+      <section class="section">
+        <div class="section-header">
+          <h2>{{ 'MEDICATIONS.TODAY' | translate }}</h2>
+          <span class="adherence" *ngIf="adherence !== null">
+            {{ 'MEDICATIONS.ADHERENCE' | translate: { percent: (adherence * 100 | number: '1.0-0') } }}
+          </span>
+        </div>
+
+        <p class="empty" *ngIf="todaysDoses.length === 0">{{ 'MEDICATIONS.NO_DOSES_TODAY' | translate }}</p>
+
+        <ion-card class="dose-card" *ngFor="let dose of todaysDoses">
+          <ion-card-content>
+            <div class="dose-row">
+              <div class="dose-time">{{ dose.time }}</div>
+              <div class="dose-info">
+                <strong>{{ dose.medication.name }}</strong>
+                <span *ngIf="dose.medication.dose">{{ dose.medication.dose }}</span>
+              </div>
+              <div class="dose-actions" *ngIf="!dose.status">
+                <ion-button size="small" (click)="markDose(dose, 'taken')" [disabled]="!isDue(dose)">
+                  {{ 'MEDICATIONS.TAKEN' | translate }}
+                </ion-button>
+                <ion-button size="small" fill="outline" color="medium" (click)="markDose(dose, 'skipped')" [disabled]="!isDue(dose)">
+                  {{ 'MEDICATIONS.SKIP' | translate }}
+                </ion-button>
+              </div>
+              <button type="button" class="dose-status" *ngIf="dose.status" [class.taken]="dose.status === 'taken'"
+                (click)="markDose(dose, dose.status === 'taken' ? 'skipped' : 'taken')">
+                <ion-icon [name]="dose.status === 'taken' ? 'checkmark-circle' : 'close-circle'"></ion-icon>
+                {{ (dose.status === 'taken' ? 'MEDICATIONS.TAKEN' : 'MEDICATIONS.SKIPPED') | translate }}
+              </button>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </section>
+
+      <!-- Medication list -->
+      <section class="section">
+        <div class="section-header">
+          <h2>{{ 'MEDICATIONS.MY_MEDICATIONS' | translate }}</h2>
+          <ion-button size="small" fill="clear" (click)="startAdd()" *ngIf="!draft">
+            <ion-icon name="add" slot="start"></ion-icon>
+            {{ 'MEDICATIONS.ADD' | translate }}
+          </ion-button>
+        </div>
+
+        <!-- Add / edit form -->
+        <ion-card class="form-card" *ngIf="draft">
+          <ion-card-content>
+            <ion-item class="form-item">
+              <ion-label position="stacked">{{ 'MEDICATIONS.NAME' | translate }}</ion-label>
+              <ion-input [(ngModel)]="draft.name" [maxlength]="100" [placeholder]="'MEDICATIONS.NAME_PLACEHOLDER' | translate"></ion-input>
+            </ion-item>
+            <ion-item class="form-item">
+              <ion-label position="stacked">{{ 'MEDICATIONS.DOSE' | translate }}</ion-label>
+              <ion-input [(ngModel)]="draft.dose" [maxlength]="100" [placeholder]="'MEDICATIONS.DOSE_PLACEHOLDER' | translate"></ion-input>
+            </ion-item>
+
+            <p class="field-label">{{ 'MEDICATIONS.TIMES' | translate }}</p>
+            <div class="chips">
+              <ion-chip *ngFor="let time of draft.times" (click)="removeTime(time)">
+                <ion-icon name="time-outline"></ion-icon>
+                {{ time }} ✕
+              </ion-chip>
+            </div>
+            <div class="add-time">
+              <input type="time" [(ngModel)]="newTime" class="time-input" [attr.aria-label]="'MEDICATIONS.TIMES' | translate" />
+              <ion-button size="small" fill="outline" (click)="addTime()">{{ 'MEDICATIONS.ADD_TIME' | translate }}</ion-button>
+            </div>
+
+            <p class="field-label">{{ 'MEDICATIONS.DAYS' | translate }}</p>
+            <p class="hint">{{ 'MEDICATIONS.DAYS_HINT' | translate }}</p>
+            <div class="chips">
+              <ion-chip *ngFor="let day of daysOfWeek" [class.selected]="draft.days?.includes(day.value)" (click)="toggleDay(day.value)">
+                {{ day.label | translate }}
+              </ion-chip>
+            </div>
+
+            <div class="form-actions">
+              <ion-button expand="block" (click)="save()" [disabled]="saving">
+                <ion-spinner *ngIf="saving" name="crescent" slot="start"></ion-spinner>
+                {{ 'COMMON.SAVE' | translate }}
+              </ion-button>
+              <ion-button expand="block" fill="clear" (click)="cancelEdit()">{{ 'COMMON.CANCEL' | translate }}</ion-button>
+            </div>
+          </ion-card-content>
+        </ion-card>
+
+        <p class="empty" *ngIf="medications.length === 0 && !draft">{{ 'MEDICATIONS.EMPTY' | translate }}</p>
+
+        <ion-card class="medication-card" *ngFor="let medication of medications" [class.inactive]="!medication.active">
+          <ion-card-content>
+            <div class="medication-row">
+              <ion-icon name="medkit" class="medication-icon"></ion-icon>
+              <div class="medication-info">
+                <strong>{{ medication.name }}</strong>
+                <span *ngIf="medication.dose">{{ medication.dose }}</span>
+                <span class="schedule">{{ medication.times.join(', ') }} · {{ daysLabel(medication) }}</span>
+              </div>
+              <ion-toggle [checked]="medication.active" (ionChange)="toggleActive(medication)"
+                [attr.aria-label]="'MEDICATIONS.ACTIVE' | translate"></ion-toggle>
+            </div>
+            <div class="medication-actions">
+              <ion-button size="small" fill="clear" (click)="startEdit(medication)">
+                <ion-icon name="create-outline" slot="start"></ion-icon>
+                {{ 'COMMON.EDIT' | translate }}
+              </ion-button>
+              <ion-button size="small" fill="clear" color="danger" (click)="remove(medication)">
+                <ion-icon name="trash-outline" slot="start"></ion-icon>
+                {{ 'COMMON.DELETE' | translate }}
+              </ion-button>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </section>
+    </ng-container>
+  </div>
+</ion-content>

@@ -10,7 +10,8 @@ import { CommonModule } from '@angular/common';
 import { addIcons } from 'ionicons';
 import {
   person, notifications, language, swapHorizontal, download,
-  informationCircle, logOutOutline, chevronForward, refreshOutline
+  informationCircle, logOutOutline, chevronForward, refreshOutline,
+  medkit, eyeOutline, contrastOutline, trashOutline
 } from 'ionicons/icons';
 import { AuthService, Profile } from '../../core/auth.service';
 import { ProfileService } from '../../core/profile.service';
@@ -18,6 +19,7 @@ import { I18nService, SupportedLanguage } from '../../core/i18n.service';
 import { ReminderService } from '../../core/reminder.service';
 import { PwaUpdateService } from '../../core/pwa-update.service';
 import { SyncService } from '../../core/sync.service';
+import { ThemePreference, ThemeService } from '../../core/theme.service';
 
 @Component({
   selector: 'app-settings',
@@ -36,6 +38,7 @@ export class SettingsPage implements OnInit {
   updateAvailable = false;
   checkingUpdate = false;
   updating = false;
+  theme: ThemePreference = 'system';
 
   constructor(
     private authService: AuthService,
@@ -47,17 +50,20 @@ export class SettingsPage implements OnInit {
     private alertController: AlertController,
     private translate: TranslateService,
     private pwaUpdateService: PwaUpdateService,
-    private syncService: SyncService
+    private syncService: SyncService,
+    private themeService: ThemeService
   ) {
     addIcons({
       person, notifications, language, swapHorizontal, download,
-      informationCircle, 'log-out': logOutOutline, chevronForward, refreshOutline
+      informationCircle, 'log-out': logOutOutline, chevronForward, refreshOutline,
+      medkit, eyeOutline, contrastOutline, trashOutline
     });
   }
 
   async ngOnInit() {
     this.profile = await this.authService.getCurrentProfile();
     this.currentLanguage = this.i18nService.getCurrentLanguage();
+    this.theme = this.themeService.getPreference();
     
     // Check for PWA updates
     if (this.pwaUpdateService.isEnabled()) {
@@ -105,6 +111,56 @@ export class SettingsPage implements OnInit {
     });
 
     await alert.present();
+  }
+
+  changeTheme(theme: ThemePreference) {
+    this.theme = theme;
+    this.themeService.setPreference(theme);
+  }
+
+  async deleteAccount() {
+    const confirmWord = this.translate.instant('SETTINGS.DELETE_ACCOUNT_CONFIRM_WORD');
+    const alert = await this.alertController.create({
+      header: this.translate.instant('SETTINGS.DELETE_ACCOUNT_TITLE'),
+      message: this.translate.instant('SETTINGS.DELETE_ACCOUNT_MESSAGE', { word: confirmWord }),
+      inputs: [{ name: 'confirm', type: 'text', placeholder: confirmWord }],
+      buttons: [
+        { text: this.translate.instant('COMMON.CANCEL'), role: 'cancel' },
+        {
+          text: this.translate.instant('SETTINGS.DELETE_ACCOUNT'),
+          role: 'destructive',
+          handler: (values: { confirm?: string }) => {
+            if ((values.confirm || '').trim().toUpperCase() !== confirmWord.toUpperCase()) {
+              this.showToast('SETTINGS.DELETE_ACCOUNT_MISMATCH', 'danger');
+              return false;
+            }
+            this.performDeleteAccount();
+            return true;
+          },
+        },
+      ],
+    });
+    await alert.present();
+  }
+
+  private async performDeleteAccount() {
+    const { error } = await this.authService.deleteAccount();
+    if (error) {
+      console.error('Account deletion failed:', error);
+      await this.showToast('SETTINGS.DELETE_ACCOUNT_ERROR', 'danger');
+      return;
+    }
+    await this.showToast('SETTINGS.DELETE_ACCOUNT_SUCCESS', 'success');
+    this.router.navigate(['/auth'], { replaceUrl: true });
+  }
+
+  private async showToast(key: string, color: 'success' | 'danger') {
+    const toast = await this.toastController.create({
+      message: this.translate.instant(key),
+      duration: 2500,
+      color,
+    });
+    await toast.present();
   }
 
   private isValidLanguage(lang: string): lang is SupportedLanguage {

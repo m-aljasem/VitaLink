@@ -70,7 +70,7 @@ export class LineChartComponent implements OnInit, OnDestroy, OnChanges {
         scales: {
           x: {
             grid: {
-              color: 'rgba(0, 0, 0, 0.05)',
+              color: 'rgba(128, 128, 128, 0.15)', // visible on light and dark backgrounds
             },
             ticks: {
               font: {
@@ -80,7 +80,7 @@ export class LineChartComponent implements OnInit, OnDestroy, OnChanges {
           },
           y: {
             grid: {
-              color: 'rgba(0, 0, 0, 0.05)',
+              color: 'rgba(128, 128, 128, 0.15)', // visible on light and dark backgrounds
             },
             ticks: {
               font: {

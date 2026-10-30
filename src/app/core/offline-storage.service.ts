@@ -124,6 +124,10 @@ export class OfflineStorageService {
     });
   }
 
+  async getObservation(id: string): Promise<Observation | null> {
+    return this.get('observations', id);
+  }
+
   async getObservations(userId: string, metric?: string): Promise<Observation[]> {
     const store = this.getStore('observations', 'readonly');
     const index = store.index('user_id');
@@ -206,6 +210,10 @@ export class OfflineStorageService {
       request.onsuccess = () => resolve(request.result as SyncQueueItem[]);
       request.onerror = () => reject(request.error);
     });
+  }
+
+  async updateSyncQueueItem(item: SyncQueueItem): Promise<void> {
+    return this.put('syncQueue', item);
   }
 
   async removeFromSyncQueue(itemId: string): Promise<void> {

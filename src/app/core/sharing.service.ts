@@ -14,6 +14,14 @@ export interface ProviderLink {
   created_at: string;
 }
 
+export interface AuditView {
+  id: string;
+  provider_id: string;
+  patient_id: string;
+  metric: string;
+  viewed_at: string;
+}
+
 export type SharingFlags = Pick<ProviderLink, 'share_bp' | 'share_glucose' | 'share_spo2' | 'share_hr' | 'share_pain' | 'share_weight'>;
 
 export interface LinkToken {
@@ -111,6 +119,25 @@ export class SharingService {
       .eq('id', tokenId);
 
     return { error };
+  }
+
+  /** Records that the signed-in provider viewed a patient's metric (shown to the patient). */
+  async logView(providerId: string, patientId: string, metric: string): Promise<void> {
+    const { error } = await this.supabase
+      .from('audit_views')
+      .insert({ provider_id: providerId, patient_id: patientId, metric });
+    if (error) console.error('Failed to log provider view:', error);
+  }
+
+  /** Who viewed the signed-in patient's data, newest first. */
+  async getAccessLog(patientId: string, limit = 100): Promise<{ data?: AuditView[]; error?: any }> {
+    const { data, error } = await this.supabase
+      .from('audit_views')
+      .select('*')
+      .eq('patient_id', patientId)
+      .order('viewed_at', { ascending: false })
+      .limit(limit);
+    return { data: data as AuditView[], error };
   }
 
   async getActiveTokens(providerId: string): Promise<{ data?: LinkToken[]; error?: any }> {

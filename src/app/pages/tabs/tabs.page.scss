@@ -1,5 +1,5 @@
 .custom-tab-bar {
-  --background: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.98) 100%);
+  --background: linear-gradient(180deg, rgba(var(--app-surface-rgb), 0.95) 0%, rgba(var(--app-surface-rgb), 0.98) 100%);
   --border: none;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);

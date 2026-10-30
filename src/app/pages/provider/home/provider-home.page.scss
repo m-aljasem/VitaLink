@@ -1,5 +1,5 @@
 .provider-content {
-  --background: linear-gradient(180deg, #f0f4ff 0%, #ffffff 100%);
+  --background: linear-gradient(180deg, var(--app-surface-soft-2) 0%, var(--app-surface) 100%);
 }
 
 .provider-home-container {
@@ -133,7 +133,7 @@
     margin-bottom: 0.75rem;
 
     .patient-searchbar {
-      --background: #ffffff;
+      --background: var(--app-surface);
       --box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
       --border-radius: 12px;
       --icon-color: #667eea;
@@ -376,7 +376,7 @@
 }
 
 .skeleton-card {
-  background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%) !important;
+  background: linear-gradient(135deg, var(--app-line) 0%, var(--app-line-strong) 100%) !important;
   position: relative;
   overflow: hidden;
 
@@ -421,7 +421,7 @@
 }
 
 .skeleton-badge {
-  background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%) !important;
+  background: linear-gradient(135deg, var(--app-line) 0%, var(--app-line-strong) 100%) !important;
   width: 40px;
   height: 28px;
   border-radius: 20px;
@@ -447,8 +447,8 @@
 }
 
 .skeleton-patient-card {
-  background: #ffffff !important;
-  border: 1px solid #e5e7eb !important;
+  background: var(--app-surface) !important;
+  border: 1px solid var(--app-line) !important;
   position: relative;
   overflow: hidden;
 
@@ -473,7 +473,7 @@
     width: 56px;
     height: 56px;
     border-radius: 16px;
-    background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);
+    background: linear-gradient(135deg, var(--app-line) 0%, var(--app-line-strong) 100%);
     position: relative;
     overflow: hidden;
 
@@ -499,7 +499,7 @@
     height: 20px;
     width: 120px;
     margin-bottom: 0.5rem;
-    background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);
+    background: linear-gradient(135deg, var(--app-line) 0%, var(--app-line-strong) 100%);
     border-radius: 8px;
     position: relative;
     overflow: hidden;
@@ -525,7 +525,7 @@
   .skeleton-date {
     height: 16px;
     width: 100px;
-    background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);
+    background: linear-gradient(135deg, var(--app-line) 0%, var(--app-line-strong) 100%);
     border-radius: 8px;
     position: relative;
     overflow: hidden;
@@ -552,7 +552,7 @@
     width: 24px;
     height: 24px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);
+    background: linear-gradient(135deg, var(--app-line) 0%, var(--app-line-strong) 100%);
     position: relative;
     overflow: hidden;
 
@@ -578,7 +578,7 @@
     width: 60px;
     height: 28px;
     border-radius: 14px;
-    background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);
+    background: linear-gradient(135deg, var(--app-line) 0%, var(--app-line-strong) 100%);
     position: relative;
     overflow: hidden;
 
@@ -615,4 +615,104 @@
   .greeting h1 {
     font-size: 1.5rem;
   }
+}
+
+/* Alerts for out-of-range readings */
+.alerts-card {
+  margin: 0 0 16px;
+  border-radius: 16px;
+  border-inline-start: 4px solid var(--severity-critical-bg);
+
+  .alerts-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+
+    h2 {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin: 0;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--ion-text-color);
+    }
+  }
+
+  .alerts-count {
+    min-width: 22px;
+    padding: 0 6px;
+    border-radius: 999px;
+    background: var(--severity-critical-bg);
+    color: var(--severity-critical-fg);
+    font-size: 0.75rem;
+    text-align: center;
+  }
+
+  .alert-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 10px 4px;
+    border: 0;
+    border-top: 1px solid var(--ion-border-color);
+    background: transparent;
+    color: var(--ion-text-color);
+    font: inherit;
+    text-align: start;
+    cursor: pointer;
+  }
+
+  .alert-icon {
+    flex-shrink: 0;
+    font-size: 1.2rem;
+    color: var(--severity-abnormal-fg);
+  }
+
+  .alert-critical .alert-icon {
+    color: var(--severity-critical-bg);
+  }
+
+  .alert-text {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    font-size: 0.85rem;
+  }
+
+  .alert-time {
+    flex-shrink: 0;
+    font-size: 0.75rem;
+    color: var(--ion-color-medium);
+  }
+}
+
+.patient-flags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.patient-flag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.flag-attention {
+  background: var(--severity-abnormal-bg);
+  color: var(--severity-abnormal-fg);
+}
+
+.flag-inactive {
+  background: var(--ion-color-light);
+  color: var(--ion-color-medium-shade);
 }

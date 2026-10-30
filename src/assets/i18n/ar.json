@@ -61,7 +61,9 @@
     "DIASTOLIC": "الضغط الانبساطي",
     "SAVE": "حفظ",
     "NEXT": "التالي",
-    "SKIP": "تخطي"
+    "SKIP": "تخطي",
+    "GENDER_OTHER": "آخر",
+    "GENDER_PREFER_NOT": "أفضّل عدم الإجابة"
   },
   "TOUR": {
     "WELCOME": "مرحباً بك في VitaLink",
@@ -84,7 +86,8 @@
     "NO_DATA": "لا توجد بيانات بعد",
     "RECENT_ACTIVITY": "النشاط الأخير",
     "NO_ACTIVITY": "لا يوجد نشاط حديث",
-    "TITLE": "الرئيسية"
+    "TITLE": "الرئيسية",
+    "QUICK_ADD": "إضافة سريعة"
   },
   "METRICS": {
     "BP": "ضغط الدم",
@@ -118,7 +121,17 @@
     "DELETE_RECORD_MESSAGE": "هل أنت متأكد من أنك تريد حذف هذا السجل؟",
     "DELETE_RECORD_ERROR": "فشل حذف السجل",
     "DELETE_RECORD_SUCCESS": "تم حذف السجل بنجاح",
-    "SAVED_OFFLINE": "تم الحفظ على هذا الجهاز. ستتم المزامنة عند عودة الاتصال بالإنترنت."
+    "SAVED_OFFLINE": "تم الحفظ على هذا الجهاز. ستتم المزامنة عند عودة الاتصال بالإنترنت.",
+    "BP_SYSTOLIC_RANGE_ERROR": "يجب أن يكون الضغط الانقباضي بين 50 و250",
+    "BP_DIASTOLIC_RANGE_ERROR": "يجب أن يكون الضغط الانبساطي بين 30 و150",
+    "BP_RATIO_ERROR": "يجب أن يكون الانقباضي أعلى من الانبساطي",
+    "DATE_FUTURE_ERROR": "لا يمكن أن يكون التاريخ في المستقبل",
+    "VALUE_RANGE_ERROR": "يجب أن تكون القيمة بين {{min}} و{{max}} {{unit}}",
+    "EDIT_RECORD": "تعديل القراءة",
+    "NOTE": "ملاحظة",
+    "NOTE_PLACEHOLDER": "اختياري، مثال: دوخة، بعد القهوة",
+    "MMOLL": "مليمول/لتر",
+    "LB": "رطل"
   },
   "TAGS": {
     "BP_AFTER_WAKE": "بعد الاستيقاظ",
@@ -188,7 +201,11 @@
     "SUCCESS_TITLE": "نجح",
     "ADDED_SUCCESSFULLY": "تمت الإضافة بنجاح!",
     "ADDING_PROVIDER": "جاري إضافة مقدم الخدمة...",
-    "TOO_MANY_ATTEMPTS": "عدد كبير جدًا من الرموز غير الصحيحة. يرجى الانتظار 15 دقيقة ثم المحاولة مرة أخرى."
+    "TOO_MANY_ATTEMPTS": "عدد كبير جدًا من الرموز غير الصحيحة. يرجى الانتظار 15 دقيقة ثم المحاولة مرة أخرى.",
+    "INVALID_DATE_RANGE": "يجب أن يكون تاريخ البدء قبل تاريخ الانتهاء",
+    "PDF_EXPORT_ERROR": "حدث خطأ أثناء إنشاء ملف PDF",
+    "PDF_EXPORT_SUCCESS": "تم تصدير ملف PDF بنجاح!",
+    "SELECT_AT_LEAST_ONE_METRIC": "يرجى اختيار مؤشر واحد على الأقل"
   },
   "SETTINGS": {
     "TITLE": "الإعدادات",
@@ -269,7 +286,21 @@
     "PWA_UPDATE_MESSAGE": "إصدار جديد من التطبيق متاح. سيتم إعادة تحميل التطبيق لتطبيق التحديث.",
     "PWA_UPDATE_CONFIRM": "تحديث",
     "PWA_UPDATE_ERROR": "فشل تطبيق التحديث",
-    "REMINDER_NOTIFICATION_BODY": "حان وقت تسجيل بياناتك الصحية"
+    "REMINDER_NOTIFICATION_BODY": "حان وقت تسجيل بياناتك الصحية",
+    "AGE_RANGE_ERROR": "يجب أن يكون العمر بين 0 و130",
+    "UNITS": "الوحدات",
+    "THEME": "المظهر",
+    "THEME_SYSTEM": "حسب النظام",
+    "THEME_LIGHT": "فاتح",
+    "THEME_DARK": "داكن",
+    "DELETE_ACCOUNT": "حذف الحساب",
+    "DELETE_ACCOUNT_DESC": "احذف حسابك وجميع بياناتك نهائياً",
+    "DELETE_ACCOUNT_TITLE": "هل تريد حذف حسابك؟",
+    "DELETE_ACCOUNT_MESSAGE": "سيتم حذف ملفك الشخصي وقراءاتك وأدويتك وتذكيراتك وارتباطاتك بمقدمي الرعاية نهائياً. لا يمكن التراجع عن ذلك. اكتب {{word}} للتأكيد.",
+    "DELETE_ACCOUNT_CONFIRM_WORD": "حذف",
+    "DELETE_ACCOUNT_MISMATCH": "كلمة التأكيد غير مطابقة",
+    "DELETE_ACCOUNT_ERROR": "تعذّر حذف حسابك. يرجى المحاولة مرة أخرى.",
+    "DELETE_ACCOUNT_SUCCESS": "تم حذف حسابك"
   },
   "PDF_EXPORT": {
     "SUBTITLE": "تخصيص خيارات تصدير PDF الخاصة بك",
@@ -324,7 +355,12 @@
     "DELETE_PATIENT": "حذف المريض",
     "DELETE_PATIENT_TITLE": "حذف المريض",
     "DELETE_PATIENT_MESSAGE": "هل أنت متأكد من أنك تريد إزالة هذا المريض؟ لا يمكن التراجع عن هذا الإجراء.",
-    "DELETE": "حذف"
+    "DELETE": "حذف",
+    "NEEDS_ATTENTION": "يحتاج إلى متابعة",
+    "INACTIVE": "لا قراءات منذ {{days}}+ أيام",
+    "NO_PATIENTS": "لا يوجد مرضى بعد. شارك رمزاً من تبويب الاتصال لإضافة مريض.",
+    "PATIENT": "مريض",
+    "PROVIDER": "مقدم رعاية"
   },
   "TIME": {
     "JUST_NOW": "الآن",
@@ -432,5 +468,62 @@
     "UNITED_KINGDOM": "المملكة المتحدة",
     "UNITED_STATES": "الولايات المتحدة",
     "VIETNAM": "فيتنام"
+  },
+  "ACCESS_LOG": {
+    "TITLE": "سجل الاطلاع",
+    "SETTINGS_DESC": "اعرف مقدمي الرعاية الذين اطلعوا على بياناتك",
+    "INTRO": "في كل مرة يفتح فيها مقدم رعاية أحد مؤشراتك المشتركة، يُسجَّل ذلك هنا.",
+    "EMPTY": "لم يطّلع أحد على بياناتك بعد.",
+    "LOAD_ERROR": "تعذّر تحميل سجل الاطلاع. يرجى المحاولة مرة أخرى.",
+    "FORMER_PROVIDER": "مقدم رعاية سابق",
+    "VIEWED": "اطّلع على {{metric}}"
+  },
+  "ALERTS": {
+    "TITLE": "التنبيهات",
+    "MARK_ALL_READ": "تعليم الكل كمقروء"
+  },
+  "CLINICAL": {
+    "NORMAL": "طبيعي",
+    "BORDERLINE": "حدّي",
+    "ABNORMAL": "خارج النطاق",
+    "CRITICAL": "حرج",
+    "BORDERLINE_HIGH": "مرتفع قليلاً",
+    "BORDERLINE_LOW": "منخفض قليلاً",
+    "ABNORMAL_HIGH": "مرتفع",
+    "ABNORMAL_LOW": "منخفض",
+    "CRITICAL_HIGH": "مرتفع جداً",
+    "CRITICAL_LOW": "منخفض جداً",
+    "ADVICE_ABNORMAL": "هذه القراءة خارج النطاق المعتاد. أعد القياس، وإذا بقيت خارج النطاق فاستشر طبيبك.",
+    "ADVICE_CRITICAL": "هذه القراءة بعيدة جداً عن النطاق الآمن. أعد القياس الآن. إذا تأكدت أو شعرت بتوعك (ألم في الصدر، ضيق في التنفس، تشوش، إغماء)، فاطلب الرعاية الطبية العاجلة."
+  },
+  "MEDICATIONS": {
+    "TITLE": "الأدوية",
+    "SETTINGS_DESC": "تابع أدويتك وجرعاتك",
+    "TODAY": "اليوم",
+    "ADHERENCE": "تم تناول {{percent}}% (آخر 7 أيام)",
+    "NO_DOSES_TODAY": "لا توجد جرعات مجدولة لليوم.",
+    "MY_MEDICATIONS": "أدويتي",
+    "ADD": "إضافة",
+    "NAME": "الاسم",
+    "NAME_PLACEHOLDER": "مثال: ميتفورمين",
+    "DOSE": "الجرعة",
+    "DOSE_PLACEHOLDER": "مثال: 500 ملغ، قرص واحد",
+    "TIMES": "الأوقات",
+    "ADD_TIME": "إضافة وقت",
+    "DAYS": "الأيام",
+    "DAYS_HINT": "اترك الأيام دون تحديد ليكون الدواء يومياً.",
+    "EVERY_DAY": "كل يوم",
+    "EMPTY": "لا توجد أدوية بعد. أضف دواءً لتصلك تذكيرات الجرعات.",
+    "ACTIVE": "نشط",
+    "TAKEN": "تم تناولها",
+    "SKIP": "تخطي",
+    "SKIPPED": "تم تخطيها",
+    "NAME_REQUIRED": "يرجى إدخال اسم الدواء",
+    "TIME_REQUIRED": "أضف وقتاً واحداً على الأقل",
+    "SAVE_ERROR": "تعذّر الحفظ. يرجى المحاولة مرة أخرى.",
+    "LOAD_ERROR": "تعذّر تحميل أدويتك.",
+    "DELETE_TITLE": "حذف الدواء",
+    "DELETE_MESSAGE": "هل تريد حذف {{name}} وسجله؟",
+    "NOTIFICATION_BODY": "حان وقت تناول دوائك"
   }
 }

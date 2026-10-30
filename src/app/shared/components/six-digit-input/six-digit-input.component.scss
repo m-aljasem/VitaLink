@@ -11,7 +11,7 @@
     font-size: 1.5rem;
     font-weight: 600;
     --border-radius: 16px;
-    --background: #ffffff;
+    --background: var(--app-surface);
     --border-color: var(--ion-color-medium);
     --border-width: 2px;
     --border-style: solid;
@@ -20,7 +20,7 @@
 
     &:focus-within {
       --border-color: var(--ion-color-primary);
-      --background: #ffffff;
+      --background: var(--app-surface);
       box-shadow: 0 2px 8px rgba(var(--ion-color-primary-rgb), 0.3);
     }
   }

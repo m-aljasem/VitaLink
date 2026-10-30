@@ -24,6 +24,8 @@
         [trend]="metric.trend"
         [color]="metric.color"
         [sparklineData]="metric.sparklineData"
+        [unit]="metric.unit"
+        [reading]="metric.reading"
       ></app-metric-card>
     </div>
 
@@ -47,6 +49,7 @@
               <div class="activity-value" [style.color]="getMetricColor(activity.metric)">
                 {{ formatMetricValue(activity) }}
               </div>
+              <app-severity-badge [reading]="activity"></app-severity-badge>
               <div *ngIf="activity.tags && activity.tags.length > 0" class="activity-tags">
                 <ion-chip *ngFor="let tag of activity.tags" size="small" class="activity-chip" [style.--chip-color]="getMetricColor(activity.metric)">
                   {{ tag | translate }}
@@ -94,8 +97,11 @@
                 <div class="record-value" [style.color]="getMetricColor(selectedRecord.metric)">
                   {{ formatMetricValue(selectedRecord) }}
                 </div>
+                <app-severity-badge [reading]="selectedRecord" [showNormal]="true"></app-severity-badge>
               </div>
             </div>
+
+            <p class="severity-advice" *ngIf="format.severityAdvice(format.classify(selectedRecord)) as advice">{{ advice }}</p>
 
             <div class="record-details">
               <div class="detail-row">
@@ -114,6 +120,13 @@
                       {{ tag | translate }}
                     </ion-chip>
                   </div>
+                </div>
+              </div>
+              <div class="detail-row" *ngIf="selectedRecord.note">
+                <ion-icon name="document-text-outline"></ion-icon>
+                <div>
+                  <strong>{{ 'METRICS.NOTE' | translate }}:</strong>
+                  <p class="record-note">{{ selectedRecord.note }}</p>
                 </div>
               </div>
             </div>
@@ -136,5 +149,11 @@
       </ion-content>
     </ng-template>
   </ion-modal>
+
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+    <ion-fab-button (click)="quickAdd()" [attr.aria-label]="'HOME.QUICK_ADD' | translate">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 </ion-content>
 

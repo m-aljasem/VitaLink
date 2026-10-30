@@ -37,6 +37,35 @@
           </div>
         </ion-card-content>
       </ion-card>
+
+      <ion-card class="settings-card" button routerLink="medications" *ngIf="profile?.role === 'patient'">
+        <ion-card-content>
+          <div class="setting-item">
+            <div class="setting-icon-wrapper icon-medications">
+              <ion-icon name="medkit"></ion-icon>
+            </div>
+            <div class="setting-content">
+              <h3>{{ 'MEDICATIONS.TITLE' | translate }}</h3>
+              <p>{{ 'MEDICATIONS.SETTINGS_DESC' | translate }}</p>
+            </div>
+            <ion-icon name="chevron-forward" class="arrow-icon"></ion-icon>
+          </div>
+        </ion-card-content>
+      </ion-card>
+      <ion-card class="settings-card" button routerLink="access-log" *ngIf="profile?.role === 'patient'">
+        <ion-card-content>
+          <div class="setting-item">
+            <div class="setting-icon-wrapper icon-access">
+              <ion-icon name="eye-outline"></ion-icon>
+            </div>
+            <div class="setting-content">
+              <h3>{{ 'ACCESS_LOG.TITLE' | translate }}</h3>
+              <p>{{ 'ACCESS_LOG.SETTINGS_DESC' | translate }}</p>
+            </div>
+            <ion-icon name="chevron-forward" class="arrow-icon"></ion-icon>
+          </div>
+        </ion-card-content>
+      </ion-card>
     </div>
 
     <!-- Preferences Section -->
@@ -63,6 +92,27 @@
                 <ion-select-option value="ur">اردو</ion-select-option>
                 <ion-select-option value="zh">中文</ion-select-option>
                 <ion-select-option value="ja">日本語</ion-select-option>
+              </ion-select>
+            </div>
+          </div>
+        </ion-card-content>
+      </ion-card>
+
+      <ion-card class="settings-card">
+        <ion-card-content>
+          <div class="setting-item">
+            <div class="setting-icon-wrapper icon-theme">
+              <ion-icon name="contrast-outline"></ion-icon>
+            </div>
+            <div class="setting-content">
+              <h3>{{ 'SETTINGS.THEME' | translate }}</h3>
+              <ion-select
+                [ngModel]="theme"
+                (ionChange)="changeTheme($event.detail.value)"
+                class="language-select">
+                <ion-select-option value="system">{{ 'SETTINGS.THEME_SYSTEM' | translate }}</ion-select-option>
+                <ion-select-option value="light">{{ 'SETTINGS.THEME_LIGHT' | translate }}</ion-select-option>
+                <ion-select-option value="dark">{{ 'SETTINGS.THEME_DARK' | translate }}</ion-select-option>
               </ion-select>
             </div>
           </div>
@@ -174,6 +224,20 @@
               <p>{{ 'SETTINGS.LOGOUT_DESC' | translate }}</p>
             </div>
             <ion-icon name="chevron-forward" class="arrow-icon"></ion-icon>
+          </div>
+        </ion-card-content>
+      </ion-card>
+
+      <ion-card class="settings-card delete-account-card" button (click)="deleteAccount()">
+        <ion-card-content>
+          <div class="setting-item">
+            <div class="setting-icon-wrapper icon-delete">
+              <ion-icon name="trash-outline"></ion-icon>
+            </div>
+            <div class="setting-content">
+              <h3>{{ 'SETTINGS.DELETE_ACCOUNT' | translate }}</h3>
+              <p>{{ 'SETTINGS.DELETE_ACCOUNT_DESC' | translate }}</p>
+            </div>
           </div>
         </ion-card-content>
       </ion-card>

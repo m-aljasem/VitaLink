@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
-import { jsPDF } from 'jspdf';
 import { ObservationService, MetricType, Observation } from './observation.service';
-import { AuthService, Profile } from './auth.service';
-import { TranslateService } from '@ngx-translate/core';
+import { AuthService } from './auth.service';
+import { MetricFormatService } from './metric-format.service';
+import { classifyReading } from './clinical';
+import { UnitPreferences, toDisplay, unitSymbol } from './units';
+import { computeMetricStats } from './report-stats';
 
 interface PDFExportOptions {
   metrics: MetricType[];
@@ -19,7 +21,7 @@ export class PdfExportService {
   constructor(
     private observationService: ObservationService,
     private authService: AuthService,
-    private translate: TranslateService
+    private format: MetricFormatService
   ) {}
 
   async generatePDF(options: PDFExportOptions): Promise<void> {
@@ -36,6 +38,22 @@ export class PdfExportService {
     const margin = 20;
     const contentWidth = pageWidth - (margin * 2);
     
+    // jsPDF (with html2canvas/canvg) is large, so it is only loaded when a report is generated.
+    const { jsPDF } = await import('jspdf');
+    const prefs = this.format.units;
+
+    // Readings in the report period, per metric, newest first.
+    const readingsByMetric = new Map<MetricType, Observation[]>();
+    for (const metric of options.metrics) {
+      const { data } = await this.observationService.getObservationsByMetric(user.id, metric, 1000);
+      readingsByMetric.set(metric, (data || [])
+        .filter(obs => {
+          const ts = new Date(obs.ts);
+          return ts >= options.startDate && ts <= options.endDate;
+        })
+        .sort((a, b) => new Date(b.ts).getTime() - new Date(a.ts).getTime()));
+    }
+
     const doc = new jsPDF({
       orientation: 'portrait',
       unit: 'mm',
@@ -108,7 +126,8 @@ export class PdfExportService {
     }
     
     if (profile.gender) {
-      addText(`Gender: ${profile.gender}`, margin + 5, yPosition, 11);
+      const genders: Record<string, string> = { male: 'Male', female: 'Female', other: 'Other', prefer_not_to_say: 'Not stated' };
+      addText(`Gender: ${genders[profile.gender] || profile.gender}`, margin + 5, yPosition, 11);
       yPosition += lineHeight;
     }
     
@@ -129,114 +148,88 @@ export class PdfExportService {
 
     // Summary Statistics (if enabled)
     if (options.includeSummary) {
-      checkPageBreak(30);
-      drawRect(margin, yPosition, contentWidth, 25, '#F9FAFB', '#E5E7EB');
-      addText('Summary Statistics', margin + 5, yPosition + 7, 14, true);
-      yPosition += 12;
+      checkPageBreak(20);
+      addText('Summary Statistics', margin, yPosition + 6, 14, true);
+      yPosition += 10;
 
-      // Calculate summary for each metric
       for (const metric of options.metrics) {
-        const { data: observations } = await this.observationService.getObservationsByMetric(
-          user.id,
-          metric,
-          1000
-        );
+        const stats = computeMetricStats(metric, readingsByMetric.get(metric) || [], prefs);
+        if (!stats) continue;
 
-        if (observations && observations.length > 0) {
-          const filtered = observations.filter(obs => {
-            const obsDate = new Date(obs.ts);
-            return obsDate >= options.startDate && obsDate <= options.endDate;
-          });
-
-          if (filtered.length > 0) {
-            checkPageBreak(10);
-            const metricName = this.getMetricName(metric);
-            const values = this.extractValues(filtered, metric);
-            
-            if (values.length > 0) {
-              const avg = values.reduce((a, b) => a + b, 0) / values.length;
-              const min = Math.min(...values);
-              const max = Math.max(...values);
-              
-              const summaryText = `${metricName}: Avg ${avg.toFixed(1)}, Min ${min.toFixed(1)}, Max ${max.toFixed(1)}`;
-              addText(summaryText, margin + 5, yPosition, 10);
-              yPosition += lineHeight;
-            }
-          }
+        const unit = unitSymbol(metric, prefs);
+        const lines: string[] = [];
+        if (metric === 'bp' && stats.diastolic) {
+          lines.push(`Average ${stats.average}/${stats.diastolic.average} ${unit}  (range ${stats.min}-${stats.max} / ${stats.diastolic.min}-${stats.diastolic.max})`);
+          const parts = [
+            stats.morning ? `Morning (before 12:00): ${stats.morning.systolic}/${stats.morning.diastolic} (n=${stats.morning.count})` : '',
+            stats.evening ? `Evening (after 18:00): ${stats.evening.systolic}/${stats.evening.diastolic} (n=${stats.evening.count})` : '',
+          ].filter(Boolean);
+          if (parts.length) lines.push(parts.join('   '));
+        } else {
+          lines.push(`Average ${stats.average} ${unit}  (range ${stats.min}-${stats.max})`);
         }
+        const rangeText = stats.inRangeShare !== null
+          ? `In normal range: ${Math.round(stats.inRangeShare * 100)}%   Out of range: ${stats.outOfRangeCount}`
+          : '';
+        lines.push([`Readings: ${stats.count}`, rangeText].filter(Boolean).join('   '));
+
+        const boxHeight = 9 + lines.length * 6;
+        checkPageBreak(boxHeight + 4);
+        drawRect(margin, yPosition, contentWidth, boxHeight, '#F9FAFB', '#E5E7EB');
+        doc.setFillColor(this.getMetricColor(metric));
+        doc.rect(margin, yPosition, 2, boxHeight, 'F');
+        addText(this.getMetricName(metric), margin + 6, yPosition + 6, 11, true);
+        lines.forEach((line, i) => addText(line, margin + 6, yPosition + 12 + i * 6, 9.5, false, '#374151'));
+        yPosition += boxHeight + 4;
       }
+
+      checkPageBreak(10);
+      addText(
+        'Ranges are general adult guidelines (e.g. ACC/AHA blood pressure, ADA glucose) and are not a diagnosis.',
+        margin, yPosition + 4, 8, false, '#6B7280'
+      );
       yPosition += sectionSpacing;
     }
 
     // Detailed Data Tables for each metric
     for (const metric of options.metrics) {
-      checkPageBreak(40);
-      
-      const { data: observations } = await this.observationService.getObservationsByMetric(
-        user.id,
-        metric,
-        1000
-      );
-
-      if (!observations || observations.length === 0) continue;
-
-      const filtered = observations
-        .filter(obs => {
-          const obsDate = new Date(obs.ts);
-          return obsDate >= options.startDate && obsDate <= options.endDate;
-        })
-        .sort((a, b) => new Date(b.ts).getTime() - new Date(a.ts).getTime())
-        .slice(0, 50); // Limit to 50 most recent
-
+      const filtered = (readingsByMetric.get(metric) || []).slice(0, 50); // 50 most recent
       if (filtered.length === 0) continue;
 
-      // Metric Header
+      checkPageBreak(40);
       const metricName = this.getMetricName(metric);
-      const metricColor = this.getMetricColor(metric);
-      
-      drawRect(margin, yPosition, contentWidth, 15, metricColor, '#1E40AF');
+      drawRect(margin, yPosition, contentWidth, 15, this.getMetricColor(metric), this.getMetricColor(metric));
       addText(metricName, margin + 5, yPosition + 10, 14, true, '#FFFFFF');
       yPosition += 18;
 
       // Table Header
       checkPageBreak(20);
       drawRect(margin, yPosition, contentWidth, 8, '#F3F4F6', '#D1D5DB');
-      addText('Date & Time', margin + 5, yPosition + 6, 10, true);
-      addText('Value', margin + 100, yPosition + 6, 10, true);
-      addText('Tags', margin + 150, yPosition + 6, 10, true);
+      addText('Date & Time', margin + 3, yPosition + 6, 9, true);
+      addText('Value', margin + 45, yPosition + 6, 9, true);
+      addText('Status', margin + 82, yPosition + 6, 9, true);
+      addText('Tags / Note', margin + 112, yPosition + 6, 9, true);
       yPosition += 10;
 
-      // Table Rows
-      for (const obs of filtered) {
+      filtered.forEach((obs, index) => {
         checkPageBreak(8);
-        
         const date = new Date(obs.ts);
-        const dateStr = date.toLocaleDateString('en-US', { 
-          month: 'short', 
-          day: 'numeric', 
-          year: 'numeric' 
-        });
-        const timeStr = date.toLocaleTimeString('en-US', { 
-          hour: '2-digit', 
-          minute: '2-digit' 
-        });
-        
-        const value = this.formatValue(obs, metric);
-        const tags = obs.tags && obs.tags.length > 0 ? obs.tags.join(', ') : '-';
-        
-        // Alternate row colors
-        const rowColor = filtered.indexOf(obs) % 2 === 0 ? '#FFFFFF' : '#F9FAFB';
-        drawRect(margin, yPosition, contentWidth, 7, rowColor, '#E5E7EB');
-        
-        addText(`${dateStr} ${timeStr}`, margin + 5, yPosition + 5, 9);
-        addText(value, margin + 100, yPosition + 5, 9);
-        
-        // Truncate tags if too long
-        const tagsText = tags.length > 20 ? tags.substring(0, 17) + '...' : tags;
-        addText(tagsText, margin + 150, yPosition + 5, 9);
-        
+        const dateStr = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        const timeStr = date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+        const status = this.statusText(obs);
+        const details = [
+          ...(obs.tags || []).map(tag => this.tagText(tag)),
+          obs.note ? `"${obs.note}"` : '',
+        ].filter(Boolean).join(', ') || '-';
+
+        drawRect(margin, yPosition, contentWidth, 7, index % 2 === 0 ? '#FFFFFF' : '#F9FAFB', '#E5E7EB');
+        addText(`${dateStr} ${timeStr}`, margin + 3, yPosition + 5, 8.5);
+        addText(this.formatValue(obs, metric, prefs), margin + 45, yPosition + 5, 8.5);
+        addText(status, margin + 82, yPosition + 5, 8.5, status !== 'Normal' && status !== '-',
+          status.startsWith('Critical') ? '#B91C1C' : '#000000');
+        addText(details.length > 38 ? details.substring(0, 35) + '...' : details, margin + 112, yPosition + 5, 8.5);
         yPosition += 8;
-      }
+      });
 
       yPosition += sectionSpacing;
     }
@@ -292,37 +285,34 @@ export class PdfExportService {
     return colors[metric] || '#3B82F6';
   }
 
-  private extractValues(observations: Observation[], metric: MetricType): number[] {
+  private formatValue(obs: Observation, metric: MetricType, prefs: UnitPreferences): string {
+    const unit = unitSymbol(metric, prefs);
     if (metric === 'bp') {
-      return observations
-        .map(obs => obs.systolic || 0)
-        .filter(val => val > 0);
+      return `${obs.systolic ?? '-'}/${obs.diastolic ?? '-'} ${unit}`;
     }
-    return observations
-      .map(obs => obs.numeric_value || 0)
-      .filter(val => val > 0);
+    if (obs.numeric_value == null) return '-';
+    return `${toDisplay(metric, Number(obs.numeric_value), prefs)} ${unit}`;
   }
 
-  private formatValue(obs: Observation, metric: MetricType): string {
-    if (metric === 'bp') {
-      const unit = this.translate.instant('METRICS.MMHG');
-      return `${obs.systolic || 'N/A'}/${obs.diastolic || 'N/A'} ${unit}`;
-    }
-    // Get unit translation key based on metric type
-    const unitKey = this.getUnitTranslationKey(metric);
-    const unit = unitKey ? this.translate.instant(unitKey) : (obs.unit || '');
-    return `${obs.numeric_value || 'N/A'} ${unit}`;
+  /** English status label (the PDF font only covers Latin script). */
+  private statusText(obs: Observation): string {
+    const c = classifyReading(obs);
+    if (!c) return '-';
+    if (c.severity === 'normal') return 'Normal';
+    const level = { borderline: 'Borderline', abnormal: '', critical: 'Critically' }[c.severity];
+    const direction = c.direction === 'low' ? 'low' : 'high';
+    return level ? `${level} ${direction}` : direction === 'low' ? 'Low' : 'High';
   }
 
-  private getUnitTranslationKey(metric: string): string | null {
-    const unitMap: { [key: string]: string } = {
-      glucose: 'METRICS.MGDL',
-      spo2: 'METRICS.PERCENT',
-      hr: 'METRICS.BPM',
-      pain: 'METRICS.SCALE_1_10',
-      weight: 'METRICS.KG',
+  private tagText(tag: string): string {
+    const tags: Record<string, string> = {
+      'TAGS.BP_AFTER_WAKE': 'After waking',
+      'TAGS.BP_BEFORE_BED': 'Before bed',
+      'TAGS.BP_STRESS': 'Stress',
+      'TAGS.GLUCOSE_FASTING': 'Fasting',
+      'TAGS.GLUCOSE_AFTER_MEAL': 'After meal',
+      'TAGS.GLUCOSE_WORKOUT': 'Workout',
     };
-    return unitMap[metric] || null;
+    return tags[tag] || tag.replace(/^TAGS\./, '');
   }
 }
-

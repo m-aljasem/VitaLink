@@ -1,5 +1,5 @@
 .profile-content {
-  --background: linear-gradient(180deg, #f0f4ff 0%, #ffffff 100%);
+  --background: linear-gradient(180deg, var(--app-surface-soft-2) 0%, var(--app-surface) 100%);
 }
 
 .profile-container {
@@ -95,10 +95,10 @@
     .form-item {
       margin-bottom: 1rem;
       --border-radius: 12px;
-      --background: #ffffff;
+      --background: var(--app-surface);
       --border-width: 1px;
       --border-style: solid;
-      --border-color: #d1d5db;
+      --border-color: var(--app-line-strong);
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
       width: 100%;
 
@@ -128,13 +128,13 @@
         
         // Fix autocomplete panel background
         .mat-mdc-autocomplete-panel {
-          background: #ffffff !important;
+          background: var(--app-surface) !important;
           border-radius: 8px !important;
           box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
           border: none !important;
           
           .mat-mdc-option {
-            background: #ffffff !important;
+            background: var(--app-surface) !important;
             border: none !important;
             
             &:hover {
@@ -169,15 +169,16 @@
   
   .gender-buttons {
     display: flex;
+    flex-wrap: wrap;
     gap: 0.75rem;
     width: 100%;
     
     .gender-button {
-      flex: 1;
+      flex: 1 1 calc(50% - 0.75rem);
       --border-radius: 12px;
       --border-width: 1px;
-      --border-color: #d1d5db;
-      --background: #ffffff;
+      --border-color: var(--app-line-strong);
+      --background: var(--app-surface);
       --color: var(--ion-color-dark);
       margin: 0;
       height: 48px;
@@ -265,4 +266,15 @@
   .profile-header h1 {
     font-size: 2.5rem;
   }
+}
+
+.unit-label {
+  display: block;
+  margin: 12px 0 6px;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.unit-segment {
+  margin-bottom: 4px;
 }

@@ -65,7 +65,7 @@
     font-size: 1.75rem;
     font-weight: 700;
     margin: 0 0 0.75rem 0;
-    background: linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%);
+    background: linear-gradient(135deg, white 0%, #f0f0f0 100%); // gradient text on the coloured header, same in both themes
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -106,7 +106,7 @@
     letter-spacing: 0.5rem;
     text-align: center;
     --border-radius: 14px;
-    --background: rgba(255, 255, 255, 0.95);
+    --background: rgba(var(--app-surface-rgb), 0.95);
     --border-color: rgba(255, 255, 255, 0.5);
     --border-width: 2px;
     --border-style: solid;
@@ -117,7 +117,7 @@
 
     &:focus-within {
       --border-color: rgba(255, 255, 255, 0.8);
-      --background: #ffffff;
+      --background: var(--app-surface);
       box-shadow: 0 6px 20px rgba(255, 255, 255, 0.4);
       transform: translateY(-2px) scale(1.02);
     }

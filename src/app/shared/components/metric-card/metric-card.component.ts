@@ -6,13 +6,15 @@ import { arrowUp, arrowDown, remove, timeOutline, pulse, water, heart, thermomet
 import { addIcons } from 'ionicons';
 import { TranslateModule } from '@ngx-translate/core';
 import { MetricType } from '../../../core/observation.service';
+import { ReadingValues } from '../../../core/clinical';
+import { SeverityBadgeComponent } from '../severity-badge/severity-badge.component';
 
 @Component({
   selector: 'app-metric-card',
   templateUrl: './metric-card.component.html',
   styleUrls: ['./metric-card.component.scss'],
   standalone: true,
-  imports: [CommonModule, IonCard, IonCardContent, IonText, IonIcon, TranslateModule],
+  imports: [CommonModule, IonCard, IonCardContent, IonText, IonIcon, TranslateModule, SeverityBadgeComponent],
 })
 export class MetricCardComponent {
   @Input() metric!: MetricType;
@@ -21,6 +23,9 @@ export class MetricCardComponent {
   @Input() trend: 'up' | 'down' | 'neutral' = 'neutral';
   @Input() color = '#3B82F6';
   @Input() sparklineData: number[] = [];
+  @Input() unit = '';
+  /** Latest reading, used for the severity badge. */
+  @Input() reading: ReadingValues | null = null;
 
   constructor(private router: Router) {
     addIcons({ arrowUp, arrowDown, remove, timeOutline, pulse, water, heart, thermometer, bandage, scale });

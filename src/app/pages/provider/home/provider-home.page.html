@@ -5,8 +5,38 @@
 
   <div class="provider-home-container">
     <div class="greeting">
-      <h1>{{ 'HOME.GREETING_MORNING' | translate }}, {{ profile?.first_name || 'Provider' }}</h1>
+      <h1>{{ greeting | translate }}, {{ profile?.first_name || ('PROVIDER.PROVIDER' | translate) }}</h1>
     </div>
+
+    <!-- Alerts -->
+    <ion-card class="alerts-card" *ngIf="alerts.length > 0">
+      <ion-card-content>
+        <div class="alerts-header">
+          <h2>
+            <ion-icon name="notifications"></ion-icon>
+            {{ 'ALERTS.TITLE' | translate }}
+            <span class="alerts-count">{{ alerts.length }}</span>
+          </h2>
+          <ion-button fill="clear" size="small" (click)="markAllAlertsRead()">
+            {{ 'ALERTS.MARK_ALL_READ' | translate }}
+          </ion-button>
+        </div>
+        <button
+          type="button"
+          class="alert-row"
+          *ngFor="let alert of alerts.slice(0, 10)"
+          [class.alert-critical]="alert.severity === 'critical'"
+          (click)="openAlert(alert)"
+        >
+          <ion-icon name="alert-circle" class="alert-icon"></ion-icon>
+          <span class="alert-text">
+            <strong>{{ patientName(alert.patient_id) }}</strong>
+            <span>{{ alertText(alert) }}</span>
+          </span>
+          <span class="alert-time">{{ formatDate(alert.created_at) }}</span>
+        </button>
+      </ion-card-content>
+    </ion-card>
 
     <!-- Stats Widgets -->
     <div class="stats-grid">
@@ -158,13 +188,23 @@
                     {{ patient.profile.first_name }} {{ patient.profile.last_name }}
                   </span>
                   <span *ngIf="!patient.profile.first_name && !patient.profile.last_name">
-                    Patient {{ patient.profile.id.substring(0, 8) }}
+                    {{ 'PROVIDER.PATIENT' | translate }} {{ patient.profile.id.substring(0, 8) }}
                   </span>
                 </h3>
                 <p class="last-seen">
                   <ion-icon name="time-outline"></ion-icon>
                   {{ 'PROVIDER.LAST_SEEN' | translate }}: {{ formatDate(patient.lastSeen) }}
                 </p>
+                <div class="patient-flags" *ngIf="patient.needsAttention || patient.inactive">
+                  <span class="patient-flag flag-attention" *ngIf="patient.needsAttention">
+                    <ion-icon name="alert-circle"></ion-icon>
+                    {{ 'PROVIDER.NEEDS_ATTENTION' | translate }}
+                  </span>
+                  <span class="patient-flag flag-inactive" *ngIf="patient.inactive">
+                    <ion-icon name="moon-outline"></ion-icon>
+                    {{ 'PROVIDER.INACTIVE' | translate: { days: 3 } }}
+                  </span>
+                </div>
               </div>
               <div class="patient-arrow">
                 <ion-icon name="chevron-forward"></ion-icon>
@@ -193,7 +233,7 @@
       <div class="empty-state" *ngIf="!loading && patients.length === 0">
         <ion-icon name="people-outline" class="empty-icon"></ion-icon>
         <ion-text color="medium">
-          {{ 'CONNECT.NO_PROVIDERS' | translate }}
+          {{ 'PROVIDER.NO_PATIENTS' | translate }}
         </ion-text>
       </div>
     </div>

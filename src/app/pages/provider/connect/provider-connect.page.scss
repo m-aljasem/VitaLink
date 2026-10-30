@@ -1,32 +1,32 @@
 .provider-connect-content {
-  --background: linear-gradient(180deg, #f0f4ff 0%, #ffffff 100%);
-  background: #f2f6ff !important;
-  background-color: #f2f6ff !important;
+  --background: linear-gradient(180deg, var(--app-surface-soft-2) 0%, var(--app-surface) 100%);
+  background: var(--app-surface-soft) !important;
+  background-color: var(--app-surface-soft) !important;
   
   // Override scroll content background
   &::part(scroll) {
-    background: #f2f6ff !important;
+    background: var(--app-surface-soft) !important;
   }
   
   &::part(native) {
-    background: #f2f6ff !important;
+    background: var(--app-surface-soft) !important;
   }
   
   // Make scroll content match when refresher is present
   &.has-refresher {
     .scroll-content {
-      background: #f2f6ff !important;
-      background-color: #f2f6ff !important;
+      background: var(--app-surface-soft) !important;
+      background-color: var(--app-surface-soft) !important;
     }
   }
 
   // Target the refresher and its content with multiple selectors
   ion-refresher {
-    background: #f2f6ff !important;
-    background-color: #f2f6ff !important;
+    background: var(--app-surface-soft) !important;
+    background-color: var(--app-surface-soft) !important;
     
     &::part(native) {
-      background: #f2f6ff !important;
+      background: var(--app-surface-soft) !important;
     }
   }
 
@@ -64,18 +64,18 @@
   // Deep selectors for internal elements
   ::ng-deep {
     .scroll-content {
-      background: #f2f6ff !important;
-      background-color: #f2f6ff !important;
+      background: var(--app-surface-soft) !important;
+      background-color: var(--app-surface-soft) !important;
     }
     
     ion-refresher {
-      background: #f2f6ff !important;
-      background-color: #f2f6ff !important;
+      background: var(--app-surface-soft) !important;
+      background-color: var(--app-surface-soft) !important;
       
       .refresher-pulling,
       .refresher-refreshing {
-        background: #f2f6ff !important;
-        background-color: #f2f6ff !important;
+        background: var(--app-surface-soft) !important;
+        background-color: var(--app-surface-soft) !important;
       }
       
       // Ensure spinner icons are visible
@@ -103,14 +103,14 @@
     
     // Target any gaps or overlays
     .refresher-native {
-      background: #f2f6ff !important;
-      background-color: #f2f6ff !important;
+      background: var(--app-surface-soft) !important;
+      background-color: var(--app-surface-soft) !important;
     }
     
     // Fix any white gaps in the content area
     .inner-scroll {
-      background: #f2f6ff !important;
-      background-color: #f2f6ff !important;
+      background: var(--app-surface-soft) !important;
+      background-color: var(--app-surface-soft) !important;
     }
   }
   
@@ -221,7 +221,7 @@
   border-radius: 20px;
   box-shadow: 0 8px 25px rgba(245, 87, 108, 0.15);
   border: 1px solid rgba(245, 87, 108, 0.2);
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.98) 100%);
+  background: linear-gradient(135deg, rgba(var(--app-surface-rgb), 0.95) 0%, rgba(var(--app-surface-rgb), 0.98) 100%);
   overflow: hidden;
   animation: slideInDown 0.5s ease-out;
   transition: all 0.5s ease-out;
@@ -544,7 +544,7 @@
 }
 
 .skeleton-badge {
-  background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%) !important;
+  background: linear-gradient(135deg, var(--app-line) 0%, var(--app-line-strong) 100%) !important;
   width: 40px;
   height: 28px;
   border-radius: 20px;
@@ -570,8 +570,8 @@
 }
 
 .skeleton-patient-card {
-  background: #ffffff !important;
-  border: 1px solid #e5e7eb !important;
+  background: var(--app-surface) !important;
+  border: 1px solid var(--app-line) !important;
   position: relative;
   overflow: hidden;
 
@@ -596,7 +596,7 @@
     width: 56px;
     height: 56px;
     border-radius: 16px;
-    background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);
+    background: linear-gradient(135deg, var(--app-line) 0%, var(--app-line-strong) 100%);
     position: relative;
     overflow: hidden;
 
@@ -622,7 +622,7 @@
     height: 20px;
     width: 120px;
     margin-bottom: 0.5rem;
-    background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);
+    background: linear-gradient(135deg, var(--app-line) 0%, var(--app-line-strong) 100%);
     border-radius: 8px;
     position: relative;
     overflow: hidden;
@@ -648,7 +648,7 @@
   .skeleton-date {
     height: 16px;
     width: 100px;
-    background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);
+    background: linear-gradient(135deg, var(--app-line) 0%, var(--app-line-strong) 100%);
     border-radius: 8px;
     position: relative;
     overflow: hidden;
@@ -675,7 +675,7 @@
     width: 32px;
     height: 32px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);
+    background: linear-gradient(135deg, var(--app-line) 0%, var(--app-line-strong) 100%);
     position: relative;
     overflow: hidden;
 

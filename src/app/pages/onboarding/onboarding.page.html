@@ -86,6 +86,22 @@
                 <ion-icon name="female" slot="start"></ion-icon>
                 {{ 'ONBOARDING.FEMALE' | translate }}
               </ion-button>
+              <ion-button
+                [class.selected]="gender === 'other'"
+                (click)="selectGender('other')"
+                class="gender-button"
+                fill="outline"
+              >
+                {{ 'ONBOARDING.GENDER_OTHER' | translate }}
+              </ion-button>
+              <ion-button
+                [class.selected]="gender === 'prefer_not_to_say'"
+                (click)="selectGender('prefer_not_to_say')"
+                class="gender-button"
+                fill="outline"
+              >
+                {{ 'ONBOARDING.GENDER_PREFER_NOT' | translate }}
+              </ion-button>
             </div>
           </div>
           

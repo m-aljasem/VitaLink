@@ -61,7 +61,9 @@
     "DIASTOLIC": "舒张压",
     "SAVE": "保存",
     "NEXT": "下一步",
-    "SKIP": "跳过"
+    "SKIP": "跳过",
+    "GENDER_OTHER": "其他",
+    "GENDER_PREFER_NOT": "不愿透露"
   },
   "TOUR": {
     "WELCOME": "欢迎使用 VitaLink",
@@ -84,7 +86,8 @@
     "NO_DATA": "暂无数据",
     "RECENT_ACTIVITY": "最近活动",
     "NO_ACTIVITY": "没有最近活动",
-    "TITLE": "首页"
+    "TITLE": "首页",
+    "QUICK_ADD": "快速添加"
   },
   "METRICS": {
     "BP": "血压",
@@ -118,7 +121,17 @@
     "DELETE_RECORD_MESSAGE": "您确定要删除此记录吗？",
     "DELETE_RECORD_ERROR": "删除记录失败",
     "DELETE_RECORD_SUCCESS": "记录删除成功",
-    "SAVED_OFFLINE": "已保存在此设备上，恢复联网后将自动同步。"
+    "SAVED_OFFLINE": "已保存在此设备上，恢复联网后将自动同步。",
+    "BP_SYSTOLIC_RANGE_ERROR": "收缩压必须在 50 到 250 之间",
+    "BP_DIASTOLIC_RANGE_ERROR": "舒张压必须在 30 到 150 之间",
+    "BP_RATIO_ERROR": "收缩压必须高于舒张压",
+    "DATE_FUTURE_ERROR": "日期不能是将来的时间",
+    "VALUE_RANGE_ERROR": "数值必须在 {{min}} 到 {{max}} {{unit}} 之间",
+    "EDIT_RECORD": "编辑读数",
+    "NOTE": "备注",
+    "NOTE_PLACEHOLDER": "可选，例如：头晕、喝咖啡后",
+    "MMOLL": "mmol/L",
+    "LB": "磅"
   },
   "TAGS": {
     "BP_AFTER_WAKE": "醒来后",
@@ -188,7 +201,11 @@
     "SUCCESS_TITLE": "成功",
     "ADDED_SUCCESSFULLY": "添加成功！",
     "ADDING_PROVIDER": "正在添加提供商...",
-    "TOO_MANY_ATTEMPTS": "错误代码次数过多。请等待 15 分钟后重试。"
+    "TOO_MANY_ATTEMPTS": "错误代码次数过多。请等待 15 分钟后重试。",
+    "INVALID_DATE_RANGE": "开始日期必须早于结束日期",
+    "PDF_EXPORT_ERROR": "生成 PDF 时出错",
+    "PDF_EXPORT_SUCCESS": "PDF 导出成功！",
+    "SELECT_AT_LEAST_ONE_METRIC": "请至少选择一项指标"
   },
   "SETTINGS": {
     "TITLE": "设置",
@@ -269,7 +286,21 @@
     "PWA_UPDATE_MESSAGE": "有新版本的应用可用。应用将重新加载以应用更新。",
     "PWA_UPDATE_CONFIRM": "更新",
     "PWA_UPDATE_ERROR": "应用更新失败",
-    "REMINDER_NOTIFICATION_BODY": "该记录您的健康数据了"
+    "REMINDER_NOTIFICATION_BODY": "该记录您的健康数据了",
+    "AGE_RANGE_ERROR": "年龄必须在 0 到 130 之间",
+    "UNITS": "单位",
+    "THEME": "外观",
+    "THEME_SYSTEM": "跟随系统",
+    "THEME_LIGHT": "浅色",
+    "THEME_DARK": "深色",
+    "DELETE_ACCOUNT": "删除账户",
+    "DELETE_ACCOUNT_DESC": "永久删除您的账户及所有数据",
+    "DELETE_ACCOUNT_TITLE": "删除您的账户？",
+    "DELETE_ACCOUNT_MESSAGE": "您的个人资料、读数、药物、提醒以及与护理人员的连接都将被永久删除，且无法恢复。输入 {{word}} 以确认。",
+    "DELETE_ACCOUNT_CONFIRM_WORD": "删除",
+    "DELETE_ACCOUNT_MISMATCH": "确认词不匹配",
+    "DELETE_ACCOUNT_ERROR": "无法删除您的账户，请重试。",
+    "DELETE_ACCOUNT_SUCCESS": "您的账户已删除"
   },
   "PDF_EXPORT": {
     "SUBTITLE": "自定义您的PDF导出选项",
@@ -324,7 +355,12 @@
     "DELETE_PATIENT": "删除患者",
     "DELETE_PATIENT_TITLE": "删除患者",
     "DELETE_PATIENT_MESSAGE": "您确定要删除此患者吗？此操作无法撤销。",
-    "DELETE": "删除"
+    "DELETE": "删除",
+    "NEEDS_ATTENTION": "需要关注",
+    "INACTIVE": "已 {{days}}+ 天没有读数",
+    "NO_PATIENTS": "还没有患者。在\"连接\"标签页分享代码即可添加。",
+    "PATIENT": "患者",
+    "PROVIDER": "护理人员"
   },
   "TIME": {
     "JUST_NOW": "刚刚",
@@ -432,5 +468,62 @@
     "UNITED_KINGDOM": "英国",
     "UNITED_STATES": "美国",
     "VIETNAM": "越南"
+  },
+  "ACCESS_LOG": {
+    "TITLE": "访问记录",
+    "SETTINGS_DESC": "查看哪些护理人员查看过您的数据",
+    "INTRO": "每当护理人员打开您共享的某项指标时，都会记录在这里。",
+    "EMPTY": "目前还没有人查看过您的数据。",
+    "LOAD_ERROR": "无法加载访问记录，请重试。",
+    "FORMER_PROVIDER": "前护理人员",
+    "VIEWED": "查看了{{metric}}"
+  },
+  "ALERTS": {
+    "TITLE": "提醒",
+    "MARK_ALL_READ": "全部标为已读"
+  },
+  "CLINICAL": {
+    "NORMAL": "正常",
+    "BORDERLINE": "临界",
+    "ABNORMAL": "超出范围",
+    "CRITICAL": "危急",
+    "BORDERLINE_HIGH": "略高",
+    "BORDERLINE_LOW": "略低",
+    "ABNORMAL_HIGH": "偏高",
+    "ABNORMAL_LOW": "偏低",
+    "CRITICAL_HIGH": "过高",
+    "CRITICAL_LOW": "过低",
+    "ADVICE_ABNORMAL": "此读数超出常规范围。请重新测量，如果仍超出范围，请咨询医生。",
+    "ADVICE_CRITICAL": "此读数远超安全范围。请立即重新测量。如果确认无误或您感到不适（胸痛、呼吸急促、意识模糊、晕厥），请立即就医。"
+  },
+  "MEDICATIONS": {
+    "TITLE": "用药",
+    "SETTINGS_DESC": "记录您的药物和服药情况",
+    "TODAY": "今天",
+    "ADHERENCE": "已服用 {{percent}}%（最近 7 天）",
+    "NO_DOSES_TODAY": "今天没有安排服药。",
+    "MY_MEDICATIONS": "我的药物",
+    "ADD": "添加",
+    "NAME": "名称",
+    "NAME_PLACEHOLDER": "例如：二甲双胍",
+    "DOSE": "剂量",
+    "DOSE_PLACEHOLDER": "例如：500 毫克，1 片",
+    "TIMES": "时间",
+    "ADD_TIME": "添加时间",
+    "DAYS": "日期",
+    "DAYS_HINT": "不选择任何一天即为每天服用。",
+    "EVERY_DAY": "每天",
+    "EMPTY": "还没有药物。添加药物即可收到服药提醒。",
+    "ACTIVE": "启用",
+    "TAKEN": "已服用",
+    "SKIP": "跳过",
+    "SKIPPED": "已跳过",
+    "NAME_REQUIRED": "请输入药物名称",
+    "TIME_REQUIRED": "请至少添加一个时间",
+    "SAVE_ERROR": "保存失败，请重试。",
+    "LOAD_ERROR": "无法加载您的药物。",
+    "DELETE_TITLE": "删除药物",
+    "DELETE_MESSAGE": "删除 {{name}} 及其记录？",
+    "NOTIFICATION_BODY": "该服药了"
   }
 }

@@ -4,7 +4,19 @@ import { getSupabaseClient } from './supabase.client';
 import { LocalNotifications, Weekday } from '@capacitor/local-notifications';
 import { Capacitor } from '@capacitor/core';
 
-const WEEKDAYS: { [key: string]: Weekday } = {
+/**
+ * Stable positive 32-bit notification ID for a key and slot (0–9), so the same
+ * notification can be found and cancelled later.
+ */
+export function notificationId(key: string, slot: number): number {
+  let hash = 0;
+  for (const char of key) {
+    hash = (hash * 31 + char.charCodeAt(0)) % 200_000_000;
+  }
+  return hash * 10 + slot;
+}
+
+export const WEEKDAYS: { [key: string]: Weekday } = {
   Sun: Weekday.Sunday,
   Mon: Weekday.Monday,
   Tue: Weekday.Tuesday,
@@ -101,7 +113,7 @@ export class ReminderService {
     const { data: reminders, error } = await this.getReminders(userId);
     if (error || !reminders) return;
 
-    await this.cancelAllNotifications();
+    await this.cancelNotificationsOfKind('reminder');
     for (const reminder of reminders) {
       await this.scheduleNotification(reminder);
     }
@@ -116,6 +128,20 @@ export class ReminderService {
     }
   }
 
+  /**
+   * Cancels pending notifications created for one feature ('reminder' or 'medication').
+   * Notifications without a kind predate tagging and count as reminders.
+   */
+  async cancelNotificationsOfKind(kind: 'reminder' | 'medication'): Promise<void> {
+    if (!Capacitor.isNativePlatform()) return;
+
+    const { notifications } = await LocalNotifications.getPending();
+    const matching = notifications.filter(n => (n.extra?.kind ?? 'reminder') === kind);
+    if (matching.length > 0) {
+      await LocalNotifications.cancel({ notifications: matching.map(n => ({ id: n.id })) });
+    }
+  }
+
   private async cancelNotifications(reminderId: string): Promise<void> {
     if (!Capacitor.isNativePlatform()) return;
 
@@ -127,11 +153,7 @@ export class ReminderService {
 
   /** Stable per reminder and weekday, so the notification can be cancelled later. */
   private notificationId(reminderId: string, weekday: Weekday): number {
-    let hash = 0;
-    for (const char of reminderId) {
-      hash = (hash * 31 + char.charCodeAt(0)) % 200_000_000;
-    }
-    return hash * 10 + weekday;
+    return notificationId(reminderId, weekday);
   }
 
   private async scheduleNotification(reminder: Reminder): Promise<void> {
@@ -153,6 +175,7 @@ export class ReminderService {
         title: reminder.title,
         body,
         id: this.notificationId(reminder.id!, WEEKDAYS[day]),
+        extra: { kind: 'reminder' },
         schedule: {
           on: {
             weekday: WEEKDAYS[day],

@@ -14,6 +14,9 @@ import { ProfileService } from '../../core/profile.service';
 import { ObservationService } from '../../core/observation.service';
 import { I18nService } from '../../core/i18n.service';
 import { CountrySelectComponent, Country } from '@wlucha/ng-country-select';
+import { defaultUnitsForCountry } from '../../core/units';
+
+type Gender = NonNullable<Profile['gender']>;
 
 type OnboardingStep = 'role' | 'profile' | 'conditions' | 'initial-metrics';
 
@@ -40,7 +43,7 @@ export class OnboardingPage implements OnInit {
   firstName = '';
   lastName = '';
   age: number | null = null;
-  gender: 'male' | 'female' | null = null;
+  gender: Gender | null = null;
   country: Country | null = null;
   countryCode = ''; // Store alpha2 code for database
   city = '';
@@ -210,6 +213,7 @@ export class OnboardingPage implements OnInit {
       age: this.age || undefined,
       gender: this.gender || undefined,
       country: this.countryCode || undefined,
+      ...(existingProfile.data ? {} : defaultUnitsForCountry(this.countryCode)),
       city: this.city || undefined,
       provider_kind: this.providerKind || undefined,
       hospital: this.hospital || undefined,
@@ -275,7 +279,7 @@ export class OnboardingPage implements OnInit {
     this.countryCode = country.alpha2;
   }
 
-  selectGender(gender: 'male' | 'female') {
+  selectGender(gender: Gender) {
     this.gender = gender;
   }
 

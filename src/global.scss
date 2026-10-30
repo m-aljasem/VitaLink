@@ -27,17 +27,18 @@
 
 /* Tailwind CSS is handled by PostCSS - no need to import here */
 
-/* Dark mode disabled - light mode only */
+/* Dark palette for Ionic components, enabled by the `ion-palette-dark` class on <html> (ThemeService) */
+@import "@ionic/angular/css/palettes/dark.class.css";
 
 /* Material Autocomplete Panel - Fix transparent background */
 .mat-mdc-autocomplete-panel {
-  background: #ffffff !important;
+  background: var(--app-surface) !important;
   border-radius: 8px !important;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
   border: none !important;
   
   .mat-mdc-option {
-    background: #ffffff !important;
+    background: var(--app-surface) !important;
     border: none !important;
     
     &:hover {
@@ -52,10 +53,10 @@
 
 /* Global Input Field Styling */
 ion-item {
-  --background: #ffffff;
+  --background: var(--app-surface);
   --border-width: 1px;
   --border-style: solid;
-  --border-color: #d1d5db;
+  --border-color: var(--app-line-strong);
   --border-radius: 12px;
   --padding-start: 16px;
   --padding-end: 16px;
@@ -71,7 +72,7 @@ ion-item {
   
   ion-input {
     --color: var(--ion-text-color);
-    --placeholder-color: #9ca3af;
+    --placeholder-color: var(--app-text-subtle);
     --placeholder-opacity: 1;
     font-size: 1rem;
     font-weight: 400;
@@ -91,7 +92,7 @@ ion-item {
   
   ion-textarea {
     --color: var(--ion-text-color);
-    --placeholder-color: #9ca3af;
+    --placeholder-color: var(--app-text-subtle);
     --placeholder-opacity: 1;
     font-size: 1rem;
   }
@@ -99,13 +100,13 @@ ion-item {
 
 /* Ensure inputs are visible even when not in items */
 ion-input {
-  --background: #ffffff;
+  --background: var(--app-surface);
   --color: var(--ion-text-color);
-  --placeholder-color: #9ca3af;
+  --placeholder-color: var(--app-text-subtle);
   --placeholder-opacity: 1;
   --border-width: 1px;
   --border-style: solid;
-  --border-color: #d1d5db;
+  --border-color: var(--app-line-strong);
   --border-radius: 12px;
   --padding-start: 12px;
   --padding-end: 12px;
@@ -121,13 +122,13 @@ ion-input {
 }
 
 ion-textarea {
-  --background: #ffffff;
+  --background: var(--app-surface);
   --color: var(--ion-text-color);
-  --placeholder-color: #9ca3af;
+  --placeholder-color: var(--app-text-subtle);
   --placeholder-opacity: 1;
   --border-width: 1px;
   --border-style: solid;
-  --border-color: #d1d5db;
+  --border-color: var(--app-line-strong);
   --border-radius: 12px;
   --padding-start: 12px;
   --padding-end: 12px;
@@ -145,18 +146,18 @@ ion-textarea {
 /* Refresher Background - Match page backgrounds */
 ion-content.has-refresher {
   .scroll-content {
-    background: #f2f6ff !important;
-    background-color: #f2f6ff !important;
+    background: var(--app-surface-soft) !important;
+    background-color: var(--app-surface-soft) !important;
   }
   
   .inner-scroll {
-    background: #f2f6ff !important;
-    background-color: #f2f6ff !important;
+    background: var(--app-surface-soft) !important;
+    background-color: var(--app-surface-soft) !important;
   }
   
   ion-refresher {
-    background: #f2f6ff !important;
-    background-color: #f2f6ff !important;
+    background: var(--app-surface-soft) !important;
+    background-color: var(--app-surface-soft) !important;
   }
   
   ion-refresher-content {
@@ -194,8 +195,8 @@ ion-content.has-refresher {
   
   // Fix white gaps during pull
   .refresher-native {
-    background: #f2f6ff !important;
-    background-color: #f2f6ff !important;
+    background: var(--app-surface-soft) !important;
+    background-color: var(--app-surface-soft) !important;
   }
   
   // Ensure spinner icons are visible in refresher
@@ -227,12 +228,12 @@ ion-content.has-refresher {
 .patient-connect-content,
 .provider-connect-content {
   // Set background on the content element itself
-  background: #f2f6ff !important;
-  background-color: #f2f6ff !important;
+  background: var(--app-surface-soft) !important;
+  background-color: var(--app-surface-soft) !important;
   
   ion-refresher {
-    background: #f2f6ff !important;
-    background-color: #f2f6ff !important;
+    background: var(--app-surface-soft) !important;
+    background-color: var(--app-surface-soft) !important;
   }
   
   ion-refresher-content {
@@ -293,27 +294,58 @@ ion-content.has-refresher {
   }
   
   .scroll-content {
-    background: #f2f6ff !important;
-    background-color: #f2f6ff !important;
+    background: var(--app-surface-soft) !important;
+    background-color: var(--app-surface-soft) !important;
   }
   
   .inner-scroll {
-    background: #f2f6ff !important;
-    background-color: #f2f6ff !important;
+    background: var(--app-surface-soft) !important;
+    background-color: var(--app-surface-soft) !important;
   }
   
   // Target any wrapper or container elements
   .native-wrapper {
-    background: #f2f6ff !important;
-    background-color: #f2f6ff !important;
+    background: var(--app-surface-soft) !important;
+    background-color: var(--app-surface-soft) !important;
   }
   
   // Fix any gaps that appear during pull
   &::part(scroll) {
-    background: #f2f6ff !important;
+    background: var(--app-surface-soft) !important;
   }
   
   &::part(native) {
-    background: #f2f6ff !important;
+    background: var(--app-surface-soft) !important;
   }
+}
+
+/* Guidance shown with abnormal or critical readings */
+.severity-advice {
+  margin: 12px 0 0;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: var(--severity-abnormal-bg);
+  color: var(--severity-abnormal-fg);
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+.record-note {
+  white-space: pre-wrap;
+  margin: 4px 0 0;
+}
+
+.history-note {
+  margin: 4px 0 0;
+  font-size: 0.8rem;
+  color: var(--ion-color-medium);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+/* Alert shown after saving a critical reading */
+ion-alert.reading-alert-critical .alert-head {
+  color: var(--severity-critical-bg);
 }

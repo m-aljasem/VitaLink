@@ -302,7 +302,7 @@
 }
 
 .skeleton-card {
-  background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%) !important;
+  background: linear-gradient(135deg, var(--app-line) 0%, var(--app-line-strong) 100%) !important;
   position: relative;
   overflow: hidden;
 
@@ -401,7 +401,7 @@
       margin: 0;
       border-radius: 12px;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-      background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);
+      background: linear-gradient(135deg, var(--app-line) 0%, var(--app-line-strong) 100%);
       overflow: hidden;
 
       ion-card-content {
@@ -454,7 +454,7 @@
     .metric-widget {
       margin: 0;
       border-radius: 10px;
-      background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);
+      background: linear-gradient(135deg, var(--app-line) 0%, var(--app-line-strong) 100%);
       overflow: hidden;
 
       ion-card-content {
@@ -491,5 +491,18 @@
   .metric-widget.locked {
     background: var(--ion-color-dark);
     opacity: 0.5;
+  }
+}
+
+.widget-latest {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin: 2px 0 4px;
+
+  .widget-value {
+    font-weight: 700;
+    font-size: 0.95rem;
   }
 }

@@ -49,7 +49,9 @@
       <div class="metric-value-wrapper">
         <div class="metric-value" [class.no-data]="!value" [style.color]="color">
           {{ value || ('HOME.NO_DATA' | translate) }}
+          <span class="metric-unit" *ngIf="value && unit">{{ unit }}</span>
         </div>
+        <app-severity-badge [reading]="reading"></app-severity-badge>
       </div>
       
       <div class="metric-footer">

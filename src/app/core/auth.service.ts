@@ -3,6 +3,7 @@ import { getSupabaseClient } from './supabase.client';
 import { User, Session } from '@supabase/supabase-js';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { OfflineStorageService } from './offline-storage.service';
+import { isNetworkError } from './network.service';
 import { ReminderService } from './reminder.service';
 
 export interface Profile {
@@ -13,13 +14,15 @@ export interface Profile {
   first_name?: string;
   last_name?: string;
   age?: number;
-  gender?: 'male' | 'female';
+  gender?: 'male' | 'female' | 'other' | 'prefer_not_to_say';
   country?: string;
   city?: string;
   provider_kind?: 'doctor' | 'nurse' | 'family' | 'friend' | 'caregiver';
   hospital?: string;
   conditions?: string[];
   height_cm?: number;
+  glucose_unit?: 'mg/dL' | 'mmol/L';
+  weight_unit?: 'kg' | 'lb';
   created_at?: string;
 }
 
@@ -108,18 +111,41 @@ export class AuthService {
   }
 
   async loadProfile(userId: string): Promise<void> {
-    const { data, error } = await this.supabase
-      .from('profiles')
-      .select('*')
-      .eq('id', userId)
-      .maybeSingle();
-
-    if (!error && data) {
-      this.currentProfile$.next(data as Profile);
-    } else {
-      // Profile doesn't exist yet (new user), set to null
-      this.currentProfile$.next(null);
+    let data: Profile | null = null;
+    let error: any = null;
+    try {
+      ({ data, error } = await this.supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', userId)
+        .maybeSingle());
+    } catch (err) {
+      error = err;
     }
+
+    if (!error) {
+      // A missing row means a new user who still needs onboarding.
+      this.currentProfile$.next(data as Profile | null);
+      if (data) {
+        this.offlineStorage.init().then(() => this.offlineStorage.saveProfile(data as Profile)).catch(() => undefined);
+      }
+      return;
+    }
+
+    // Server unreachable: use the copy saved on this device, so offline users aren't sent to onboarding.
+    if (isNetworkError(error)) {
+      try {
+        await this.offlineStorage.init();
+        const cached = await this.offlineStorage.getProfile(userId);
+        if (cached) {
+          this.currentProfile$.next(cached);
+          return;
+        }
+      } catch {
+        // Fall through
+      }
+    }
+    this.currentProfile$.next(null);
   }
 
   async getCurrentProfile(): Promise<Profile | null> {
@@ -162,6 +188,14 @@ export class AuthService {
     this.currentUser$.next(null);
     this.currentProfile$.next(null);
     this.session$.next(null);
+  }
+
+  /** Permanently deletes the account and all its data on the server, then signs out. */
+  async deleteAccount(): Promise<{ error?: any }> {
+    const { error } = await this.supabase.rpc('delete_my_account');
+    if (error) return { error };
+    await this.signOut();
+    return {};
   }
 
   async isAuthenticated(): Promise<boolean> {

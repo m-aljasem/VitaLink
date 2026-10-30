@@ -9,7 +9,7 @@
 --   2. Tables and indexes
 --   3. Integrity triggers
 --   4. Row Level Security policies
---   5. Provider linking functions (create / redeem 6-digit codes)
+--   5. Functions: reading severity, provider alerts, linking codes, account deletion
 --   6. Grants
 --   7. Realtime
 --
@@ -40,6 +40,63 @@ exception when duplicate_object then null; end $$;
 -- 2. Tables and indexes
 -- -----------------------------------------------------------------------------
 
+-- Clinical classification of a single reading, using general adult ranges.
+-- Keep in sync with src/app/core/clinical.ts.
+-- Returns 'normal' | 'borderline' | 'abnormal' | 'critical', or null when the
+-- metric isn't classified from one reading (weight).
+create or replace function public.reading_severity(
+  p_metric public.metric_type,
+  p_systolic smallint,
+  p_diastolic smallint,
+  p_value numeric,
+  p_tags text[]
+)
+returns text
+language sql
+immutable
+as $$
+  select case p_metric
+    when 'bp' then case
+      when p_systolic is null or p_diastolic is null then null
+      when p_systolic >= 180 or p_diastolic >= 120 then 'critical'
+      when p_systolic < 70 then 'critical'
+      when p_systolic >= 140 or p_diastolic >= 90 then 'abnormal'
+      when p_systolic < 80 then 'abnormal'
+      when p_systolic >= 120 or p_diastolic >= 80 then 'borderline'
+      when p_systolic < 90 or p_diastolic < 60 then 'borderline'
+      else 'normal' end
+    when 'glucose' then case
+      when p_value is null then null
+      when p_value < 54 or p_value >= 300 then 'critical'
+      when p_value < 70 then 'abnormal'
+      when 'TAGS.GLUCOSE_FASTING' = any(coalesce(p_tags, '{}')) then case
+        when p_value >= 126 then 'abnormal'
+        when p_value >= 100 then 'borderline'
+        else 'normal' end
+      when p_value >= 200 then 'abnormal'
+      when p_value >= 140 then 'borderline'
+      else 'normal' end
+    when 'spo2' then case
+      when p_value is null then null
+      when p_value < 88 then 'critical'
+      when p_value < 92 then 'abnormal'
+      when p_value < 95 then 'borderline'
+      else 'normal' end
+    when 'hr' then case
+      when p_value is null then null
+      when p_value < 35 or p_value >= 150 then 'critical'
+      when p_value < 40 or p_value >= 120 then 'abnormal'
+      when p_value < 50 or p_value > 100 then 'borderline'
+      else 'normal' end
+    when 'pain' then case
+      when p_value is null then null
+      when p_value >= 7 then 'abnormal'
+      when p_value >= 4 then 'borderline'
+      else 'normal' end
+    else null
+  end
+$$;
+
 -- User profiles (one per auth user)
 create table if not exists public.profiles (
   id uuid primary key references auth.users(id) on delete cascade,
@@ -49,13 +106,16 @@ create table if not exists public.profiles (
   first_name text,
   last_name text,
   age int,
-  gender text check (gender in ('male', 'female')),
+  gender text check (gender in ('male', 'female', 'other', 'prefer_not_to_say')),
   country text,
   city text,
   provider_kind public.provider_kind,
   hospital text,
   conditions text[] default '{}',
   height_cm numeric,
+  -- display units; readings are always stored as mg/dL and kg
+  glucose_unit text not null default 'mg/dL' check (glucose_unit in ('mg/dL', 'mmol/L')),
+  weight_unit text not null default 'kg' check (weight_unit in ('kg', 'lb')),
   created_at timestamptz default now(),
   constraint profiles_age_range check (age is null or age between 0 and 130),
   constraint profiles_height_range check (height_cm is null or height_cm between 30 and 300),
@@ -121,6 +181,10 @@ create table if not exists public.observations (
   unit text,
   tags text[] default '{}',
   context jsonb default '{}',
+  note text check (note is null or length(note) <= 500),
+  severity text generated always as (
+    public.reading_severity(metric, systolic, diastolic, numeric_value, tags)
+  ) stored,
   created_at timestamptz default now()
 );
 create index if not exists observations_user_metric_ts_idx
@@ -142,7 +206,7 @@ create table if not exists public.reminders (
 );
 create index if not exists reminders_user_idx on public.reminders (user_id);
 
--- Audit log of provider views (reserved; not written by the app yet)
+-- Log of providers viewing a patient's data; visible to the patient
 create table if not exists public.audit_views (
   id uuid primary key default gen_random_uuid(),
   provider_id uuid not null references auth.users(id) on delete cascade,
@@ -150,11 +214,93 @@ create table if not exists public.audit_views (
   metric public.metric_type not null,
   viewed_at timestamptz default now()
 );
+create index if not exists audit_views_patient_idx on public.audit_views (patient_id, viewed_at desc);
+
+-- Alerts for providers when a linked patient logs an out-of-range reading
+create table if not exists public.alerts (
+  id uuid primary key default gen_random_uuid(),
+  recipient_id uuid not null references auth.users(id) on delete cascade,
+  patient_id uuid not null references auth.users(id) on delete cascade,
+  observation_id uuid references public.observations(id) on delete cascade,
+  metric public.metric_type not null,
+  severity text not null,
+  created_at timestamptz default now(),
+  read_at timestamptz
+);
+create index if not exists alerts_recipient_idx on public.alerts (recipient_id, created_at desc);
+
+-- Medications and their taken/skipped log
+create table if not exists public.medications (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references auth.users(id) on delete cascade,
+  name text not null check (length(name) between 1 and 100),
+  dose text check (dose is null or length(dose) <= 100),
+  times time[] not null default '{}',
+  days text[], -- e.g. {'Mon','Wed'}; empty or null = every day
+  active boolean not null default true,
+  created_at timestamptz default now()
+);
+create index if not exists medications_user_idx on public.medications (user_id);
+
+create table if not exists public.medication_logs (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references auth.users(id) on delete cascade,
+  medication_id uuid not null references public.medications(id) on delete cascade,
+  scheduled_for timestamptz not null,
+  status text not null check (status in ('taken', 'skipped')),
+  logged_at timestamptz default now(),
+  unique (medication_id, scheduled_for)
+);
+create index if not exists medication_logs_user_idx on public.medication_logs (user_id, scheduled_for desc);
 
 
 -- -----------------------------------------------------------------------------
--- 3. Integrity triggers
+-- 3. Helpers and triggers
 -- -----------------------------------------------------------------------------
+
+-- Whether a link shares the given metric with the provider.
+create or replace function public.link_shares_metric(pl public.provider_links, p_metric public.metric_type)
+returns boolean
+language sql
+immutable
+as $$
+  select case p_metric
+    when 'bp' then pl.share_bp
+    when 'glucose' then pl.share_glucose
+    when 'spo2' then pl.share_spo2
+    when 'hr' then pl.share_hr
+    when 'pain' then pl.share_pain
+    when 'weight' then pl.share_weight
+  end
+$$;
+
+-- Notify linked providers (who can see this metric) about recent out-of-range readings.
+create or replace function public.create_reading_alerts()
+returns trigger
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  -- Skip normal readings and back-filled ones older than a day.
+  if new.severity not in ('abnormal', 'critical') or new.ts < now() - interval '1 day' then
+    return new;
+  end if;
+
+  insert into public.alerts (recipient_id, patient_id, observation_id, metric, severity)
+  select pl.provider_id, new.user_id, new.id, new.metric, new.severity
+  from public.provider_links pl
+  where pl.patient_id = new.user_id
+    and public.link_shares_metric(pl, new.metric);
+
+  return new;
+end;
+$$;
+
+drop trigger if exists observations_create_alerts on public.observations;
+create trigger observations_create_alerts
+  after insert on public.observations
+  for each row execute function public.create_reading_alerts();
 
 -- A link's provider and patient can never be changed (only sharing flags).
 create or replace function public.provider_links_lock_identity()
@@ -209,6 +355,9 @@ alter table public.link_redeem_attempts enable row level security; -- no policie
 alter table public.observations enable row level security;
 alter table public.reminders enable row level security;
 alter table public.audit_views enable row level security;
+alter table public.alerts enable row level security;
+alter table public.medications enable row level security;
+alter table public.medication_logs enable row level security;
 
 -- profiles
 drop policy if exists "own profile" on public.profiles;
@@ -301,16 +450,76 @@ create policy "own reminders" on public.reminders for all
   using (user_id = auth.uid())
   with check (user_id = auth.uid());
 
--- audit_views
+-- audit_views: append-only; providers log their own views of shared metrics
 drop policy if exists "own audit views" on public.audit_views;
-create policy "own audit views" on public.audit_views for all
-  using (provider_id = auth.uid())
-  with check (provider_id = auth.uid());
+drop policy if exists "providers log views" on public.audit_views;
+create policy "providers log views" on public.audit_views for insert
+  with check (
+    provider_id = auth.uid()
+    and exists (
+      select 1 from public.provider_links pl
+      where pl.provider_id = auth.uid() and pl.patient_id = audit_views.patient_id
+        and public.link_shares_metric(pl, audit_views.metric)
+    )
+  );
+
+drop policy if exists "providers see own views" on public.audit_views;
+create policy "providers see own views" on public.audit_views for select
+  using (provider_id = auth.uid());
+
+drop policy if exists "patients see who viewed" on public.audit_views;
+create policy "patients see who viewed" on public.audit_views for select
+  using (patient_id = auth.uid());
+
+-- alerts: created only by the observations trigger
+drop policy if exists "own alerts" on public.alerts;
+create policy "own alerts" on public.alerts for select
+  using (recipient_id = auth.uid());
+
+drop policy if exists "mark own alerts read" on public.alerts;
+create policy "mark own alerts read" on public.alerts for update
+  using (recipient_id = auth.uid());
+
+drop policy if exists "delete own alerts" on public.alerts;
+create policy "delete own alerts" on public.alerts for delete
+  using (recipient_id = auth.uid());
+
+-- medications
+drop policy if exists "own medications" on public.medications;
+create policy "own medications" on public.medications for all
+  using (user_id = auth.uid())
+  with check (user_id = auth.uid());
+
+drop policy if exists "own medication logs" on public.medication_logs;
+create policy "own medication logs" on public.medication_logs for all
+  using (user_id = auth.uid())
+  with check (
+    user_id = auth.uid()
+    and exists (select 1 from public.medications m where m.id = medication_id and m.user_id = auth.uid())
+  );
 
 
 -- -----------------------------------------------------------------------------
--- 5. Provider linking functions
+-- 5. Functions: account deletion, linking codes
 -- -----------------------------------------------------------------------------
+
+-- Permanently deletes the signed-in user's account and all their data
+-- (every table references auth.users with on delete cascade).
+create or replace function public.delete_my_account()
+returns void
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_uid uuid := auth.uid();
+begin
+  if v_uid is null then
+    raise exception 'not_authenticated';
+  end if;
+  delete from auth.users where id = v_uid;
+end;
+$$;
 
 -- Issues a new 6-digit code for the signed-in provider (replacing any active one).
 create or replace function public.create_link_token()
@@ -424,10 +633,17 @@ $$;
 revoke all on all tables in schema public from anon;
 grant select, insert, update, delete on
   public.profiles, public.provider_links, public.link_tokens,
-  public.observations, public.reminders, public.audit_views
+  public.observations, public.reminders,
+  public.medications, public.medication_logs
   to authenticated;
+grant select, insert on public.audit_views to authenticated;
+grant select, delete on public.alerts to authenticated;
+grant update (read_at) on public.alerts to authenticated;
 revoke all on public.link_redeem_attempts from anon, authenticated;
 
+revoke all on function public.delete_my_account() from public, anon;
+grant execute on function public.delete_my_account() to authenticated;
+revoke all on function public.create_reading_alerts() from public, anon, authenticated;
 revoke all on function public.create_link_token() from public, anon;
 revoke all on function public.redeem_link_token(text, boolean, boolean, boolean, boolean, boolean, boolean) from public, anon;
 grant execute on function public.create_link_token() to authenticated;
@@ -437,7 +653,8 @@ grant execute on function public.redeem_link_token(text, boolean, boolean, boole
 -- -----------------------------------------------------------------------------
 -- 7. Realtime
 -- -----------------------------------------------------------------------------
--- The provider "Connect" screen listens for code redemption and new links.
+-- The provider "Connect" screen listens for code redemption and new links;
+-- the provider home screen listens for new alerts.
 do $$
 declare
   t text;
@@ -445,7 +662,7 @@ begin
   if not exists (select 1 from pg_publication where pubname = 'supabase_realtime') then
     create publication supabase_realtime;
   end if;
-  foreach t in array array['link_tokens', 'provider_links'] loop
+  foreach t in array array['link_tokens', 'provider_links', 'alerts'] loop
     if not exists (
       select 1 from pg_publication_tables
       where pubname = 'supabase_realtime' and schemaname = 'public' and tablename = t

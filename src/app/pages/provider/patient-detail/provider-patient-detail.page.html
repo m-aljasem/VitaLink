@@ -86,6 +86,10 @@
               </div>
               <div class="widget-info">
                 <h4 class="widget-label">{{ widget.label | translate }}</h4>
+                <div class="widget-latest" *ngIf="widget.latest">
+                  <span class="widget-value" [style.color]="widget.color">{{ format.formatValue(widget.latest) }}</span>
+                  <app-severity-badge [reading]="widget.latest"></app-severity-badge>
+                </div>
                 <div class="widget-status" *ngIf="widget.isShared && widget.recordCount > 0">
                   <span class="record-count">{{ widget.recordCount }}</span>
                   <span class="record-label">{{ 'PROVIDER.RECORDS' | translate }}</span>

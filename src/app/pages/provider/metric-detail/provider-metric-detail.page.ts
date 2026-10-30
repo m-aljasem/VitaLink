@@ -13,6 +13,8 @@ import { SharingService, ProviderLink } from '../../../core/sharing.service';
 import { ObservationService, MetricType, Observation } from '../../../core/observation.service';
 import { LineChartComponent } from '../../../shared/components/line-chart/line-chart.component';
 import { DateFormatService } from '../../../core/date-format.service';
+import { MetricFormatService } from '../../../core/metric-format.service';
+import { SeverityBadgeComponent } from '../../../shared/components/severity-badge/severity-badge.component';
 
 @Component({
   selector: 'app-provider-metric-detail',
@@ -23,7 +25,7 @@ import { DateFormatService } from '../../../core/date-format.service';
     CommonModule,
     IonContent, IonHeader, IonToolbar, IonButton, IonButtons, IonIcon,
     IonCard, IonCardContent, IonText, IonChip, IonRefresher, IonRefresherContent,
-    TranslateModule, LineChartComponent
+    TranslateModule, LineChartComponent, SeverityBadgeComponent
   ],
 })
 export class ProviderMetricDetailPage implements OnInit {
@@ -62,7 +64,8 @@ export class ProviderMetricDetailPage implements OnInit {
     private sharingService: SharingService,
     private observationService: ObservationService,
     private dateFormatService: DateFormatService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    public format: MetricFormatService
   ) {
     addIcons({ arrowBack, pulse, water, pulseOutline, heart, sad, scale, calendarOutline, timeOutline, barChartOutline, documentOutline });
   }
@@ -111,6 +114,10 @@ export class ProviderMetricDetailPage implements OnInit {
       return;
     }
 
+    if (showLoading) {
+      this.sharingService.logView(user.id, this.patientId, this.metric);
+    }
+
     // Load patient profile
     const { data: profile } = await this.profileService.getProfile(this.patientId);
     this.patientProfile = profile || null;
@@ -137,11 +144,10 @@ export class ProviderMetricDetailPage implements OnInit {
       if (this.metric === 'bp') {
         return o.systolic || 0;
       }
-      return o.numeric_value || 0;
+      return this.format.toDisplay(this.metric, Number(o.numeric_value) || 0);
     });
 
     this.chartLabels = chartObs.map(o => {
-      const date = new Date(o.ts);
       return this.dateFormatService.formatDateSync(o.ts);
     });
 
@@ -170,25 +176,7 @@ export class ProviderMetricDetailPage implements OnInit {
   }
 
   formatValue(obs: Observation): string {
-    if (obs.metric === 'bp') {
-      const unit = this.translate.instant('METRICS.MMHG');
-      return `${obs.systolic}/${obs.diastolic} ${unit}`;
-    }
-    // Get unit translation key based on metric type
-    const unitKey = this.getUnitTranslationKey(obs.metric);
-    const unit = unitKey ? this.translate.instant(unitKey) : (obs.unit || '');
-    return `${obs.numeric_value} ${unit}`;
-  }
-
-  private getUnitTranslationKey(metric: string): string | null {
-    const unitMap: { [key: string]: string } = {
-      glucose: 'METRICS.MGDL',
-      spo2: 'METRICS.PERCENT',
-      hr: 'METRICS.BPM',
-      pain: 'METRICS.SCALE_1_10',
-      weight: 'METRICS.KG',
-    };
-    return unitMap[metric] || null;
+    return this.format.formatValue(obs);
   }
 
   formatDate(dateString: string): string {

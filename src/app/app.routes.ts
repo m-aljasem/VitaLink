@@ -69,6 +69,14 @@ export const routes: Routes = [
         loadComponent: () => import('./pages/settings/export-options/export-options.page').then((m) => m.ExportOptionsPage),
       },
       {
+        path: 'settings/medications',
+        loadComponent: () => import('./pages/settings/medications/medications.page').then((m) => m.MedicationsPage),
+      },
+      {
+        path: 'settings/access-log',
+        loadComponent: () => import('./pages/settings/access-log/access-log.page').then((m) => m.AccessLogPage),
+      },
+      {
         path: 'settings/pdf-export',
         loadComponent: () => import('./pages/settings/pdf-export/pdf-export.page').then((m) => m.PdfExportPage),
       },

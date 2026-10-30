@@ -1,5 +1,5 @@
 .settings-content {
-  --background: linear-gradient(180deg, #f0f4ff 0%, #ffffff 100%);
+  --background: linear-gradient(180deg, var(--app-surface-soft-2) 0%, var(--app-surface) 100%);
 }
 
 .settings-container {
@@ -111,6 +111,22 @@
 
       &.icon-logout {
         background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+      }
+
+      &.icon-medications {
+        background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+      }
+
+      &.icon-access {
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      }
+
+      &.icon-theme {
+        background: linear-gradient(135deg, #434343 0%, #000000 100%);
+      }
+
+      &.icon-delete {
+        background: linear-gradient(135deg, #b91c1c 0%, #7f1d1d 100%);
       }
     }
 
@@ -248,4 +264,8 @@
   .export-buttons {
     flex-direction: row;
   }
+}
+
+.delete-account-card h3 {
+  color: var(--ion-color-danger);
 }

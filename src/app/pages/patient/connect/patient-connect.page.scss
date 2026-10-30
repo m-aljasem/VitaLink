@@ -1,32 +1,32 @@
 .patient-connect-content {
-  --background: linear-gradient(180deg, #f0f4ff 0%, #ffffff 100%);
-  background: #f2f6ff !important;
-  background-color: #f2f6ff !important;
+  --background: linear-gradient(180deg, var(--app-surface-soft-2) 0%, var(--app-surface) 100%);
+  background: var(--app-surface-soft) !important;
+  background-color: var(--app-surface-soft) !important;
   
   // Override scroll content background
   &::part(scroll) {
-    background: #f2f6ff !important;
+    background: var(--app-surface-soft) !important;
   }
   
   &::part(native) {
-    background: #f2f6ff !important;
+    background: var(--app-surface-soft) !important;
   }
   
   // Make scroll content match when refresher is present
   &.has-refresher {
     .scroll-content {
-      background: #f2f6ff !important;
-      background-color: #f2f6ff !important;
+      background: var(--app-surface-soft) !important;
+      background-color: var(--app-surface-soft) !important;
     }
   }
 
   // Target the refresher and its content with multiple selectors
   ion-refresher {
-    background: #f2f6ff !important;
-    background-color: #f2f6ff !important;
+    background: var(--app-surface-soft) !important;
+    background-color: var(--app-surface-soft) !important;
     
     &::part(native) {
-      background: #f2f6ff !important;
+      background: var(--app-surface-soft) !important;
     }
   }
 
@@ -64,18 +64,18 @@
   // Deep selectors for internal elements
   ::ng-deep {
     .scroll-content {
-      background: #f2f6ff !important;
-      background-color: #f2f6ff !important;
+      background: var(--app-surface-soft) !important;
+      background-color: var(--app-surface-soft) !important;
     }
     
     ion-refresher {
-      background: #f2f6ff !important;
-      background-color: #f2f6ff !important;
+      background: var(--app-surface-soft) !important;
+      background-color: var(--app-surface-soft) !important;
       
       .refresher-pulling,
       .refresher-refreshing {
-        background: #f2f6ff !important;
-        background-color: #f2f6ff !important;
+        background: var(--app-surface-soft) !important;
+        background-color: var(--app-surface-soft) !important;
       }
       
       // Ensure spinner icons are visible
@@ -103,14 +103,14 @@
     
     // Target any gaps or overlays
     .refresher-native {
-      background: #f2f6ff !important;
-      background-color: #f2f6ff !important;
+      background: var(--app-surface-soft) !important;
+      background-color: var(--app-surface-soft) !important;
     }
     
     // Fix any white gaps in the content area
     .inner-scroll {
-      background: #f2f6ff !important;
-      background-color: #f2f6ff !important;
+      background: var(--app-surface-soft) !important;
+      background-color: var(--app-surface-soft) !important;
     }
   }
   
@@ -413,7 +413,7 @@
       width: 56px;
       height: 56px;
       border-radius: 14px;
-      background: linear-gradient(90deg, #e5e7eb 25%, #f3f4f6 50%, #e5e7eb 75%);
+      background: linear-gradient(90deg, var(--app-line) 25%, var(--app-surface-muted) 50%, var(--app-line) 75%);
       background-size: 200% 100%;
       animation: shimmer 1.5s infinite;
       flex-shrink: 0;
@@ -430,7 +430,7 @@
         height: 20px;
         width: 60%;
         border-radius: 8px;
-        background: linear-gradient(90deg, #e5e7eb 25%, #f3f4f6 50%, #e5e7eb 75%);
+        background: linear-gradient(90deg, var(--app-line) 25%, var(--app-surface-muted) 50%, var(--app-line) 75%);
         background-size: 200% 100%;
         animation: shimmer 1.5s infinite;
       }
@@ -439,7 +439,7 @@
         height: 16px;
         width: 40%;
         border-radius: 8px;
-        background: linear-gradient(90deg, #e5e7eb 25%, #f3f4f6 50%, #e5e7eb 75%);
+        background: linear-gradient(90deg, var(--app-line) 25%, var(--app-surface-muted) 50%, var(--app-line) 75%);
         background-size: 200% 100%;
         animation: shimmer 1.5s infinite;
         animation-delay: 0.2s;
@@ -449,7 +449,7 @@
         height: 14px;
         width: 50%;
         border-radius: 8px;
-        background: linear-gradient(90deg, #e5e7eb 25%, #f3f4f6 50%, #e5e7eb 75%);
+        background: linear-gradient(90deg, var(--app-line) 25%, var(--app-surface-muted) 50%, var(--app-line) 75%);
         background-size: 200% 100%;
         animation: shimmer 1.5s infinite;
         animation-delay: 0.4s;
@@ -460,7 +460,7 @@
       width: 24px;
       height: 24px;
       border-radius: 12px;
-      background: linear-gradient(90deg, #e5e7eb 25%, #f3f4f6 50%, #e5e7eb 75%);
+      background: linear-gradient(90deg, var(--app-line) 25%, var(--app-surface-muted) 50%, var(--app-line) 75%);
       background-size: 200% 100%;
       animation: shimmer 1.5s infinite;
       flex-shrink: 0;
@@ -521,11 +521,11 @@
     }
 
     .form-item {
-      --background: #ffffff;
+      --background: var(--app-surface);
       --border-radius: 12px;
       --border-width: 1px;
       --border-style: solid;
-      --border-color: #e5e7eb;
+      --border-color: var(--app-line);
       margin-bottom: 1rem;
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     }
@@ -537,10 +537,10 @@
 
       .metric-checkbox-item {
         --border-radius: 12px;
-        --background: #ffffff;
+        --background: var(--app-surface);
         --border-width: 1px;
         --border-style: solid;
-        --border-color: #e5e7eb;
+        --border-color: var(--app-line);
         margin-bottom: 0.5rem;
         border-radius: 12px;
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
@@ -619,8 +619,8 @@
     letter-spacing: 0.5rem;
     text-align: center;
     --border-radius: 20px;
-    --background: #ffffff;
-    --border-color: #e5e7eb;
+    --background: var(--app-surface);
+    --border-color: var(--app-line);
     --border-width: 2px;
     --border-style: solid;
     --color: var(--ion-color-dark);
@@ -630,7 +630,7 @@
 
     &:focus-within {
       --border-color: var(--ion-color-primary);
-      --background: #ffffff;
+      --background: var(--app-surface);
       box-shadow: 0 6px 20px rgba(102, 126, 234, 0.2);
       transform: translateY(-2px) scale(1.02);
     }
@@ -673,10 +673,10 @@
 
       .sharing-item {
         --border-radius: 12px;
-        --background: #ffffff;
+        --background: var(--app-surface);
         --border-width: 1px;
         --border-style: solid;
-        --border-color: #e5e7eb;
+        --border-color: var(--app-line);
         margin-bottom: 0.5rem;
         border-radius: 12px;
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);

@@ -216,7 +216,7 @@ ion-header {
 }
 
 .skeleton-card {
-  background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%) !important;
+  background: linear-gradient(135deg, var(--app-line) 0%, var(--app-line-strong) 100%) !important;
   position: relative;
   overflow: hidden;
 
@@ -248,7 +248,7 @@ ion-header {
 }
 
 .skeleton-header {
-  background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%) !important;
+  background: linear-gradient(135deg, var(--app-line) 0%, var(--app-line-strong) 100%) !important;
   position: relative;
   overflow: hidden;
 
@@ -314,7 +314,7 @@ ion-header {
 }
 
 .skeleton-chart {
-  background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);
+  background: linear-gradient(135deg, var(--app-line) 0%, var(--app-line-strong) 100%);
   border-radius: 8px;
   position: relative;
   overflow: hidden;
@@ -385,7 +385,7 @@ ion-header {
       margin: 0;
       border-radius: 12px;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-      border-left: 4px solid #e5e7eb;
+      border-left: 4px solid var(--app-line);
 
       ion-card-content {
         padding: 1rem;

@@ -13,7 +13,7 @@
         <div class="entry-form">
           <h2 class="form-title">
             <ion-icon name="add-circle"></ion-icon>
-            {{ 'METRICS.ENTER_VALUE' | translate }}
+            {{ (editingRecord ? 'METRICS.EDIT_RECORD' : 'METRICS.ENTER_VALUE') | translate }}
           </h2>
 
           <div *ngIf="metric === 'bp'" class="form-fields bp-fields">
@@ -41,72 +41,17 @@
             </ion-item>
           </div>
 
-          <div *ngIf="metric === 'glucose'" class="form-fields">
+          <div *ngIf="metric !== 'bp'" class="form-fields">
             <ion-item class="form-item">
-              <ion-label position="stacked">{{ 'METRICS.ENTER_VALUE' | translate }}</ion-label>
-              <ion-input 
-                type="number" 
+              <ion-label position="stacked">{{ 'METRICS.ENTER_VALUE' | translate }} ({{ format.unitLabel(metric) }})</ion-label>
+              <ion-input
+                type="number"
+                inputmode="decimal"
                 [(ngModel)]="numericValue"
-                [min]="20"
-                [max]="600"
-                [step]="1"
-                placeholder="20-600 mg/dL">
-              </ion-input>
-            </ion-item>
-          </div>
-
-          <div *ngIf="metric === 'spo2'" class="form-fields">
-            <ion-item class="form-item">
-              <ion-label position="stacked">{{ 'METRICS.ENTER_VALUE' | translate }}</ion-label>
-              <ion-input 
-                type="number" 
-                [(ngModel)]="numericValue"
-                [min]="0"
-                [max]="100"
-                [step]="1"
-                placeholder="0-100%">
-              </ion-input>
-            </ion-item>
-          </div>
-
-          <div *ngIf="metric === 'hr'" class="form-fields">
-            <ion-item class="form-item">
-              <ion-label position="stacked">{{ 'METRICS.ENTER_VALUE' | translate }}</ion-label>
-              <ion-input 
-                type="number" 
-                [(ngModel)]="numericValue"
-                [min]="30"
-                [max]="220"
-                [step]="1"
-                placeholder="30-220 bpm">
-              </ion-input>
-            </ion-item>
-          </div>
-
-          <div *ngIf="metric === 'pain'" class="form-fields">
-            <ion-item class="form-item">
-              <ion-label position="stacked">{{ 'METRICS.ENTER_VALUE' | translate }}</ion-label>
-              <ion-input 
-                type="number" 
-                [(ngModel)]="numericValue"
-                [min]="0"
-                [max]="10"
-                [step]="1"
-                placeholder="0-10">
-              </ion-input>
-            </ion-item>
-          </div>
-
-          <div *ngIf="metric === 'weight'" class="form-fields">
-            <ion-item class="form-item">
-              <ion-label position="stacked">{{ 'METRICS.ENTER_VALUE' | translate }}</ion-label>
-              <ion-input 
-                type="number" 
-                [(ngModel)]="numericValue"
-                [min]="1"
-                [max]="500"
-                [step]="0.1"
-                placeholder="1-500 kg">
+                [min]="inputRange.min"
+                [max]="inputRange.max"
+                [step]="inputRange.step"
+                [placeholder]="inputRange.min + '–' + inputRange.max">
               </ion-input>
             </ion-item>
           </div>
@@ -157,9 +102,22 @@
             </div>
           </div>
 
-          <ion-button expand="block" (click)="save()" class="save-button">
+          <ion-item class="form-item note-item">
+            <ion-label position="stacked">{{ 'METRICS.NOTE' | translate }}</ion-label>
+            <ion-textarea
+              [(ngModel)]="note"
+              [maxlength]="500"
+              [autoGrow]="true"
+              [placeholder]="'METRICS.NOTE_PLACEHOLDER' | translate">
+            </ion-textarea>
+          </ion-item>
+
+          <ion-button expand="block" (click)="save()" class="save-button" [disabled]="saving">
             <ion-icon name="checkmark-circle" slot="start"></ion-icon>
             {{ 'COMMON.SAVE' | translate }}
+          </ion-button>
+          <ion-button *ngIf="editingRecord" expand="block" fill="clear" (click)="cancelEdit()">
+            {{ 'COMMON.CANCEL' | translate }}
           </ion-button>
         </div>
       </ion-card-content>
@@ -203,6 +161,8 @@
                 <div class="history-value" [style.color]="chartColor">
                   {{ formatValue(obs) }}
                 </div>
+                <app-severity-badge [reading]="obs"></app-severity-badge>
+                <p *ngIf="obs.note" class="history-note">{{ obs.note }}</p>
                 <div *ngIf="obs.tags && obs.tags.length > 0" class="history-tags">
                   <ion-chip *ngFor="let tag of obs.tags" size="small" class="history-chip" [style.--chip-color]="chartColor">
                     {{ tag | translate }}
@@ -244,8 +204,11 @@
                   <div class="record-value" [style.color]="chartColor">
                     {{ formatValue(selectedRecord) }}
                   </div>
+                  <app-severity-badge [reading]="selectedRecord" [showNormal]="true"></app-severity-badge>
                 </div>
               </div>
+
+              <p class="severity-advice" *ngIf="format.severityAdvice(format.classify(selectedRecord)) as advice">{{ advice }}</p>
 
               <div class="record-details">
                 <div class="detail-row">
@@ -264,6 +227,13 @@
                         {{ tag | translate }}
                       </ion-chip>
                     </div>
+                  </div>
+                </div>
+                <div class="detail-row" *ngIf="selectedRecord.note">
+                  <ion-icon name="document-text-outline"></ion-icon>
+                  <div>
+                    <strong>{{ 'METRICS.NOTE' | translate }}:</strong>
+                    <p class="record-note">{{ selectedRecord.note }}</p>
                   </div>
                 </div>
               </div>

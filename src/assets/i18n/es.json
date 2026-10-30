@@ -61,7 +61,9 @@
     "DIASTOLIC": "Presión arterial diastólica",
     "SAVE": "Guardar",
     "NEXT": "Siguiente",
-    "SKIP": "Omitir"
+    "SKIP": "Omitir",
+    "GENDER_OTHER": "Otro",
+    "GENDER_PREFER_NOT": "Prefiero no decirlo"
   },
   "TOUR": {
     "WELCOME": "Bienvenido a VitaLink",
@@ -84,7 +86,8 @@
     "NO_DATA": "Aún no hay datos",
     "RECENT_ACTIVITY": "Actividad reciente",
     "NO_ACTIVITY": "No hay actividad reciente",
-    "TITLE": "Inicio"
+    "TITLE": "Inicio",
+    "QUICK_ADD": "Añadir rápido"
   },
   "METRICS": {
     "BP": "Presión arterial",
@@ -118,7 +121,17 @@
     "DELETE_RECORD_MESSAGE": "¿Estás seguro de que deseas eliminar este registro?",
     "DELETE_RECORD_ERROR": "Error al eliminar el registro",
     "DELETE_RECORD_SUCCESS": "Registro eliminado exitosamente",
-    "SAVED_OFFLINE": "Guardado en este dispositivo. Se sincronizará cuando vuelva a estar en línea."
+    "SAVED_OFFLINE": "Guardado en este dispositivo. Se sincronizará cuando vuelva a estar en línea.",
+    "BP_SYSTOLIC_RANGE_ERROR": "La sistólica debe estar entre 50 y 250",
+    "BP_DIASTOLIC_RANGE_ERROR": "La diastólica debe estar entre 30 y 150",
+    "BP_RATIO_ERROR": "La sistólica debe ser mayor que la diastólica",
+    "DATE_FUTURE_ERROR": "La fecha no puede ser futura",
+    "VALUE_RANGE_ERROR": "El valor debe estar entre {{min}} y {{max}} {{unit}}",
+    "EDIT_RECORD": "Editar lectura",
+    "NOTE": "Nota",
+    "NOTE_PLACEHOLDER": "Opcional, p. ej., mareo, después del café",
+    "MMOLL": "mmol/L",
+    "LB": "lb"
   },
   "TAGS": {
     "BP_AFTER_WAKE": "Después de despertar",
@@ -188,7 +201,11 @@
     "SUCCESS_TITLE": "Éxito",
     "ADDED_SUCCESSFULLY": "¡agregado exitosamente!",
     "ADDING_PROVIDER": "Agregando proveedor...",
-    "TOO_MANY_ATTEMPTS": "Demasiados códigos incorrectos. Espere 15 minutos e inténtelo de nuevo."
+    "TOO_MANY_ATTEMPTS": "Demasiados códigos incorrectos. Espere 15 minutos e inténtelo de nuevo.",
+    "INVALID_DATE_RANGE": "La fecha de inicio debe ser anterior a la fecha de fin",
+    "PDF_EXPORT_ERROR": "Error al generar el PDF",
+    "PDF_EXPORT_SUCCESS": "¡PDF exportado correctamente!",
+    "SELECT_AT_LEAST_ONE_METRIC": "Seleccione al menos un indicador"
   },
   "SETTINGS": {
     "TITLE": "Configuración",
@@ -269,7 +286,21 @@
     "PWA_UPDATE_MESSAGE": "Hay una nueva versión de la aplicación disponible. La aplicación se recargará para aplicar la actualización.",
     "PWA_UPDATE_CONFIRM": "Actualizar",
     "PWA_UPDATE_ERROR": "Error al aplicar la actualización",
-    "REMINDER_NOTIFICATION_BODY": "Es hora de registrar sus datos de salud"
+    "REMINDER_NOTIFICATION_BODY": "Es hora de registrar sus datos de salud",
+    "AGE_RANGE_ERROR": "La edad debe estar entre 0 y 130",
+    "UNITS": "Unidades",
+    "THEME": "Apariencia",
+    "THEME_SYSTEM": "Según el sistema",
+    "THEME_LIGHT": "Claro",
+    "THEME_DARK": "Oscuro",
+    "DELETE_ACCOUNT": "Eliminar cuenta",
+    "DELETE_ACCOUNT_DESC": "Elimine para siempre su cuenta y todos sus datos",
+    "DELETE_ACCOUNT_TITLE": "¿Eliminar su cuenta?",
+    "DELETE_ACCOUNT_MESSAGE": "Se eliminarán para siempre su perfil, lecturas, medicamentos, recordatorios y conexiones con profesionales. No se puede deshacer. Escriba {{word}} para confirmar.",
+    "DELETE_ACCOUNT_CONFIRM_WORD": "ELIMINAR",
+    "DELETE_ACCOUNT_MISMATCH": "La palabra de confirmación no coincide",
+    "DELETE_ACCOUNT_ERROR": "No se pudo eliminar su cuenta. Inténtelo de nuevo.",
+    "DELETE_ACCOUNT_SUCCESS": "Su cuenta ha sido eliminada"
   },
   "PDF_EXPORT": {
     "SUBTITLE": "Personalice sus opciones de exportación PDF",
@@ -324,7 +355,12 @@
     "DELETE_PATIENT": "Eliminar paciente",
     "DELETE_PATIENT_TITLE": "Eliminar paciente",
     "DELETE_PATIENT_MESSAGE": "¿Está seguro de que desea eliminar este paciente? Esta acción no se puede deshacer.",
-    "DELETE": "Eliminar"
+    "DELETE": "Eliminar",
+    "NEEDS_ATTENTION": "Requiere atención",
+    "INACTIVE": "Sin lecturas desde hace {{days}}+ días",
+    "NO_PATIENTS": "Aún no hay pacientes. Comparta un código desde la pestaña Conectar para añadir uno.",
+    "PATIENT": "Paciente",
+    "PROVIDER": "Profesional"
   },
   "TIME": {
     "JUST_NOW": "ahora mismo",
@@ -432,5 +468,62 @@
     "UNITED_KINGDOM": "Reino Unido",
     "UNITED_STATES": "Estados Unidos",
     "VIETNAM": "Vietnam"
+  },
+  "ACCESS_LOG": {
+    "TITLE": "Historial de accesos",
+    "SETTINGS_DESC": "Vea qué profesionales consultaron sus datos",
+    "INTRO": "Cada vez que un profesional de salud abre uno de sus indicadores compartidos, queda registrado aquí.",
+    "EMPTY": "Nadie ha consultado sus datos todavía.",
+    "LOAD_ERROR": "No se pudo cargar el historial de accesos. Inténtelo de nuevo.",
+    "FORMER_PROVIDER": "Antiguo profesional",
+    "VIEWED": "Consultó {{metric}}"
+  },
+  "ALERTS": {
+    "TITLE": "Alertas",
+    "MARK_ALL_READ": "Marcar todo como leído"
+  },
+  "CLINICAL": {
+    "NORMAL": "Normal",
+    "BORDERLINE": "Límite",
+    "ABNORMAL": "Fuera de rango",
+    "CRITICAL": "Crítico",
+    "BORDERLINE_HIGH": "Ligeramente alto",
+    "BORDERLINE_LOW": "Ligeramente bajo",
+    "ABNORMAL_HIGH": "Alto",
+    "ABNORMAL_LOW": "Bajo",
+    "CRITICAL_HIGH": "Muy alto",
+    "CRITICAL_LOW": "Muy bajo",
+    "ADVICE_ABNORMAL": "Esta lectura está fuera del rango habitual. Vuelva a medirla y, si sigue fuera de rango, consulte a su médico.",
+    "ADVICE_CRITICAL": "Esta lectura está muy fuera del rango seguro. Vuelva a medirla ahora. Si se confirma o se encuentra mal (dolor en el pecho, falta de aire, confusión, desmayo), busque atención médica urgente."
+  },
+  "MEDICATIONS": {
+    "TITLE": "Medicamentos",
+    "SETTINGS_DESC": "Controle sus medicamentos y dosis",
+    "TODAY": "Hoy",
+    "ADHERENCE": "{{percent}}% tomadas (últimos 7 días)",
+    "NO_DOSES_TODAY": "No hay dosis programadas para hoy.",
+    "MY_MEDICATIONS": "Mis medicamentos",
+    "ADD": "Añadir",
+    "NAME": "Nombre",
+    "NAME_PLACEHOLDER": "p. ej., Metformina",
+    "DOSE": "Dosis",
+    "DOSE_PLACEHOLDER": "p. ej., 500 mg, 1 comprimido",
+    "TIMES": "Horas",
+    "ADD_TIME": "Añadir hora",
+    "DAYS": "Días",
+    "DAYS_HINT": "Deje todos sin seleccionar para todos los días.",
+    "EVERY_DAY": "Todos los días",
+    "EMPTY": "Aún no hay medicamentos. Añada uno para recibir recordatorios de dosis.",
+    "ACTIVE": "Activo",
+    "TAKEN": "Tomada",
+    "SKIP": "Omitir",
+    "SKIPPED": "Omitida",
+    "NAME_REQUIRED": "Introduzca el nombre del medicamento",
+    "TIME_REQUIRED": "Añada al menos una hora",
+    "SAVE_ERROR": "No se pudo guardar. Inténtelo de nuevo.",
+    "LOAD_ERROR": "No se pudieron cargar sus medicamentos.",
+    "DELETE_TITLE": "Eliminar medicamento",
+    "DELETE_MESSAGE": "¿Eliminar {{name}} y su historial?",
+    "NOTIFICATION_BODY": "Es hora de tomar su medicamento"
   }
 }

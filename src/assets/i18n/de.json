@@ -61,7 +61,9 @@
     "DIASTOLIC": "Diastolischer Blutdruck",
     "SAVE": "Speichern",
     "NEXT": "Weiter",
-    "SKIP": "Überspringen"
+    "SKIP": "Überspringen",
+    "GENDER_OTHER": "Divers",
+    "GENDER_PREFER_NOT": "Keine Angabe"
   },
   "TOUR": {
     "WELCOME": "Willkommen bei VitaLink",
@@ -84,7 +86,8 @@
     "NO_DATA": "Noch keine Daten",
     "RECENT_ACTIVITY": "Aktuelle Aktivität",
     "NO_ACTIVITY": "Keine aktuelle Aktivität",
-    "TITLE": "Startseite"
+    "TITLE": "Startseite",
+    "QUICK_ADD": "Schnell erfassen"
   },
   "METRICS": {
     "BP": "Blutdruck",
@@ -118,7 +121,17 @@
     "DELETE_RECORD_MESSAGE": "Sind Sie sicher, dass Sie diesen Datensatz löschen möchten?",
     "DELETE_RECORD_ERROR": "Fehler beim Löschen des Datensatzes",
     "DELETE_RECORD_SUCCESS": "Datensatz erfolgreich gelöscht",
-    "SAVED_OFFLINE": "Auf diesem Gerät gespeichert. Die Synchronisierung erfolgt, sobald Sie wieder online sind."
+    "SAVED_OFFLINE": "Auf diesem Gerät gespeichert. Die Synchronisierung erfolgt, sobald Sie wieder online sind.",
+    "BP_SYSTOLIC_RANGE_ERROR": "Der systolische Wert muss zwischen 50 und 250 liegen",
+    "BP_DIASTOLIC_RANGE_ERROR": "Der diastolische Wert muss zwischen 30 und 150 liegen",
+    "BP_RATIO_ERROR": "Der systolische Wert muss höher als der diastolische sein",
+    "DATE_FUTURE_ERROR": "Das Datum darf nicht in der Zukunft liegen",
+    "VALUE_RANGE_ERROR": "Der Wert muss zwischen {{min}} und {{max}} {{unit}} liegen",
+    "EDIT_RECORD": "Messung bearbeiten",
+    "NOTE": "Notiz",
+    "NOTE_PLACEHOLDER": "Optional, z. B. Schwindel, nach Kaffee",
+    "MMOLL": "mmol/L",
+    "LB": "lb"
   },
   "TAGS": {
     "BP_AFTER_WAKE": "Nach dem Aufwachen",
@@ -188,7 +201,11 @@
     "SUCCESS_TITLE": "Erfolg",
     "ADDED_SUCCESSFULLY": "erfolgreich hinzugefügt!",
     "ADDING_PROVIDER": "Anbieter wird hinzugefügt...",
-    "TOO_MANY_ATTEMPTS": "Zu viele falsche Codes. Bitte warten Sie 15 Minuten und versuchen Sie es erneut."
+    "TOO_MANY_ATTEMPTS": "Zu viele falsche Codes. Bitte warten Sie 15 Minuten und versuchen Sie es erneut.",
+    "INVALID_DATE_RANGE": "Das Startdatum muss vor dem Enddatum liegen",
+    "PDF_EXPORT_ERROR": "Fehler beim Erstellen der PDF",
+    "PDF_EXPORT_SUCCESS": "PDF erfolgreich exportiert!",
+    "SELECT_AT_LEAST_ONE_METRIC": "Bitte wählen Sie mindestens einen Wert aus"
   },
   "SETTINGS": {
     "TITLE": "Einstellungen",
@@ -269,7 +286,21 @@
     "PWA_UPDATE_MESSAGE": "Eine neue Version der App ist verfügbar. Die App wird neu geladen, um das Update anzuwenden.",
     "PWA_UPDATE_CONFIRM": "Aktualisieren",
     "PWA_UPDATE_ERROR": "Fehler beim Anwenden des Updates",
-    "REMINDER_NOTIFICATION_BODY": "Zeit, Ihre Gesundheitsdaten zu erfassen"
+    "REMINDER_NOTIFICATION_BODY": "Zeit, Ihre Gesundheitsdaten zu erfassen",
+    "AGE_RANGE_ERROR": "Das Alter muss zwischen 0 und 130 liegen",
+    "UNITS": "Einheiten",
+    "THEME": "Darstellung",
+    "THEME_SYSTEM": "Systemeinstellung",
+    "THEME_LIGHT": "Hell",
+    "THEME_DARK": "Dunkel",
+    "DELETE_ACCOUNT": "Konto löschen",
+    "DELETE_ACCOUNT_DESC": "Konto und alle Daten dauerhaft löschen",
+    "DELETE_ACCOUNT_TITLE": "Konto löschen?",
+    "DELETE_ACCOUNT_MESSAGE": "Ihr Profil, Ihre Messungen, Medikamente, Erinnerungen und Verbindungen zu Betreuern werden dauerhaft gelöscht. Dies kann nicht rückgängig gemacht werden. Geben Sie {{word}} ein, um zu bestätigen.",
+    "DELETE_ACCOUNT_CONFIRM_WORD": "LÖSCHEN",
+    "DELETE_ACCOUNT_MISMATCH": "Das Bestätigungswort stimmt nicht überein",
+    "DELETE_ACCOUNT_ERROR": "Konto konnte nicht gelöscht werden. Bitte erneut versuchen.",
+    "DELETE_ACCOUNT_SUCCESS": "Ihr Konto wurde gelöscht"
   },
   "PDF_EXPORT": {
     "SUBTITLE": "Passen Sie Ihre PDF-Exportoptionen an",
@@ -324,7 +355,12 @@
     "DELETE_PATIENT": "Patient löschen",
     "DELETE_PATIENT_TITLE": "Patient löschen",
     "DELETE_PATIENT_MESSAGE": "Sind Sie sicher, dass Sie diesen Patienten entfernen möchten? Diese Aktion kann nicht rückgängig gemacht werden.",
-    "DELETE": "Löschen"
+    "DELETE": "Löschen",
+    "NEEDS_ATTENTION": "Braucht Aufmerksamkeit",
+    "INACTIVE": "Seit {{days}}+ Tagen keine Messung",
+    "NO_PATIENTS": "Noch keine Patienten. Teilen Sie einen Code im Tab „Verbinden“, um einen hinzuzufügen.",
+    "PATIENT": "Patient",
+    "PROVIDER": "Betreuer"
   },
   "TIME": {
     "JUST_NOW": "gerade eben",
@@ -432,5 +468,62 @@
     "UNITED_KINGDOM": "Vereinigtes Königreich",
     "UNITED_STATES": "Vereinigte Staaten",
     "VIETNAM": "Vietnam"
+  },
+  "ACCESS_LOG": {
+    "TITLE": "Zugriffsverlauf",
+    "SETTINGS_DESC": "Sehen Sie, welche Betreuer Ihre Daten angesehen haben",
+    "INTRO": "Jedes Mal, wenn ein Betreuer einen Ihrer geteilten Werte öffnet, wird das hier festgehalten.",
+    "EMPTY": "Bisher hat niemand Ihre Daten angesehen.",
+    "LOAD_ERROR": "Zugriffsverlauf konnte nicht geladen werden. Bitte erneut versuchen.",
+    "FORMER_PROVIDER": "Ehemaliger Betreuer",
+    "VIEWED": "Hat {{metric}} angesehen"
+  },
+  "ALERTS": {
+    "TITLE": "Warnungen",
+    "MARK_ALL_READ": "Alle als gelesen markieren"
+  },
+  "CLINICAL": {
+    "NORMAL": "Normal",
+    "BORDERLINE": "Grenzwertig",
+    "ABNORMAL": "Außerhalb des Bereichs",
+    "CRITICAL": "Kritisch",
+    "BORDERLINE_HIGH": "Leicht erhöht",
+    "BORDERLINE_LOW": "Leicht erniedrigt",
+    "ABNORMAL_HIGH": "Hoch",
+    "ABNORMAL_LOW": "Niedrig",
+    "CRITICAL_HIGH": "Sehr hoch",
+    "CRITICAL_LOW": "Sehr niedrig",
+    "ADVICE_ABNORMAL": "Dieser Wert liegt außerhalb des üblichen Bereichs. Messen Sie erneut und sprechen Sie mit Ihrem Arzt, wenn er außerhalb bleibt.",
+    "ADVICE_CRITICAL": "Dieser Wert liegt weit außerhalb des sicheren Bereichs. Messen Sie sofort erneut. Wenn er sich bestätigt oder es Ihnen schlecht geht (Brustschmerzen, Atemnot, Verwirrtheit, Ohnmacht), suchen Sie umgehend ärztliche Hilfe."
+  },
+  "MEDICATIONS": {
+    "TITLE": "Medikamente",
+    "SETTINGS_DESC": "Medikamente und Einnahmen verfolgen",
+    "TODAY": "Heute",
+    "ADHERENCE": "{{percent}} % eingenommen (letzte 7 Tage)",
+    "NO_DOSES_TODAY": "Für heute sind keine Einnahmen geplant.",
+    "MY_MEDICATIONS": "Meine Medikamente",
+    "ADD": "Hinzufügen",
+    "NAME": "Name",
+    "NAME_PLACEHOLDER": "z. B. Metformin",
+    "DOSE": "Dosis",
+    "DOSE_PLACEHOLDER": "z. B. 500 mg, 1 Tablette",
+    "TIMES": "Uhrzeiten",
+    "ADD_TIME": "Uhrzeit hinzufügen",
+    "DAYS": "Tage",
+    "DAYS_HINT": "Keine Auswahl bedeutet jeden Tag.",
+    "EVERY_DAY": "Jeden Tag",
+    "EMPTY": "Noch keine Medikamente. Fügen Sie eines hinzu, um Erinnerungen zu erhalten.",
+    "ACTIVE": "Aktiv",
+    "TAKEN": "Eingenommen",
+    "SKIP": "Auslassen",
+    "SKIPPED": "Ausgelassen",
+    "NAME_REQUIRED": "Bitte geben Sie den Namen des Medikaments ein",
+    "TIME_REQUIRED": "Fügen Sie mindestens eine Uhrzeit hinzu",
+    "SAVE_ERROR": "Speichern fehlgeschlagen. Bitte erneut versuchen.",
+    "LOAD_ERROR": "Ihre Medikamente konnten nicht geladen werden.",
+    "DELETE_TITLE": "Medikament löschen",
+    "DELETE_MESSAGE": "{{name}} und den Verlauf löschen?",
+    "NOTIFICATION_BODY": "Zeit für Ihr Medikament"
   }
 }

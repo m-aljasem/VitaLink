@@ -65,6 +65,7 @@
               <div class="record-main">
                 <div class="record-value">
                   <span class="value">{{ formatValue(obs) }}</span>
+                  <app-severity-badge [reading]="obs"></app-severity-badge>
                 </div>
                 <div class="record-meta">
                   <div class="record-date">
@@ -79,9 +80,10 @@
               </div>
               <div class="record-tags" *ngIf="obs.tags && obs.tags.length > 0">
                 <ion-chip *ngFor="let tag of obs.tags" class="tag-chip">
-                  {{ 'TAGS.' + tag | translate }}
+                  {{ tag | translate }}
                 </ion-chip>
               </div>
+              <p class="record-note" *ngIf="obs.note">{{ obs.note }}</p>
             </div>
           </ion-card-content>
         </ion-card>

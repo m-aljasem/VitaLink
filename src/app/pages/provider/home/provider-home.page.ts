@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import {
   IonContent, IonCard, IonCardContent, IonCardHeader, IonCardTitle,
-  IonChip, IonText, IonRefresher, IonRefresherContent, IonIcon, IonSearchbar
+  IonChip, IonText, IonRefresher, IonRefresherContent, IonIcon, IonSearchbar, IonButton, ToastController
 } from '@ionic/angular/standalone';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { CommonModule } from '@angular/common';
@@ -10,7 +11,8 @@ import { FormsModule } from '@angular/forms';
 import { addIcons } from 'ionicons';
 import { 
   people, pulse, addCircle, warning, person, timeOutline, chevronForward, 
-  peopleOutline, heart, water, speedometer, thermometer, scale, searchOutline, closeOutline
+  peopleOutline, heart, water, speedometer, thermometer, scale, searchOutline, closeOutline,
+  notifications, alertCircle, moonOutline
 } from 'ionicons/icons';
 import { AuthService, Profile } from '../../../core/auth.service';
 import { SharingService, ProviderLink } from '../../../core/sharing.service';
@@ -18,12 +20,21 @@ import { ProfileService } from '../../../core/profile.service';
 import { ObservationService, MetricType } from '../../../core/observation.service';
 import { DateFormatService } from '../../../core/date-format.service';
 import { I18nService } from '../../../core/i18n.service';
+import { AlertsService, ReadingAlert } from '../../../core/alerts.service';
+import { MetricFormatService } from '../../../core/metric-format.service';
+
+/** Days without a reading after which a patient is shown as inactive. */
+const INACTIVE_AFTER_DAYS = 3;
 
 interface PatientInfo {
   link: ProviderLink;
   profile: Profile;
   lastSeen: string | null;
   sharedMetrics: string[];
+  /** Has an abnormal or critical reading in the last 7 days. */
+  needsAttention: boolean;
+  /** No reading for INACTIVE_AFTER_DAYS days. */
+  inactive: boolean;
 }
 
 interface Stats {
@@ -42,10 +53,10 @@ interface Stats {
     CommonModule,
     FormsModule,
     IonContent, IonCard, IonCardContent, IonCardHeader, IonCardTitle,
-    IonChip, IonText, IonRefresher, IonRefresherContent, IonIcon, IonSearchbar, TranslateModule
+    IonChip, IonText, IonRefresher, IonRefresherContent, IonIcon, IonSearchbar, IonButton, TranslateModule
   ],
 })
-export class ProviderHomePage implements OnInit {
+export class ProviderHomePage implements OnInit, OnDestroy {
   profile: Profile | null = null;
   loading = true;
   stats: Stats = {
@@ -58,6 +69,10 @@ export class ProviderHomePage implements OnInit {
   filteredPatients: PatientInfo[] = [];
   searchTerm: string = '';
   isRTL: boolean = false;
+  greeting = 'HOME.GREETING_MORNING';
+  /** Unread alerts, newest first. */
+  alerts: ReadingAlert[] = [];
+  private alertSubscription?: Subscription;
 
   constructor(
     private authService: AuthService,
@@ -67,22 +82,73 @@ export class ProviderHomePage implements OnInit {
     private router: Router,
     private dateFormatService: DateFormatService,
     private translate: TranslateService,
-    private i18nService: I18nService
+    private i18nService: I18nService,
+    private alertsService: AlertsService,
+    private toastController: ToastController,
+    public format: MetricFormatService
   ) {
     addIcons({ 
       people, pulse, addCircle, warning, person, timeOutline, chevronForward, 
-      peopleOutline, heart, water, speedometer, thermometer, scale, searchOutline, closeOutline
+      peopleOutline, heart, water, speedometer, thermometer, scale, searchOutline, closeOutline,
+      notifications, alertCircle, moonOutline
     });
   }
 
   async ngOnInit() {
     this.profile = await this.authService.getCurrentProfile();
     this.isRTL = this.i18nService.isRTL();
+    const hour = new Date().getHours();
+    this.greeting = hour < 12 ? 'HOME.GREETING_MORNING' : hour < 18 ? 'HOME.GREETING_AFTERNOON' : 'HOME.GREETING_EVENING';
     await this.loadData();
+
+    const user = this.authService.getCurrentUser();
+    if (user) {
+      this.alertSubscription = this.alertsService.watch(user.id).subscribe(alert => this.onNewAlert(alert));
+    }
   }
 
-  async loadData() {
-    this.loading = true;
+  ngOnDestroy() {
+    this.alertSubscription?.unsubscribe();
+    this.alertsService.stopWatching();
+  }
+
+  private async onNewAlert(alert: ReadingAlert) {
+    this.alerts = [alert, ...this.alerts.filter(a => a.id !== alert.id)];
+    const toast = await this.toastController.create({
+      message: `${this.patientName(alert.patient_id)}: ${this.alertText(alert)}`,
+      duration: 4000,
+      color: alert.severity === 'critical' ? 'danger' : 'warning',
+      position: 'top',
+    });
+    await toast.present();
+    // Refresh flags and counts
+    this.loadData(false);
+  }
+
+  patientName(patientId: string): string {
+    const patient = this.patients.find(p => p.profile.id === patientId);
+    const name = `${patient?.profile.first_name || ''} ${patient?.profile.last_name || ''}`.trim();
+    return name || this.translate.instant('PROVIDER.PATIENT');
+  }
+
+  alertText(alert: ReadingAlert): string {
+    const metric = this.translate.instant('METRICS.' + alert.metric.toUpperCase());
+    return `${metric} – ${this.format.severityLabel({ severity: alert.severity })}`;
+  }
+
+  async openAlert(alert: ReadingAlert) {
+    await this.alertsService.markRead([alert.id]);
+    this.alerts = this.alerts.filter(a => a.id !== alert.id);
+    this.router.navigate(['/provider/patient', alert.patient_id, 'metric', alert.metric]);
+  }
+
+  async markAllAlertsRead() {
+    await this.alertsService.markRead(this.alerts.map(a => a.id));
+    this.alerts = [];
+  }
+
+  async loadData(showLoading = true) {
+    if (showLoading) this.loading = true;
     const user = this.authService.getCurrentUser();
     if (!user) {
       this.loading = false;
@@ -102,6 +168,9 @@ export class ProviderHomePage implements OnInit {
     // Calculate active this week (patients with observations in last 7 days)
     const weekAgo = new Date();
     weekAgo.setDate(weekAgo.getDate() - 7);
+
+    const inactiveSince = new Date();
+    inactiveSince.setDate(inactiveSince.getDate() - INACTIVE_AFTER_DAYS);
 
     // Load patient profiles and calculate stats
     const patientResults = await Promise.all(
@@ -132,6 +201,8 @@ export class ProviderHomePage implements OnInit {
           profile: patientProfile!,
           lastSeen,
           sharedMetrics,
+          needsAttention: false,
+          inactive: sharedMetrics.length > 0 && (!lastSeen || new Date(lastSeen) < inactiveSince),
         };
       })
     );
@@ -141,7 +212,21 @@ export class ProviderHomePage implements OnInit {
     this.stats.activeThisWeek = this.patients.filter(
       p => p.lastSeen && new Date(p.lastSeen) > weekAgo
     ).length;
-    this.filteredPatients = this.patients;
+
+    // Patients with out-of-range readings this week come first, then inactive ones.
+    const [flagged, alertsResult] = await Promise.all([
+      this.observationService.getUsersWithOutOfRangeReadings(this.patients.map(p => p.profile.id), weekAgo),
+      this.alertsService.getAlerts(user.id, 50),
+    ]);
+    for (const patient of this.patients) {
+      patient.needsAttention = flagged.has(patient.profile.id);
+    }
+    this.stats.exceptions = flagged.size;
+    this.patients.sort((a, b) =>
+      Number(b.needsAttention) - Number(a.needsAttention) || Number(b.inactive) - Number(a.inactive)
+    );
+    this.alerts = (alertsResult.data || []).filter(a => !a.read_at);
+    this.filterPatients();
 
     // Calculate new links (created in last 7 days)
     this.stats.newLinks = links.filter(

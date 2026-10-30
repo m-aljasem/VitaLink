@@ -3,13 +3,14 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import {
   IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonInput, IonItem, IonLabel,
-  IonChip, IonButtons, ToastController, IonText, IonCard, IonCardContent, IonIcon, ModalController, AlertController, IonModal
+  IonChip, IonButtons, ToastController, IonText, IonCard, IonCardContent, IonIcon, ModalController, AlertController, IonModal,
+  IonTextarea
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { 
   pulse, water, heart, thermometer, bandage, scale, timeOutline, arrowBack, arrowForward,
   addCircle, time, calendarOutline, checkmarkCircle, pricetagOutline, barChart,
-  createOutline, trash
+  createOutline, trash, documentTextOutline
 } from 'ionicons/icons';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { CommonModule } from '@angular/common';
@@ -19,6 +20,11 @@ import { LineChartComponent } from '../../../shared/components/line-chart/line-c
 import { DatePickerModalComponent } from '../../../shared/components/date-picker-modal/date-picker-modal.component';
 import { I18nService } from '../../../core/i18n.service';
 import { DateFormatService } from '../../../core/date-format.service';
+import { MetricFormatService } from '../../../core/metric-format.service';
+import { ObservationChanges } from '../../../core/observation.service';
+import { isOutOfRange } from '../../../core/clinical';
+import { BP_RANGES, canonicalUnit } from '../../../core/units';
+import { SeverityBadgeComponent } from '../../../shared/components/severity-badge/severity-badge.component';
 
 @Component({
   selector: 'app-metric-detail',
@@ -28,7 +34,8 @@ import { DateFormatService } from '../../../core/date-format.service';
   imports: [
     CommonModule, FormsModule,
     IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonInput, IonItem, IonLabel,
-    IonChip, IonButtons, IonText, IonCard, IonCardContent, IonIcon, IonModal, TranslateModule, LineChartComponent
+    IonChip, IonButtons, IonText, IonCard, IonCardContent, IonIcon, IonModal, IonTextarea, TranslateModule, LineChartComponent,
+    SeverityBadgeComponent
   ],
 })
 export class MetricDetailPage implements OnInit {
@@ -51,7 +58,9 @@ export class MetricDetailPage implements OnInit {
   systolic: number | null = null;
   diastolic: number | null = null;
   pulse: number | null = null; // Optional pulse for BP
-  numericValue: number | null = null;
+  numericValue: number | null = null; // in the user's display unit
+  note = '';
+  saving = false;
   selectedTags: string[] = [];
   selectedDateTime = new Date().toISOString();
   dateSelectionMode: 'right-now' | 'custom' = 'right-now';
@@ -74,12 +83,13 @@ export class MetricDetailPage implements OnInit {
     private alertController: AlertController,
     private i18nService: I18nService,
     private translate: TranslateService,
-    private dateFormatService: DateFormatService
+    private dateFormatService: DateFormatService,
+    public format: MetricFormatService
   ) {
     addIcons({ 
       pulse, water, heart, thermometer, bandage, scale, timeOutline, arrowBack, arrowForward,
       addCircle, time, calendarOutline, checkmarkCircle, pricetagOutline, barChart,
-      createOutline, trash
+      createOutline, trash, documentTextOutline
     });
   }
 
@@ -128,6 +138,18 @@ export class MetricDetailPage implements OnInit {
     this.chartColor = this.metricColors[this.metric];
     this.setupTags();
     await this.loadData();
+
+    // Opened from "Edit" on the home screen
+    const editId = this.route.snapshot.queryParamMap.get('editId');
+    const toEdit = editId ? this.observations.find(o => o.id === editId) : undefined;
+    if (toEdit) {
+      this.selectedRecord = toEdit;
+      await this.editRecord();
+    }
+  }
+
+  get inputRange(): { min: number; max: number; step: number } {
+    return this.metric === 'bp' ? { min: 0, max: 0, step: 1 } : this.format.inputRange(this.metric);
   }
 
   setupTags() {
@@ -151,7 +173,7 @@ export class MetricDetailPage implements OnInit {
       if (this.metric === 'bp') {
         return o.systolic || 0;
       }
-      return o.numeric_value || 0;
+      return this.format.toDisplay(this.metric, Number(o.numeric_value) || 0);
     });
     this.chartLabels = chartObs.map(o => {
       return this.dateFormatService.formatDateSync(o.ts);
@@ -169,160 +191,112 @@ export class MetricDetailPage implements OnInit {
 
   async save() {
     const user = this.authService.getCurrentUser();
-    if (!user) return;
+    if (!user || this.saving) return;
 
-    // Validate date is not in the future
-    const selectedDate = new Date(this.selectedDateTime);
-    const now = new Date();
-    if (selectedDate > now) {
-      const toast = await this.toastController.create({
-        message: this.translate.instant('METRICS.DATE_FUTURE_ERROR') || 'Cannot select a future date',
-        duration: 2000,
-        color: 'danger',
-      });
-      await toast.present();
-      return;
+    if (new Date(this.selectedDateTime) > new Date()) {
+      return this.showToast('METRICS.DATE_FUTURE_ERROR', 'danger');
     }
 
-    const observationData: Partial<Observation> = {
-      user_id: user.id,
-      metric: this.metric,
+    const changes: ObservationChanges = {
       ts: this.selectedDateTime,
       tags: this.selectedTags,
+      note: this.note.trim() || null,
+      unit: canonicalUnit(this.metric),
     };
 
     if (this.metric === 'bp') {
       if (!this.systolic || !this.diastolic) {
-        const toast = await this.toastController.create({
-          message: this.translate.instant('METRICS.ENTER_BP_VALUES'),
-          duration: 2000,
-          color: 'danger',
-        });
-        await toast.present();
-        return;
+        return this.showToast('METRICS.ENTER_BP_VALUES', 'danger');
       }
-      
-      // Validate BP ranges
-      if (this.systolic < 50 || this.systolic > 250) {
-        const toast = await this.toastController.create({
-          message: this.translate.instant('METRICS.BP_SYSTOLIC_RANGE_ERROR') || 'Systolic must be between 50 and 250',
-          duration: 2000,
-          color: 'danger',
-        });
-        await toast.present();
-        return;
+      if (this.systolic < BP_RANGES.systolic.min || this.systolic > BP_RANGES.systolic.max) {
+        return this.showToast('METRICS.BP_SYSTOLIC_RANGE_ERROR', 'danger', BP_RANGES.systolic);
       }
-      
-      if (this.diastolic < 30 || this.diastolic > 150) {
-        const toast = await this.toastController.create({
-          message: this.translate.instant('METRICS.BP_DIASTOLIC_RANGE_ERROR') || 'Diastolic must be between 30 and 150',
-          duration: 2000,
-          color: 'danger',
-        });
-        await toast.present();
-        return;
+      if (this.diastolic < BP_RANGES.diastolic.min || this.diastolic > BP_RANGES.diastolic.max) {
+        return this.showToast('METRICS.BP_DIASTOLIC_RANGE_ERROR', 'danger', BP_RANGES.diastolic);
       }
-      
       if (this.systolic <= this.diastolic) {
-        const toast = await this.toastController.create({
-          message: this.translate.instant('METRICS.BP_RATIO_ERROR') || 'Systolic must be greater than diastolic',
-          duration: 2000,
-          color: 'danger',
-        });
-        await toast.present();
-        return;
+        return this.showToast('METRICS.BP_RATIO_ERROR', 'danger');
       }
-      
-      observationData.systolic = this.systolic;
-      observationData.diastolic = this.diastolic;
+      changes.systolic = this.systolic;
+      changes.diastolic = this.diastolic;
       if (this.pulse) {
-        observationData.context = { pulse: this.pulse };
+        changes.context = { pulse: this.pulse };
       }
     } else {
-      if (!this.numericValue && this.numericValue !== 0) {
-        const toast = await this.toastController.create({
-          message: this.translate.instant('METRICS.ENTER_VALUE_REQUIRED'),
-          duration: 2000,
-          color: 'danger',
+      if (this.numericValue === null || this.numericValue === undefined || isNaN(Number(this.numericValue))) {
+        return this.showToast('METRICS.ENTER_VALUE_REQUIRED', 'danger');
+      }
+      const range = this.inputRange;
+      const value = Number(this.numericValue);
+      if (value < range.min || value > range.max) {
+        return this.showToast('METRICS.VALUE_RANGE_ERROR', 'danger', {
+          min: range.min, max: range.max, unit: this.format.unitLabel(this.metric),
         });
-        await toast.present();
-        return;
       }
-      
-      // Validate ranges based on metric type
-      let min = 0;
-      let max = 0;
-      let errorMessage = '';
-      
-      if (this.metric === 'glucose') {
-        min = 20;
-        max = 600;
-        errorMessage = this.translate.instant('METRICS.GLUCOSE_RANGE_ERROR') || 'Glucose must be between 20 and 600 mg/dL';
-      } else if (this.metric === 'spo2') {
-        min = 0;
-        max = 100;
-        errorMessage = this.translate.instant('METRICS.SPO2_RANGE_ERROR') || 'SpO2 must be between 0 and 100%';
-      } else if (this.metric === 'hr') {
-        min = 30;
-        max = 220;
-        errorMessage = this.translate.instant('METRICS.HR_RANGE_ERROR') || 'Heart rate must be between 30 and 220 bpm';
-      } else if (this.metric === 'pain') {
-        min = 0;
-        max = 10;
-        errorMessage = this.translate.instant('METRICS.PAIN_RANGE_ERROR') || 'Pain level must be between 0 and 10';
-      } else if (this.metric === 'weight') {
-        min = 1;
-        max = 500;
-        errorMessage = this.translate.instant('METRICS.WEIGHT_RANGE_ERROR') || 'Weight must be between 1 and 500 kg';
-      }
-      
-      if (this.numericValue < min || this.numericValue > max) {
-        const toast = await this.toastController.create({
-          message: errorMessage,
-          duration: 2000,
-          color: 'danger',
-        });
-        await toast.present();
-        return;
-      }
-      
-      observationData.numeric_value = this.numericValue;
-      
-      // Set units
-      if (this.metric === 'glucose') observationData.unit = 'mg/dL';
-      else if (this.metric === 'spo2') observationData.unit = '%';
-      else if (this.metric === 'hr') observationData.unit = 'bpm';
-      else if (this.metric === 'weight') observationData.unit = 'kg';
+      changes.numeric_value = this.format.fromDisplay(this.metric, value);
     }
 
-    const { error, queued } = await this.observationService.createObservation(observationData);
-    
-    if (error) {
-      const toast = await this.toastController.create({
-        message: this.translate.instant('METRICS.SAVE_ERROR'),
-        duration: 2000,
-        color: 'danger',
-      });
-      await toast.present();
-    } else {
-      const toast = await this.toastController.create({
-        message: this.translate.instant(queued ? 'METRICS.SAVED_OFFLINE' : 'METRICS.SAVE_SUCCESS'),
-        duration: 2000,
-        color: 'success',
-      });
-      await toast.present();
-      
-      // Reset form and hide it
-      this.systolic = null;
-      this.diastolic = null;
-      this.numericValue = null;
-      this.selectedTags = [];
-      this.selectedDateTime = new Date().toISOString();
-      this.dateSelectionMode = 'right-now';
-      this.showForm = false;
-      
-      await this.loadData();
+    this.saving = true;
+    let result: { error?: any; queued?: boolean };
+    try {
+      result = this.editingRecord?.id
+        ? await this.observationService.updateObservation(this.editingRecord.id, changes)
+        : await this.observationService.createObservation({ ...changes, user_id: user.id, metric: this.metric });
+    } finally {
+      this.saving = false;
     }
+
+    if (result.error) {
+      return this.showToast('METRICS.SAVE_ERROR', 'danger');
+    }
+
+    await this.showToast(result.queued ? 'METRICS.SAVED_OFFLINE' : 'METRICS.SAVE_SUCCESS', 'success');
+
+    const saved = { metric: this.metric, ...changes };
+    if (isOutOfRange(saved)) {
+      await this.showReadingWarning(saved);
+    }
+
+    this.resetForm();
+    this.showForm = false;
+    await this.loadData();
+  }
+
+  /** Explains an out-of-range reading right after it is saved. */
+  private async showReadingWarning(reading: ObservationChanges & { metric: MetricType }) {
+    const classification = this.format.classify(reading);
+    const alert = await this.alertController.create({
+      header: this.format.severityLabel(classification),
+      subHeader: this.format.formatValue(reading),
+      message: this.format.severityAdvice(classification),
+      cssClass: classification?.severity === 'critical' ? 'reading-alert-critical' : 'reading-alert',
+      buttons: [this.translate.instant('COMMON.OK')],
+    });
+    await alert.present();
+  }
+
+  private async showToast(key: string, color: 'success' | 'danger', params?: object) {
+    const toast = await this.toastController.create({
+      message: this.translate.instant(key, params),
+      duration: 2000,
+      color,
+    });
+    await toast.present();
+  }
+
+  private resetForm() {
+    this.systolic = null;
+    this.diastolic = null;
+    this.numericValue = null;
+    this.note = '';
+    this.selectedTags = [];
+    this.selectedDateTime = new Date().toISOString();
+    this.dateSelectionMode = 'right-now';
+    this.editingRecord = null;
+  }
+
+  cancelEdit() {
+    this.resetForm();
   }
 
   showAddForm() {
@@ -330,25 +304,7 @@ export class MetricDetailPage implements OnInit {
   }
 
   formatValue(obs: Observation): string {
-    if (obs.metric === 'bp') {
-      const unit = this.translate.instant('METRICS.MMHG');
-      return `${obs.systolic}/${obs.diastolic} ${unit}`;
-    }
-    // Get unit translation key based on metric type
-    const unitKey = this.getUnitTranslationKey(obs.metric);
-    const unit = unitKey ? this.translate.instant(unitKey) : (obs.unit || '');
-    return `${obs.numeric_value} ${unit}`;
-  }
-
-  private getUnitTranslationKey(metric: string): string | null {
-    const unitMap: { [key: string]: string } = {
-      glucose: 'METRICS.MGDL',
-      spo2: 'METRICS.PERCENT',
-      hr: 'METRICS.BPM',
-      pain: 'METRICS.SCALE_1_10',
-      weight: 'METRICS.KG',
-    };
-    return unitMap[metric] || null;
+    return this.format.formatValue(obs);
   }
 
   formatTime(dateString: string): string {
@@ -482,11 +438,12 @@ export class MetricDetailPage implements OnInit {
     if (this.selectedRecord.metric === 'bp') {
       this.systolic = this.selectedRecord.systolic || null;
       this.diastolic = this.selectedRecord.diastolic || null;
-    } else {
-      this.numericValue = this.selectedRecord.numeric_value || null;
+    } else if (this.selectedRecord.numeric_value != null) {
+      this.numericValue = this.format.toDisplay(this.metric, Number(this.selectedRecord.numeric_value));
     }
-    
-    this.selectedTags = this.selectedRecord.tags || [];
+
+    this.note = this.selectedRecord.note || '';
+    this.selectedTags = [...(this.selectedRecord.tags || [])];
     this.selectedDateTime = this.selectedRecord.ts;
     this.dateSelectionMode = 'custom';
     this.showForm = true;

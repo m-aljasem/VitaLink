@@ -99,6 +99,10 @@ export class SyncService {
           const { data, error } = await this.observationService.insertObservation(item.data);
           if (error) throw error;
           await this.offlineStorage.saveObservation(data!);
+        } else if (item.type === 'update' && item.data.id) {
+          const { data, error } = await this.observationService.updateOnServer(item.data.id, item.data.changes);
+          if (error) throw error;
+          await this.offlineStorage.saveObservation(data!);
         } else if (item.type === 'delete' && item.data.id) {
           const { error } = await this.observationService.deleteFromServer(item.data.id);
           if (error) throw error;

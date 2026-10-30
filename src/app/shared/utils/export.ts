@@ -1,7 +1,8 @@
 import { Observation } from '../../core/observation.service';
+import { classifyReading } from '../../core/clinical';
 
 export function observationsToCSV(observations: Observation[]): string {
-  const headers = ['Date', 'Time', 'Metric', 'Value', 'Systolic', 'Diastolic', 'Unit', 'Tags'];
+  const headers = ['Date', 'Time', 'Metric', 'Value', 'Systolic', 'Diastolic', 'Unit', 'Status', 'Tags', 'Note'];
   
   const rows = observations.map(obs => {
     const date = new Date(obs.ts);
@@ -23,12 +24,14 @@ export function observationsToCSV(observations: Observation[]): string {
       obs.systolic?.toString() || '',
       obs.diastolic?.toString() || '',
       obs.unit || '',
+      classifyReading(obs)?.severity || '',
       obs.tags?.join('; ') || '',
+      obs.note || '',
     ];
   });
 
   const csvContent = [headers, ...rows]
-    .map(row => row.map(cell => `"${cell}"`).join(','))
+    .map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(','))
     .join('\n');
 
   return csvContent;
@@ -129,11 +132,21 @@ function createFHIRObservation(obs: Observation, profile: any): any {
     };
   }
 
-  // Add tags as notes if present
-  if (obs.tags && obs.tags.length > 0) {
-    observation.note = obs.tags.map((tag) => ({
-      text: tag,
-    }));
+  // Tags and the user's note become FHIR notes
+  const notes = [...(obs.tags || []), ...(obs.note ? [obs.note] : [])];
+  if (notes.length > 0) {
+    observation.note = notes.map((text) => ({ text }));
+  }
+
+  // HL7 interpretation (N, H, L, HH, LL) from the clinical classification
+  const classification = classifyReading(obs);
+  if (classification) {
+    const code = classification.severity === 'normal'
+      ? 'N'
+      : (classification.direction === 'low' ? 'L' : 'H').repeat(classification.severity === 'critical' ? 2 : 1);
+    observation.interpretation = [{
+      coding: [{ system: 'http://terminology.hl7.org/CodeSystem/v3-ObservationInterpretation', code }],
+    }];
   }
 
   // Add context if available

@@ -65,6 +65,22 @@
                 <ion-icon name="female" slot="start"></ion-icon>
                 {{ 'ONBOARDING.FEMALE' | translate }}
               </ion-button>
+              <ion-button
+                [class.selected]="editedProfile.gender === 'other'"
+                (click)="selectGender('other')"
+                class="gender-button"
+                fill="outline"
+              >
+                {{ 'ONBOARDING.GENDER_OTHER' | translate }}
+              </ion-button>
+              <ion-button
+                [class.selected]="editedProfile.gender === 'prefer_not_to_say'"
+                (click)="selectGender('prefer_not_to_say')"
+                class="gender-button"
+                fill="outline"
+              >
+                {{ 'ONBOARDING.GENDER_PREFER_NOT' | translate }}
+              </ion-button>
             </div>
           </div>
         </div>
@@ -89,7 +105,6 @@
               (countrySelected)="onCountrySelected($event)"
               style="width: 100%; display: block;"
               [excludeCountries] = "['IL']"
-              git
             ></ng-country-select>
           </ion-item>
 
@@ -118,6 +133,29 @@
               {{ 'ONBOARDING.' + condition | translate }}
             </ion-chip>
           </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card class="form-card">
+      <ion-card-content>
+        <div class="form-section">
+          <h3 class="section-title">
+            <ion-icon name="speedometer-outline"></ion-icon>
+            {{ 'SETTINGS.UNITS' | translate }}
+          </h3>
+
+          <ion-label class="unit-label">{{ 'METRICS.GLUCOSE' | translate }}</ion-label>
+          <ion-segment [(ngModel)]="editedProfile.glucose_unit" class="unit-segment">
+            <ion-segment-button value="mg/dL">{{ 'METRICS.MGDL' | translate }}</ion-segment-button>
+            <ion-segment-button value="mmol/L">{{ 'METRICS.MMOLL' | translate }}</ion-segment-button>
+          </ion-segment>
+
+          <ion-label class="unit-label">{{ 'METRICS.WEIGHT' | translate }}</ion-label>
+          <ion-segment [(ngModel)]="editedProfile.weight_unit" class="unit-segment">
+            <ion-segment-button value="kg">{{ 'METRICS.KG' | translate }}</ion-segment-button>
+            <ion-segment-button value="lb">{{ 'METRICS.LB' | translate }}</ion-segment-button>
+          </ion-segment>
         </div>
       </ion-card-content>
     </ion-card>

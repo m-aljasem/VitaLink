@@ -1,5 +1,5 @@
 .metric-detail-content {
-  --background: linear-gradient(180deg, #f0f4ff 0%, #ffffff 100%);
+  --background: linear-gradient(180deg, var(--app-surface-soft-2) 0%, var(--app-surface) 100%);
 }
 
 .metric-detail-container {
@@ -102,10 +102,10 @@
       .form-item {
         margin: 0;
         --border-radius: 12px;
-        --background: #ffffff;
+        --background: var(--app-surface);
         --border-width: 1px;
         --border-style: solid;
-        --border-color: #d1d5db;
+        --border-color: var(--app-line-strong);
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
       }
     }
@@ -152,9 +152,9 @@
           }
 
           &:not(.active) {
-            --background: #ffffff;
+            --background: var(--app-surface);
             --color: var(--ion-color-dark);
-            border: 2px solid #e5e7eb;
+            border: 2px solid var(--app-line);
           }
 
           &:active {
@@ -340,7 +340,7 @@
     border-left: 4px solid var(--metric-color, #3B82F6);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
     transition: all 0.3s ease;
-    background: white;
+    background: var(--app-surface);
     overflow: hidden;
     animation: slideInUp 0.5s ease-out backwards;
 

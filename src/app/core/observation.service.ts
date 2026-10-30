@@ -17,8 +17,15 @@ export interface Observation {
   unit?: string;
   tags?: string[];
   context?: any;
+  note?: string | null;
+  /** Computed by the database; never sent by the client. */
+  severity?: string | null;
   created_at?: string;
 }
+
+/** Fields a user can change on an existing reading. */
+export type ObservationChanges = Partial<Pick<Observation,
+  'ts' | 'systolic' | 'diastolic' | 'numeric_value' | 'unit' | 'tags' | 'context' | 'note'>>;
 
 export interface ObservationWithMetric extends Observation {
   metric: MetricType;
@@ -89,6 +96,90 @@ export class ObservationService {
     } catch (err) {
       return { error: err };
     }
+  }
+
+  /**
+   * Updates a reading locally first, then on the server; queued when offline.
+   * Readings that haven't synced yet are changed inside their pending create.
+   */
+  async updateObservation(id: string, changes: ObservationChanges): Promise<{ data?: Observation; error?: any; queued?: boolean }> {
+    const existing = await this.offlineStorage.getObservation(id);
+    const updated = { ...(existing || {}), ...changes, id } as Observation;
+    delete updated.severity; // recomputed by the server
+    await this.offlineStorage.saveObservation(updated);
+
+    const queue = await this.offlineStorage.getSyncQueue();
+    const pendingCreate = queue.find(
+      item => item.table === 'observations' && item.type === 'create' && item.data?.id === id
+    );
+    if (pendingCreate) {
+      await this.offlineStorage.updateSyncQueueItem({ ...pendingCreate, data: { ...pendingCreate.data, ...changes } });
+      return { data: updated, queued: true };
+    }
+
+    if (this.networkService.isOnline()) {
+      const { data, error } = await this.updateOnServer(id, changes);
+      if (!error) {
+        await this.offlineStorage.saveObservation(data!);
+        return { data };
+      }
+      if (!isNetworkError(error)) {
+        if (existing) await this.offlineStorage.saveObservation(existing);
+        return { error };
+      }
+    }
+
+    await this.getSyncService().queueForSync('observations', 'update', { id, changes });
+    return { data: updated, queued: true };
+  }
+
+  async updateOnServer(id: string, changes: ObservationChanges): Promise<{ data?: Observation; error?: any }> {
+    try {
+      const { data, error } = await this.supabase
+        .from('observations')
+        .update(changes)
+        .eq('id', id)
+        .select()
+        .single();
+      if (error) return { error };
+      return { data: data as Observation };
+    } catch (err) {
+      return { error: err };
+    }
+  }
+
+  /** IDs of the given users with an abnormal or critical reading since `since` (server only). */
+  async getUsersWithOutOfRangeReadings(userIds: string[], since: Date): Promise<Set<string>> {
+    if (userIds.length === 0 || !this.networkService.isOnline()) return new Set();
+    try {
+      const { data, error } = await this.supabase
+        .from('observations')
+        .select('user_id')
+        .in('user_id', userIds)
+        .in('severity', ['abnormal', 'critical'])
+        .gte('ts', since.toISOString());
+      if (error || !data) return new Set();
+      return new Set(data.map((row: { user_id: string }) => row.user_id));
+    } catch (err) {
+      return new Set();
+    }
+  }
+
+  /** Number of readings for a metric (only those visible to the caller). */
+  async countObservations(userId: string, metric: MetricType): Promise<number> {
+    if (this.networkService.isOnline()) {
+      try {
+        const { count, error } = await this.supabase
+          .from('observations')
+          .select('id', { count: 'exact', head: true })
+          .eq('user_id', userId)
+          .eq('metric', metric);
+        if (!error && count != null) return count;
+      } catch (err) {
+        // Fall through to offline storage
+      }
+    }
+    return (await this.offlineStorage.getObservations(userId, metric)).length;
   }
 
   async getObservationsByMetric(userId: string, metric: MetricType, limit = 100): Promise<{ data?: Observation[]; error?: any }> {

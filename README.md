@@ -48,14 +48,22 @@
 
 ### 📊 Health Tracking
 - ✅ **Comprehensive Metrics** - Blood Pressure, Glucose, SpO₂, Heart Rate, Pain, Weight
-- ✅ **Visual Analytics** - Beautiful charts and trend analysis with Chart.js
+- ✅ **Out-of-Range Flags** - Readings are labelled (e.g. "High", "Very low") using general adult ranges, with guidance for urgent values
+- ✅ **Your Units** - mg/dL or mmol/L, kg or lb (defaults by country)
+- ✅ **Notes & Quick Add** - Add a note to any reading; log anything from the home screen's + button
+- ✅ **Medications** - Doses with Taken/Skip from the notification and 7-day adherence
+- ✅ **Visual Analytics** - Charts and trend analysis with Chart.js
 - ✅ **Smart Reminders** - Personalized health reminders with notifications
-- ✅ **Data Export** - Export your health data as CSV or JSON
+- ✅ **Doctor-Ready Reports** - PDF with averages, ranges, time in range and morning vs evening BP
+- ✅ **Data Export** - CSV, JSON or FHIR (with HL7 interpretation codes)
+- ✅ **Dark Mode** - Follows the system or set manually
 
 ### 👥 Provider Sharing
 - ✅ **6-Digit Code System** - Secure provider-patient linking
 - ✅ **Granular Control** - Choose exactly what metrics to share
-- ✅ **Real-Time Updates** - Providers see updates instantly
+- ✅ **Real-Time Alerts** - Providers are alerted when a patient logs an out-of-range reading
+- ✅ **Triage View** - Patients needing attention or not logging are shown first
+- ✅ **Access History** - Patients see which provider viewed which data, and when
 - ✅ **Multi-Provider Support** - Connect with multiple healthcare providers
 
 ### 📱 Platform Support
@@ -164,6 +172,11 @@ npm test                                              # opens Chrome
 npx ng test --watch=false --browsers=ChromeHeadlessCI # headless (CI, WSL, containers)
 ```
 
+### Publishing to Google Play
+
+See [`docs/PLAY_STORE.md`](docs/PLAY_STORE.md) for the data safety answers, account-deletion and
+privacy requirements, and the remaining setup for push alerts, Health Connect and crash reporting.
+
 ### Building for Production
 
 ```bash
@@ -251,6 +264,12 @@ VitaLink/
 - **Granular Sharing Controls** - You decide what to share, per provider and per metric
 - **Data Export** - Export your data as CSV, JSON or PDF
 - **Local data cleared on logout** - Offline copies are removed from the device when you sign out
+- **Account deletion** - Settings → Delete account removes the account and all its data
+- **Privacy policy** - `website/privacy.html` (draft; fill in the highlighted fields before publishing)
+
+> Severity labels use general adult guidelines (ACC/AHA blood pressure, ADA glucose) and are not a
+> diagnosis. Thresholds live in `src/app/core/clinical.ts` and `reading_severity()` in
+> `supabase/schema.sql`; a unit test keeps the two in sync.
 
 ---
 

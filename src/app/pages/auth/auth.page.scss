@@ -69,7 +69,7 @@
     font-size: 1.75rem;
     font-weight: 700;
     margin: 0 0 0.5rem 0;
-    background: linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%);
+    background: linear-gradient(135deg, white 0%, #f0f0f0 100%); // gradient text on the coloured header, same in both themes
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -89,11 +89,11 @@
   animation: fadeInUp 0.6s ease-out 0.4s both;
 
   .form-item {
-    --background: #ffffff;
+    --background: var(--app-surface);
     --border-radius: 14px;
     --border-width: 1px;
     --border-style: solid;
-    --border-color: #e5e7eb;
+    --border-color: var(--app-line);
     margin-bottom: 0.875rem;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     transition: all 0.3s ease;
@@ -181,7 +181,7 @@
       backdrop-filter: blur(10px);
 
       &.active {
-        --background: rgba(255, 255, 255, 0.95);
+        --background: rgba(var(--app-surface-rgb), 0.95);
         --color: #667EEA;
         --border-color: rgba(255, 255, 255, 0.5);
         box-shadow: 0 4px 12px rgba(255, 255, 255, 0.3);

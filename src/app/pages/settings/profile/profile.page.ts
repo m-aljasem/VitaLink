@@ -3,12 +3,12 @@ import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import {
   IonContent, IonButton, IonInput, IonItem, IonLabel,
-  IonSelect, IonSelectOption, IonChip, ToastController, IonCard, IonCardContent, IonIcon, IonSpinner
+  IonChip, ToastController, IonCard, IonCardContent, IonIcon, IonSpinner, IonSegment, IonSegmentButton
 } from '@ionic/angular/standalone';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { CommonModule } from '@angular/common';
 import { addIcons } from 'ionicons';
-import { person, personOutline, locationOutline, medicalOutline, checkmarkCircle, arrowBack, male, female } from 'ionicons/icons';
+import { person, personOutline, locationOutline, medicalOutline, checkmarkCircle, arrowBack, male, female, speedometerOutline } from 'ionicons/icons';
 import { AuthService, Profile } from '../../../core/auth.service';
 import { ProfileService } from '../../../core/profile.service';
 import { I18nService } from '../../../core/i18n.service';
@@ -23,7 +23,7 @@ import { CountrySelectComponent, Country } from '@wlucha/ng-country-select';
   imports: [
     CommonModule, FormsModule,
     IonContent, IonButton, IonInput, IonItem, IonLabel,
-    IonChip, IonCard, IonCardContent, IonIcon, IonSpinner, TranslateModule,
+    IonChip, IonCard, IonCardContent, IonIcon, IonSpinner, IonSegment, IonSegmentButton, TranslateModule,
     CountrySelectComponent
   ],
 })
@@ -46,7 +46,7 @@ export class ProfilePage implements OnInit {
     public i18nService: I18nService,
     private dateFormatService: DateFormatService
   ) {
-    addIcons({ person, personOutline, locationOutline, medicalOutline, checkmarkCircle, arrowBack, male, female });
+    addIcons({ person, personOutline, locationOutline, medicalOutline, checkmarkCircle, arrowBack, male, female, speedometerOutline });
   }
 
   async ngOnInit() {
@@ -62,7 +62,7 @@ export class ProfilePage implements OnInit {
     this.editedProfile.country = country.alpha2;
   }
 
-  selectGender(gender: 'male' | 'female') {
+  selectGender(gender: NonNullable<Profile['gender']>) {
     this.editedProfile.gender = gender;
   }
 
@@ -110,9 +110,9 @@ export class ProfilePage implements OnInit {
 
     // Validate age if provided
     if (this.editedProfile.age !== null && this.editedProfile.age !== undefined) {
-      if (this.editedProfile.age < 0 || this.editedProfile.age > 150 || !Number.isInteger(this.editedProfile.age)) {
+      if (this.editedProfile.age < 0 || this.editedProfile.age > 130 || !Number.isInteger(this.editedProfile.age)) {
         const toast = await this.toastController.create({
-          message: this.translate.instant('SETTINGS.AGE_RANGE_ERROR') || 'Age must be between 0 and 150',
+          message: this.translate.instant('SETTINGS.AGE_RANGE_ERROR') || 'Age must be between 0 and 130',
           duration: 2000,
           color: 'danger',
         });

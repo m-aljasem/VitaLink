@@ -61,7 +61,9 @@
     "DIASTOLIC": "拡張期血圧",
     "SAVE": "保存",
     "NEXT": "次へ",
-    "SKIP": "スキップ"
+    "SKIP": "スキップ",
+    "GENDER_OTHER": "その他",
+    "GENDER_PREFER_NOT": "回答しない"
   },
   "TOUR": {
     "WELCOME": "VitaLinkへようこそ",
@@ -84,7 +86,8 @@
     "NO_DATA": "データがありません",
     "RECENT_ACTIVITY": "最近の活動",
     "NO_ACTIVITY": "最近の活動がありません",
-    "TITLE": "ホーム"
+    "TITLE": "ホーム",
+    "QUICK_ADD": "クイック追加"
   },
   "METRICS": {
     "BP": "血圧",
@@ -118,7 +121,17 @@
     "DELETE_RECORD_MESSAGE": "この記録を削除してもよろしいですか？",
     "DELETE_RECORD_ERROR": "記録の削除に失敗しました",
     "DELETE_RECORD_SUCCESS": "記録が正常に削除されました",
-    "SAVED_OFFLINE": "この端末に保存しました。オンラインに戻ると同期されます。"
+    "SAVED_OFFLINE": "この端末に保存しました。オンラインに戻ると同期されます。",
+    "BP_SYSTOLIC_RANGE_ERROR": "収縮期血圧は50〜250の範囲で入力してください",
+    "BP_DIASTOLIC_RANGE_ERROR": "拡張期血圧は30〜150の範囲で入力してください",
+    "BP_RATIO_ERROR": "収縮期血圧は拡張期血圧より高くしてください",
+    "DATE_FUTURE_ERROR": "未来の日付は選択できません",
+    "VALUE_RANGE_ERROR": "値は{{min}}〜{{max}} {{unit}}の範囲で入力してください",
+    "EDIT_RECORD": "測定値を編集",
+    "NOTE": "メモ",
+    "NOTE_PLACEHOLDER": "任意（例：めまい、コーヒーの後）",
+    "MMOLL": "mmol/L",
+    "LB": "lb"
   },
   "TAGS": {
     "BP_AFTER_WAKE": "起床後",
@@ -188,7 +201,11 @@
     "SUCCESS_TITLE": "成功",
     "ADDED_SUCCESSFULLY": "正常に追加されました！",
     "ADDING_PROVIDER": "プロバイダーを追加中...",
-    "TOO_MANY_ATTEMPTS": "誤ったコードの入力回数が多すぎます。15分待ってから再度お試しください。"
+    "TOO_MANY_ATTEMPTS": "誤ったコードの入力回数が多すぎます。15分待ってから再度お試しください。",
+    "INVALID_DATE_RANGE": "開始日は終了日より前にしてください",
+    "PDF_EXPORT_ERROR": "PDFの作成中にエラーが発生しました",
+    "PDF_EXPORT_SUCCESS": "PDFをエクスポートしました！",
+    "SELECT_AT_LEAST_ONE_METRIC": "指標を1つ以上選択してください"
   },
   "SETTINGS": {
     "TITLE": "設定",
@@ -269,7 +286,21 @@
     "PWA_UPDATE_MESSAGE": "アプリの新しいバージョンが利用可能です。更新を適用するためにアプリが再読み込みされます。",
     "PWA_UPDATE_CONFIRM": "更新",
     "PWA_UPDATE_ERROR": "更新の適用に失敗しました",
-    "REMINDER_NOTIFICATION_BODY": "健康データを記録する時間です"
+    "REMINDER_NOTIFICATION_BODY": "健康データを記録する時間です",
+    "AGE_RANGE_ERROR": "年齢は0〜130の範囲で入力してください",
+    "UNITS": "単位",
+    "THEME": "外観",
+    "THEME_SYSTEM": "システム設定に従う",
+    "THEME_LIGHT": "ライト",
+    "THEME_DARK": "ダーク",
+    "DELETE_ACCOUNT": "アカウントを削除",
+    "DELETE_ACCOUNT_DESC": "アカウントとすべてのデータを完全に削除",
+    "DELETE_ACCOUNT_TITLE": "アカウントを削除しますか？",
+    "DELETE_ACCOUNT_MESSAGE": "プロフィール、測定値、薬、リマインダー、ケア提供者とのつながりがすべて完全に削除され、元に戻せません。確認のため{{word}}と入力してください。",
+    "DELETE_ACCOUNT_CONFIRM_WORD": "削除",
+    "DELETE_ACCOUNT_MISMATCH": "確認用の文字が一致しません",
+    "DELETE_ACCOUNT_ERROR": "アカウントを削除できませんでした。もう一度お試しください。",
+    "DELETE_ACCOUNT_SUCCESS": "アカウントを削除しました"
   },
   "PDF_EXPORT": {
     "SUBTITLE": "PDFエクスポートオプションをカスタマイズ",
@@ -324,7 +355,12 @@
     "DELETE_PATIENT": "患者を削除",
     "DELETE_PATIENT_TITLE": "患者を削除",
     "DELETE_PATIENT_MESSAGE": "この患者を削除してもよろしいですか？この操作は元に戻せません。",
-    "DELETE": "削除"
+    "DELETE": "削除",
+    "NEEDS_ATTENTION": "要注意",
+    "INACTIVE": "{{days}}日以上記録なし",
+    "NO_PATIENTS": "まだ患者がいません。「接続」タブからコードを共有して追加してください。",
+    "PATIENT": "患者",
+    "PROVIDER": "ケア提供者"
   },
   "TIME": {
     "JUST_NOW": "たった今",
@@ -432,5 +468,62 @@
     "UNITED_KINGDOM": "イギリス",
     "UNITED_STATES": "アメリカ合衆国",
     "VIETNAM": "ベトナム"
+  },
+  "ACCESS_LOG": {
+    "TITLE": "アクセス履歴",
+    "SETTINGS_DESC": "どのケア提供者がデータを閲覧したかを確認",
+    "INTRO": "ケア提供者が共有中の指標を開くたびに、ここに記録されます。",
+    "EMPTY": "まだ誰もデータを閲覧していません。",
+    "LOAD_ERROR": "アクセス履歴を読み込めませんでした。もう一度お試しください。",
+    "FORMER_PROVIDER": "以前のケア提供者",
+    "VIEWED": "{{metric}}を閲覧"
+  },
+  "ALERTS": {
+    "TITLE": "アラート",
+    "MARK_ALL_READ": "すべて既読にする"
+  },
+  "CLINICAL": {
+    "NORMAL": "正常",
+    "BORDERLINE": "境界域",
+    "ABNORMAL": "範囲外",
+    "CRITICAL": "危険",
+    "BORDERLINE_HIGH": "やや高い",
+    "BORDERLINE_LOW": "やや低い",
+    "ABNORMAL_HIGH": "高い",
+    "ABNORMAL_LOW": "低い",
+    "CRITICAL_HIGH": "非常に高い",
+    "CRITICAL_LOW": "非常に低い",
+    "ADVICE_ABNORMAL": "この値は通常の範囲外です。測り直しても範囲外の場合は、医師に相談してください。",
+    "ADVICE_CRITICAL": "この値は安全な範囲から大きく外れています。今すぐ測り直してください。値が確認された場合や体調が悪い場合（胸の痛み、息切れ、意識の混乱、失神）は、すぐに医療機関を受診してください。"
+  },
+  "MEDICATIONS": {
+    "TITLE": "服薬",
+    "SETTINGS_DESC": "薬と服用を記録",
+    "TODAY": "今日",
+    "ADHERENCE": "服用率 {{percent}}%（過去7日間）",
+    "NO_DOSES_TODAY": "今日の服用予定はありません。",
+    "MY_MEDICATIONS": "自分の薬",
+    "ADD": "追加",
+    "NAME": "名前",
+    "NAME_PLACEHOLDER": "例：メトホルミン",
+    "DOSE": "用量",
+    "DOSE_PLACEHOLDER": "例：500 mg、1錠",
+    "TIMES": "時刻",
+    "ADD_TIME": "時刻を追加",
+    "DAYS": "曜日",
+    "DAYS_HINT": "何も選択しない場合は毎日になります。",
+    "EVERY_DAY": "毎日",
+    "EMPTY": "まだ薬が登録されていません。追加すると服用リマインダーが届きます。",
+    "ACTIVE": "有効",
+    "TAKEN": "服用済み",
+    "SKIP": "スキップ",
+    "SKIPPED": "スキップ済み",
+    "NAME_REQUIRED": "薬の名前を入力してください",
+    "TIME_REQUIRED": "時刻を1つ以上追加してください",
+    "SAVE_ERROR": "保存できませんでした。もう一度お試しください。",
+    "LOAD_ERROR": "薬を読み込めませんでした。",
+    "DELETE_TITLE": "薬を削除",
+    "DELETE_MESSAGE": "{{name}}とその履歴を削除しますか？",
+    "NOTIFICATION_BODY": "お薬の時間です"
   }
 }

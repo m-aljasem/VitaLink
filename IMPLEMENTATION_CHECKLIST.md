@@ -1,7 +1,7 @@
 # VitaLink Implementation Checklist
 
 ## ✅ Project Setup
-- [x] Dark mode completely disabled (global.scss, variables.scss, index.html)
+- [x] Light and dark themes (ThemeService, theme tokens in variables.scss)
 - [x] Tailwind CSS configured (tailwind.config.js, postcss.config.js)
 - [x] ngx-translate installed and configured
 - [x] All dependencies installed via npm
@@ -119,7 +119,7 @@
 - [x] English translations complete
 
 ## ✅ Styling
-- [x] Light mode only (no dark CSS variables)
+- [x] Light and dark themes via `--app-*` tokens
 - [x] Tailwind utilities integrated
 - [x] Ionic variables overridden for light theme
 - [x] Rounded corners, subtle shadows

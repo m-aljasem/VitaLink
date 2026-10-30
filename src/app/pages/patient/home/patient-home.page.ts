@@ -5,17 +5,21 @@ import { filter, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { 
   IonContent, IonRefresher, IonRefresherContent,
-  IonList, IonItem, IonLabel, IonIcon, IonText, IonChip, IonCard, IonCardContent,
-  IonModal, IonHeader, IonToolbar, IonTitle, IonButtons, IonButton, ToastController, AlertController
+  IonIcon, IonText, IonChip, IonCard, IonCardContent, IonFab, IonFabButton,
+  IonModal, IonHeader, IonToolbar, IonTitle, IonButtons, IonButton, ToastController, AlertController,
+  ActionSheetController
 } from '@ionic/angular/standalone';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AuthService, Profile } from '../../../core/auth.service';
 import { ObservationService, MetricType, Observation } from '../../../core/observation.service';
 import { MetricCardComponent } from '../../../shared/components/metric-card/metric-card.component';
 import { DateFormatService } from '../../../core/date-format.service';
+import { MetricFormatService } from '../../../core/metric-format.service';
+import { ReadingValues } from '../../../core/clinical';
+import { SeverityBadgeComponent } from '../../../shared/components/severity-badge/severity-badge.component';
 import { CommonModule } from '@angular/common';
 import { addIcons } from 'ionicons';
-import { heart, water, pulse, thermometer, bandage, scale, timeOutline, createOutline, trash, pricetagOutline } from 'ionicons/icons';
+import { heart, water, pulse, thermometer, bandage, scale, timeOutline, createOutline, trash, pricetagOutline, add, medkit, documentTextOutline } from 'ionicons/icons';
 
 interface MetricData {
   metric: MetricType;
@@ -24,6 +28,8 @@ interface MetricData {
   trend: 'up' | 'down' | 'neutral';
   color: string;
   sparklineData: number[];
+  unit: string;
+  reading: ReadingValues | null;
 }
 
 @Component({
@@ -35,7 +41,7 @@ interface MetricData {
     CommonModule,
     IonContent, IonRefresher, IonRefresherContent,
     IonIcon, IonText, IonChip, IonCard, IonCardContent, IonModal, IonHeader, IonToolbar, IonTitle, IonButtons, IonButton,
-    TranslateModule, MetricCardComponent
+    IonFab, IonFabButton, TranslateModule, MetricCardComponent, SeverityBadgeComponent
   ],
 })
 export class PatientHomePage implements OnInit, ViewWillEnter, OnDestroy {
@@ -66,9 +72,11 @@ export class PatientHomePage implements OnInit, ViewWillEnter, OnDestroy {
     private toastController: ToastController,
     private alertController: AlertController,
     private translate: TranslateService,
-    private dateFormatService: DateFormatService
+    private dateFormatService: DateFormatService,
+    private actionSheetController: ActionSheetController,
+    public format: MetricFormatService
   ) {
-    addIcons({ heart, water, pulse, thermometer, bandage, scale, timeOutline, createOutline, trash, pricetagOutline });
+    addIcons({ heart, water, pulse, thermometer, bandage, scale, timeOutline, createOutline, trash, pricetagOutline, add, medkit, documentTextOutline });
     
     // Listen for navigation events to refresh data when returning to this page
     this.router.events
@@ -188,11 +196,7 @@ export class PatientHomePage implements OnInit, ViewWillEnter, OnDestroy {
       let sparklineData: number[] = [];
 
       if (latest) {
-        if (metric === 'bp') {
-          value = `${latest.systolic}/${latest.diastolic}`;
-        } else {
-          value = latest.numeric_value?.toString() || null;
-        }
+        value = this.format.formatNumber(latest);
       }
 
       // Calculate trend and sparkline
@@ -215,6 +219,8 @@ export class PatientHomePage implements OnInit, ViewWillEnter, OnDestroy {
         metric,
         value,
         lastTime: latest?.ts || null,
+        unit: this.format.unitLabel(metric),
+        reading: latest || null,
         trend,
         color: this.metricColors[metric],
         sparklineData,
@@ -232,25 +238,29 @@ export class PatientHomePage implements OnInit, ViewWillEnter, OnDestroy {
   }
 
   formatMetricValue(obs: Observation): string {
-    if (obs.metric === 'bp') {
-      const unit = this.translate.instant('METRICS.MMHG');
-      return `${obs.systolic}/${obs.diastolic} ${unit}`;
-    }
-    // Get unit translation key based on metric type
-    const unitKey = this.getUnitTranslationKey(obs.metric);
-    const unit = unitKey ? this.translate.instant(unitKey) : (obs.unit || '');
-    return `${obs.numeric_value} ${unit}`;
+    return this.format.formatValue(obs);
   }
 
-  private getUnitTranslationKey(metric: string): string | null {
-    const unitMap: { [key: string]: string } = {
-      glucose: 'METRICS.MGDL',
-      spo2: 'METRICS.PERCENT',
-      hr: 'METRICS.BPM',
-      pain: 'METRICS.SCALE_1_10',
-      weight: 'METRICS.KG',
-    };
-    return unitMap[metric] || null;
+  /** Quick-add: pick a metric and go straight to its entry form. */
+  async quickAdd() {
+    const metrics: MetricType[] = ['bp', 'glucose', 'spo2', 'hr', 'pain', 'weight'];
+    const sheet = await this.actionSheetController.create({
+      header: this.translate.instant('HOME.QUICK_ADD'),
+      buttons: [
+        ...metrics.map(metric => ({
+          text: this.translate.instant('METRICS.' + metric.toUpperCase()),
+          icon: this.getMetricIcon(metric),
+          handler: () => { this.router.navigate(['/metric', metric]); },
+        })),
+        {
+          text: this.translate.instant('MEDICATIONS.TITLE'),
+          icon: 'medkit',
+          handler: () => { this.router.navigate(['/tabs/settings/medications']); },
+        },
+        { text: this.translate.instant('COMMON.CANCEL'), role: 'cancel' },
+      ],
+    });
+    await sheet.present();
   }
 
   formatTime(dateString: string): string {
@@ -359,7 +369,7 @@ export class PatientHomePage implements OnInit, ViewWillEnter, OnDestroy {
     
     this.showRecordModal = false;
     // Navigate to the metric detail page for editing
-    this.router.navigate(['/tabs/metric-detail', this.selectedRecord.metric], {
+    this.router.navigate(['/metric', this.selectedRecord.metric], {
       queryParams: { editId: this.selectedRecord.id }
     });
   }

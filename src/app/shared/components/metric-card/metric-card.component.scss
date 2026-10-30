@@ -11,7 +11,7 @@
   flex-direction: column;
   position: relative;
   overflow: hidden;
-  background: white;
+  background: var(--app-surface);
   width: 100%;
   max-width: 100%;
   box-sizing: border-box;
@@ -218,4 +218,11 @@
       }
     }
   }
+}
+
+.metric-unit {
+  font-size: 0.6em;
+  font-weight: 600;
+  opacity: 0.75;
+  margin-inline-start: 2px;
 }

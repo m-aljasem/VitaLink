@@ -1,0 +1,31 @@
+<ion-content [fullscreen]="true">
+  <div class="access-container ion-padding">
+    <div class="page-header">
+      <ion-button fill="clear" (click)="goBack()" [attr.aria-label]="'COMMON.BACK' | translate">
+        <ion-icon [name]="backIcon"></ion-icon>
+      </ion-button>
+      <h1 class="page-title">{{ 'ACCESS_LOG.TITLE' | translate }}</h1>
+    </div>
+    <p class="intro">{{ 'ACCESS_LOG.INTRO' | translate }}</p>
+
+    <div class="loading" *ngIf="loading">
+      <ion-spinner name="crescent"></ion-spinner>
+    </div>
+
+    <p class="empty" *ngIf="!loading && error">{{ 'ACCESS_LOG.LOAD_ERROR' | translate }}</p>
+    <p class="empty" *ngIf="!loading && !error && entries.length === 0">{{ 'ACCESS_LOG.EMPTY' | translate }}</p>
+
+    <ion-card *ngFor="let entry of entries" class="entry-card">
+      <ion-card-content>
+        <div class="entry-row">
+          <ion-icon name="eye-outline" class="entry-icon"></ion-icon>
+          <div class="entry-info">
+            <strong>{{ entry.providerName }}</strong>
+            <span>{{ 'ACCESS_LOG.VIEWED' | translate: { metric: ('METRICS.' + entry.metric.toUpperCase() | translate) } }}</span>
+          </div>
+          <span class="entry-time">{{ formatDateTime(entry.viewed_at) }}</span>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>
