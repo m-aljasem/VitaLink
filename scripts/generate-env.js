@@ -81,6 +81,8 @@ const prodEnvContent = `export const environment = {
 const devEnvPath = path.join(__dirname, '..', 'src', 'environments', 'environment.ts');
 const prodEnvPath = path.join(__dirname, '..', 'src', 'environments', 'environment.prod.ts');
 
+// The folder isn't in git (both files are generated), so it is missing on a fresh clone.
+fs.mkdirSync(path.dirname(devEnvPath), { recursive: true });
 fs.writeFileSync(devEnvPath, devEnvContent);
 fs.writeFileSync(prodEnvPath, prodEnvContent);
 
