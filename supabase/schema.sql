@@ -6,7 +6,7 @@
 --
 -- Contents
 --   1. Types
---   2. Tables and indexes
+--   2. Tables and indexes (plus upgrades for databases from earlier versions)
 --   3. Integrity triggers
 --   4. Row Level Security policies
 --   5. Functions: reading severity, provider alerts, linking codes, account deletion
@@ -253,6 +253,21 @@ create table if not exists public.medication_logs (
 );
 create index if not exists medication_logs_user_idx on public.medication_logs (user_id, scheduled_for desc);
 
+
+-- Upgrades for databases created from an earlier version of this file
+-- (create table if not exists leaves existing tables unchanged).
+alter table public.profiles add column if not exists glucose_unit text not null default 'mg/dL'
+  check (glucose_unit in ('mg/dL', 'mmol/L'));
+alter table public.profiles add column if not exists weight_unit text not null default 'kg'
+  check (weight_unit in ('kg', 'lb'));
+alter table public.profiles drop constraint if exists profiles_gender_check;
+alter table public.profiles add constraint profiles_gender_check
+  check (gender in ('male', 'female', 'other', 'prefer_not_to_say'));
+alter table public.observations add column if not exists note text
+  check (note is null or length(note) <= 500);
+alter table public.observations add column if not exists severity text generated always as (
+  public.reading_severity(metric, systolic, diastolic, numeric_value, tags)
+) stored;
 
 -- -----------------------------------------------------------------------------
 -- 3. Helpers and triggers
