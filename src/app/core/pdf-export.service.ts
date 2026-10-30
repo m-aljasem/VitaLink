@@ -80,13 +80,6 @@ export class PdfExportService {
       doc.text(text, x, y);
     };
 
-    // Helper function to draw a line
-    const drawLine = (x1: number, y1: number, x2: number, y2: number, color: string = '#E5E7EB', width: number = 0.5) => {
-      doc.setDrawColor(color);
-      doc.setLineWidth(width);
-      doc.line(x1, y1, x2, y2);
-    };
-
     // Helper function to draw a filled rectangle
     const drawRect = (x: number, y: number, width: number, height: number, fillColor: string, strokeColor: string = '#E5E7EB') => {
       doc.setFillColor(fillColor);

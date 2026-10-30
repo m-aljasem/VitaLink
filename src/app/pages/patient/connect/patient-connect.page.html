@@ -1,4 +1,4 @@
-<ion-content [fullscreen]="true" class="patient-connect-content" style="--background: linear-gradient(180deg, #f0f4ff 0%, #ffffff 100%);">
+<ion-content [fullscreen]="true" class="patient-connect-content" style="--background: var(--app-surface-soft-2);">
   <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
@@ -13,14 +13,14 @@
     </div>
 
     <div class="action-buttons">
-      <ion-button expand="block" (click)="shareViaOS()" class="share-button">
-        <ion-icon name="share-social" slot="start"></ion-icon>
-        {{ 'CONNECT.SHARE_VIA_OS' | translate }}
-      </ion-button>
-
       <ion-button expand="block" (click)="showAddProviderModal()" class="add-button">
         <ion-icon name="add-circle" slot="start"></ion-icon>
         {{ 'CONNECT.ADD_CARETAKER' | translate }}
+      </ion-button>
+
+      <ion-button expand="block" (click)="shareViaOS()" class="share-button">
+        <ion-icon name="share-social" slot="start"></ion-icon>
+        {{ 'CONNECT.SHARE_VIA_OS' | translate }}
       </ion-button>
 
       <ion-button expand="block" (click)="showPdfExport()" class="pdf-export-button">

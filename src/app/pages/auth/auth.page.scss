@@ -1,5 +1,5 @@
 .auth-content {
-  --background: linear-gradient(180deg, #667EEA 0%, #764BA2 50%, #F093FB 100%);
+  --background: var(--brand);
   position: relative;
   overflow: hidden;
 
@@ -38,26 +38,15 @@
   position: relative;
   
   .logo-image {
-    width: 140px;
-    height: 140px;
+    width: 96px;
+    height: 96px;
     object-fit: contain;
-    filter: 
-      drop-shadow(0 0 20px rgba(255, 255, 255, 0.6))
-      drop-shadow(0 0 40px rgba(255, 255, 255, 0.4))
-      drop-shadow(0 0 60px rgba(255, 255, 255, 0.3))
-      drop-shadow(0 4px 12px rgba(0, 0, 0, 0.2));
+    border-radius: 22%;
+    // A thin ring separates the teal icon from the teal page.
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.9);
     transition: all 0.3s ease;
-    animation: logoGlow 2s ease-in-out infinite;
   }
   
-  &:hover .logo-image {
-    transform: scale(1.05);
-    filter: 
-      drop-shadow(0 0 30px rgba(255, 255, 255, 0.8))
-      drop-shadow(0 0 50px rgba(255, 255, 255, 0.6))
-      drop-shadow(0 0 80px rgba(255, 255, 255, 0.4))
-      drop-shadow(0 4px 12px rgba(0, 0, 0, 0.2));
-  }
 }
 
 .auth-header {
@@ -69,10 +58,7 @@
     font-size: 1.75rem;
     font-weight: 700;
     margin: 0 0 0.5rem 0;
-    background: linear-gradient(135deg, white 0%, #f0f0f0 100%); // gradient text on the coloured header, same in both themes
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: #ffffff; // on the brand-coloured header in both themes
     text-shadow: 0 2px 10px rgba(255, 255, 255, 0.3);
   }
 
@@ -99,9 +85,9 @@
     transition: all 0.3s ease;
     
     &.item-has-focus {
-      --border-color: #667EEA;
+      --border-color: var(--brand);
       --border-width: 2px;
-      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+      box-shadow: var(--app-shadow-sm);
       transform: translateY(-2px);
     }
     
@@ -119,14 +105,14 @@
   }
 
   .request-button {
-    --background: linear-gradient(135deg, #667EEA 0%, #764BA2 100%);
+    --background: var(--brand);
     --color: white;
     --border-radius: 14px;
     --padding-top: 14px;
     --padding-bottom: 14px;
     font-weight: 600;
     font-size: 0.9375rem;
-    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    box-shadow: var(--app-shadow-sm);
     margin-top: 0.25rem;
     transition: all 0.3s ease;
 
@@ -182,7 +168,7 @@
 
       &.active {
         --background: rgba(var(--app-surface-rgb), 0.95);
-        --color: #667EEA;
+        --color: var(--brand);
         --border-color: rgba(255, 255, 255, 0.5);
         box-shadow: 0 4px 12px rgba(255, 255, 255, 0.3);
         transform: translateY(-2px);

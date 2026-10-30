@@ -15,6 +15,7 @@ import { LineChartComponent } from '../../../shared/components/line-chart/line-c
 import { DateFormatService } from '../../../core/date-format.service';
 import { MetricFormatService } from '../../../core/metric-format.service';
 import { SeverityBadgeComponent } from '../../../shared/components/severity-badge/severity-badge.component';
+import { METRIC_COLORS, BRAND_COLOR } from '../../../core/metric-colors';
 
 @Component({
   selector: 'app-provider-metric-detail',
@@ -35,17 +36,10 @@ export class ProviderMetricDetailPage implements OnInit {
   observations: Observation[] = [];
   chartData: number[] = [];
   chartLabels: string[] = [];
-  chartColor = '#3B82F6';
+  chartColor = BRAND_COLOR;
   loading = true;
 
-  metricColors: { [key in MetricType]: string } = {
-    bp: '#EF4444',
-    glucose: '#F59E0B',
-    spo2: '#3B82F6',
-    hr: '#10B981',
-    pain: '#8B5CF6',
-    weight: '#6366F1',
-  };
+  metricColors: { [key in MetricType]: string } = { ...METRIC_COLORS };
 
   metricIcons: { [key in MetricType]: string } = {
     bp: 'pulse',

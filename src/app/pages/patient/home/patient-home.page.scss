@@ -1,5 +1,5 @@
 .patient-home-content {
-  --background: linear-gradient(180deg, var(--app-surface-soft-2) 0%, var(--app-surface) 100%);
+  --background: var(--app-surface-soft-2);
 }
 
 .home-container {
@@ -20,11 +20,11 @@
     height: 80px;
     margin: 0 auto 1.5rem;
     border-radius: 20px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: var(--brand);
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+    box-shadow: var(--app-shadow-sm);
     animation: pulse 2s ease-in-out infinite;
 
     ion-icon {
@@ -37,10 +37,7 @@
     font-size: 1.5rem;
     font-weight: 700;
     margin: 0 0 0.5rem 0;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: var(--ion-text-color);
     line-height: 1.2;
   }
 
@@ -55,11 +52,11 @@
 @keyframes pulse {
   0%, 100% {
     transform: scale(1);
-    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+    box-shadow: var(--app-shadow-sm);
   }
   50% {
     transform: scale(1.05);
-    box-shadow: 0 12px 30px rgba(102, 126, 234, 0.4);
+    box-shadow: var(--app-shadow-sm);
   }
 }
 
@@ -229,8 +226,8 @@
           border-radius: 14px;
           margin: 0;
           --background: transparent;
-          --color: var(--chip-color, #3B82F6);
-          border: 1px solid var(--chip-color, #3B82F6);
+          --color: var(--chip-color, var(--brand));
+          border: 1px solid var(--chip-color, var(--brand));
           opacity: 0.8;
         }
       }
@@ -385,7 +382,7 @@
 
       .record-chip {
         --background: rgba(var(--chip-color-rgb, 59, 130, 246), 0.1);
-        --color: var(--chip-color, #3B82F6);
+        --color: var(--chip-color, var(--brand));
         font-size: 0.875rem;
       }
     }
@@ -398,19 +395,19 @@
   gap: 0.75rem;
 
   .edit-button {
-    --background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
+    --background: var(--brand);
     --color: white;
     --border-radius: 12px;
     font-weight: 600;
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    box-shadow: var(--app-shadow-sm);
   }
 
   .delete-button {
-    --background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
+    --background: var(--ion-color-danger);
     --color: white;
     --border-radius: 12px;
     font-weight: 600;
-    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+    box-shadow: var(--app-shadow-sm);
   }
 
   .ok-button {

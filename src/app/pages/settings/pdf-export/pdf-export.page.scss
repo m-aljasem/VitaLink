@@ -1,5 +1,5 @@
 .pdf-export-content {
-  --background: linear-gradient(180deg, var(--app-surface-soft-2) 0%, var(--app-surface) 100%);
+  --background: var(--app-surface-soft-2);
 }
 
 .pdf-export-container {
@@ -35,11 +35,11 @@
     height: 80px;
     margin: 0 auto 1.5rem;
     border-radius: 20px;
-    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    background: var(--tone-blue);
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 8px 20px rgba(79, 172, 254, 0.3);
+    box-shadow: var(--app-shadow-sm);
 
     ion-icon {
       font-size: 2.5rem;
@@ -51,10 +51,7 @@
     font-size: 2rem;
     font-weight: 700;
     margin: 0 0 0.5rem 0;
-    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: var(--ion-text-color);
   }
 
   .subtitle {
@@ -69,7 +66,7 @@
   margin: 0 0 1.5rem 0;
   border-radius: 16px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-  border: 1px solid rgba(102, 126, 234, 0.1);
+  border: 1px solid rgba(var(--brand-rgb), 0.1);
   overflow: hidden;
 
   ion-card-content {
@@ -152,7 +149,7 @@
   --inner-padding-end: 0;
   border-radius: 12px;
   margin-bottom: 0.5rem;
-  background: rgba(102, 126, 234, 0.05);
+  background: rgba(var(--brand-rgb), 0.05);
   transition: all 0.2s ease;
 
   &:active {
@@ -188,10 +185,10 @@
   transition: all 0.3s ease;
 
   &.selected {
-    --background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    --background: var(--tone-blue);
     --color: white;
     --border-color: transparent;
-    box-shadow: 0 4px 12px rgba(79, 172, 254, 0.3);
+    box-shadow: var(--app-shadow-sm);
     transform: translateY(-2px);
   }
 
@@ -207,7 +204,7 @@
 .date-pickers-container {
   margin-top: 1.5rem;
   padding-top: 1.5rem;
-  border-top: 2px solid rgba(102, 126, 234, 0.1);
+  border-top: 2px solid rgba(var(--brand-rgb), 0.1);
   animation: slideDown 0.3s ease-out;
 }
 
@@ -227,7 +224,7 @@
   .date-input-button {
     --border-radius: 12px;
     --border-width: 2px;
-    --border-color: rgba(102, 126, 234, 0.2);
+    --border-color: rgba(var(--brand-rgb), 0.2);
     --color: var(--ion-color-dark);
     --background: var(--app-surface);
     --padding-start: 16px;
@@ -248,7 +245,7 @@
 
     &:hover {
       --border-color: var(--ion-color-primary);
-      box-shadow: 0 4px 12px rgba(79, 172, 254, 0.2);
+      box-shadow: var(--app-shadow-sm);
     }
 
     span {
@@ -273,7 +270,7 @@
   --inner-padding-end: 0;
   margin-bottom: 0.5rem;
   border-radius: 12px;
-  background: rgba(102, 126, 234, 0.05);
+  background: rgba(var(--brand-rgb), 0.05);
 
   ion-label {
     h3 {
@@ -292,14 +289,14 @@
 }
 
 .generate-pdf-button {
-  --background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  --background: var(--tone-blue);
   --color: white;
   --border-radius: 16px;
   --padding-top: 18px;
   --padding-bottom: 18px;
   font-weight: 600;
   font-size: 1.125rem;
-  box-shadow: 0 4px 15px rgba(79, 172, 254, 0.3);
+  box-shadow: var(--app-shadow-sm);
   margin-top: 1rem;
   transition: all 0.3s ease;
 

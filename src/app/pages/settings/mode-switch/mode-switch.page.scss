@@ -1,5 +1,5 @@
 .mode-switch-content {
-  --background: linear-gradient(180deg, var(--app-surface-soft-2) 0%, var(--app-surface) 100%);
+  --background: var(--app-surface-soft-2);
 }
 
 .mode-switch-container {
@@ -36,11 +36,11 @@
     height: 48px;
     margin: 0 auto 0.5rem;
     border-radius: 12px;
-    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+    background: var(--tone-green);
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 2px 8px rgba(67, 233, 123, 0.3);
+    box-shadow: var(--app-shadow-sm);
 
     ion-icon {
       font-size: 1.5rem;
@@ -52,10 +52,7 @@
     font-size: 1.25rem;
     font-weight: 700;
     margin: 0 0 0.25rem 0;
-    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: var(--ion-text-color);
   }
 
   .subtitle {
@@ -70,7 +67,7 @@
   margin: 0 0 0.75rem 0;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  border: 1px solid rgba(67, 233, 123, 0.1);
+  border: 1px solid rgba(var(--tone-green-rgb), 0.1);
   overflow: hidden;
 
   ion-card-content {
@@ -100,7 +97,7 @@
         left: 0;
         right: 0;
         bottom: 0;
-        background: linear-gradient(135deg, rgba(67, 233, 123, 0.05) 0%, rgba(56, 249, 215, 0.05) 100%);
+        background: rgba(var(--tone-green-rgb), 0.05);
         opacity: 0;
         transition: opacity 0.3s ease;
       }
@@ -114,7 +111,7 @@
         height: 40px;
         margin: 0 auto 0.5rem;
         border-radius: 10px;
-        background: linear-gradient(135deg, rgba(67, 233, 123, 0.1) 0%, rgba(56, 249, 215, 0.1) 100%);
+        background: rgba(var(--tone-green-rgb), 0.1);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -122,7 +119,7 @@
 
         ion-icon {
           font-size: 1.25rem;
-          color: #43e97b;
+          color: var(--tone-green);
           transition: all 0.3s ease;
         }
       }
@@ -142,9 +139,9 @@
       }
 
       &.selected {
-        border-color: #43e97b;
-        background: linear-gradient(135deg, rgba(67, 233, 123, 0.1) 0%, rgba(56, 249, 215, 0.1) 100%);
-        box-shadow: 0 4px 15px rgba(67, 233, 123, 0.2);
+        border-color: var(--tone-green);
+        background: rgba(var(--tone-green-rgb), 0.1);
+        box-shadow: var(--app-shadow-sm);
         transform: translateY(-2px);
 
         &::before {
@@ -152,8 +149,8 @@
         }
 
         .mode-icon-wrapper {
-          background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-          box-shadow: 0 4px 12px rgba(67, 233, 123, 0.3);
+          background: var(--tone-green);
+          box-shadow: var(--app-shadow-sm);
 
           ion-icon {
             color: white;
@@ -162,7 +159,7 @@
         }
 
         h3 {
-          color: #43e97b;
+          color: var(--tone-green);
         }
       }
     }
@@ -170,14 +167,14 @@
 }
 
 .save-button {
-  --background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+  --background: var(--tone-green);
   --color: white;
   --border-radius: 12px;
   --padding-top: 10px;
   --padding-bottom: 10px;
   font-weight: 600;
   font-size: 0.875rem;
-  box-shadow: 0 2px 8px rgba(67, 233, 123, 0.3);
+  box-shadow: var(--app-shadow-sm);
   transition: all 0.3s ease;
   margin-top: 0.25rem;
 

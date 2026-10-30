@@ -1,5 +1,5 @@
 .settings-content {
-  --background: linear-gradient(180deg, var(--app-surface-soft-2) 0%, var(--app-surface) 100%);
+  --background: var(--app-surface-soft-2);
 }
 
 .settings-container {
@@ -17,10 +17,7 @@
     font-weight: 700;
     margin: 0 0 0.5rem 0;
     color: var(--ion-color-dark);
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: var(--ion-text-color);
   }
 
   .subtitle {
@@ -48,7 +45,7 @@
   margin: 0 0 1rem 0;
   border-radius: 16px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-  border: 1px solid rgba(102, 126, 234, 0.1);
+  border: 1px solid rgba(var(--brand-rgb), 0.1);
   transition: all 0.3s ease;
   overflow: hidden;
 
@@ -82,51 +79,51 @@
 
       // Colorful gradients for each icon
       &.icon-profile {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: var(--brand);
       }
 
       &.icon-reminders {
-        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        background: var(--tone-rose);
       }
 
       &.icon-language {
-        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        background: var(--tone-blue);
       }
 
       &.icon-mode {
-        background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        background: var(--tone-green);
       }
 
       &.icon-export {
-        background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        background: var(--tone-rose);
       }
 
       &.icon-update {
-        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        background: var(--tone-blue);
       }
 
       &.icon-about {
-        background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);
+        background: var(--tone-slate);
       }
 
       &.icon-logout {
-        background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+        background: var(--tone-rose);
       }
 
       &.icon-medications {
-        background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        background: var(--tone-green);
       }
 
       &.icon-access {
-        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        background: var(--tone-blue);
       }
 
       &.icon-theme {
-        background: linear-gradient(135deg, #434343 0%, #000000 100%);
+        background: var(--tone-slate);
       }
 
       &.icon-delete {
-        background: linear-gradient(135deg, #b91c1c 0%, #7f1d1d 100%);
+        background: var(--ion-color-danger);
       }
     }
 
@@ -150,7 +147,7 @@
 
       .language-select {
         margin-top: 0.5rem;
-        --background: rgba(102, 126, 234, 0.1);
+        --background: rgba(var(--brand-rgb), 0.1);
         --border-radius: 12px;
         --padding-start: 12px;
         --padding-end: 12px;
@@ -205,11 +202,11 @@
 
   // Special styling for logout card
   &.logout-card {
-    border-color: rgba(255, 107, 107, 0.2);
-    background: linear-gradient(135deg, rgba(255, 107, 107, 0.05) 0%, rgba(238, 90, 111, 0.05) 100%);
+    border-color: rgba(var(--tone-rose-rgb), 0.2);
+    background: rgba(var(--tone-rose-rgb), 0.05);
 
     .setting-content h3 {
-      color: #ff6b6b;
+      color: var(--tone-rose);
     }
   }
 }
@@ -217,15 +214,15 @@
 // Hover effects for non-mobile
 @media (hover: hover) {
   .settings-card:not(.logout-card):hover {
-    box-shadow: 0 4px 20px rgba(102, 126, 234, 0.15);
+    box-shadow: var(--app-shadow-sm);
     transform: translateY(-2px);
-    border-color: rgba(102, 126, 234, 0.2);
+    border-color: rgba(var(--brand-rgb), 0.2);
   }
 
   .logout-card:hover {
-    box-shadow: 0 4px 20px rgba(255, 107, 107, 0.15);
+    box-shadow: var(--app-shadow-sm);
     transform: translateY(-2px);
-    border-color: rgba(255, 107, 107, 0.3);
+    border-color: rgba(var(--tone-rose-rgb), 0.3);
   }
 }
 

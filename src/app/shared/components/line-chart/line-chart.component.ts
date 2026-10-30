@@ -1,6 +1,7 @@
 import { Component, Input, OnInit, OnDestroy, OnChanges, SimpleChanges, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Chart, ChartConfiguration, registerables } from 'chart.js';
+import { BRAND_COLOR } from '../../../core/metric-colors';
 
 Chart.register(...registerables);
 
@@ -14,7 +15,7 @@ Chart.register(...registerables);
 export class LineChartComponent implements OnInit, OnDestroy, OnChanges {
   @Input() data: number[] = [];
   @Input() labels: string[] = [];
-  @Input() color = '#3B82F6';
+  @Input() color = BRAND_COLOR;
   @ViewChild('chartCanvas') chartCanvas!: ElementRef<HTMLCanvasElement>;
 
   private chart: Chart | null = null;

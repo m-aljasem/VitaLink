@@ -8,6 +8,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { MetricType } from '../../../core/observation.service';
 import { ReadingValues } from '../../../core/clinical';
 import { SeverityBadgeComponent } from '../severity-badge/severity-badge.component';
+import { BRAND_COLOR } from '../../../core/metric-colors';
 
 @Component({
   selector: 'app-metric-card',
@@ -21,7 +22,7 @@ export class MetricCardComponent {
   @Input() value: string | number | null = null;
   @Input() lastTime: string | null = null;
   @Input() trend: 'up' | 'down' | 'neutral' = 'neutral';
-  @Input() color = '#3B82F6';
+  @Input() color = BRAND_COLOR;
   @Input() sparklineData: number[] = [];
   @Input() unit = '';
   /** Latest reading, used for the severity badge. */
@@ -179,17 +180,6 @@ export class MetricCardComponent {
     return icons[this.metric] || 'pulse';
   }
 
-  getGradient(): string {
-    const gradients: { [key in MetricType]: string } = {
-      bp: 'linear-gradient(135deg, #EF4444 0%, #DC2626 100%)',
-      glucose: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
-      spo2: 'linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)',
-      hr: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
-      pain: 'linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%)',
-      weight: 'linear-gradient(135deg, #6366F1 0%, #4F46E5 100%)',
-    };
-    return gradients[this.metric] || 'linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)';
-  }
 
   getSparklinePathWithArea(): string {
     if (!this.sparklineData || this.sparklineData.length === 0) return '';

@@ -1,5 +1,5 @@
 .verify-content {
-  --background: linear-gradient(180deg, #667EEA 0%, #764BA2 50%, #F093FB 100%);
+  --background: var(--brand);
   position: relative;
   overflow: hidden;
 
@@ -65,10 +65,7 @@
     font-size: 1.75rem;
     font-weight: 700;
     margin: 0 0 0.75rem 0;
-    background: linear-gradient(135deg, white 0%, #f0f0f0 100%); // gradient text on the coloured header, same in both themes
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: #ffffff; // on the brand-coloured header in both themes
     text-shadow: 0 2px 10px rgba(255, 255, 255, 0.3);
   }
 
@@ -110,7 +107,7 @@
     --border-color: rgba(255, 255, 255, 0.5);
     --border-width: 2px;
     --border-style: solid;
-    --color: #667EEA;
+    --color: var(--brand);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     backdrop-filter: blur(10px);
     transition: all 0.3s ease;
@@ -125,14 +122,14 @@
 }
 
 .verify-button {
-  --background: linear-gradient(135deg, #667EEA 0%, #764BA2 100%);
+  --background: var(--brand);
   --color: white;
   --border-radius: 14px;
   --padding-top: 16px;
   --padding-bottom: 16px;
   font-weight: 600;
   font-size: 1rem;
-  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+  box-shadow: var(--app-shadow-sm);
   margin-bottom: 1rem;
   transition: all 0.3s ease;
   animation: fadeInUp 0.6s ease-out 0.6s both;

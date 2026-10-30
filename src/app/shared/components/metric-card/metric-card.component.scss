@@ -46,7 +46,7 @@
   left: 0;
   right: 0;
   height: 100%;
-  background: var(--metric-gradient, linear-gradient(135deg, #3B82F6 0%, #2563EB 100%));
+  background: var(--metric-accent, var(--brand));
   opacity: 0.05;
   z-index: 0;
   pointer-events: none;
@@ -62,7 +62,7 @@
     width: 40px;
     height: 40px;
     border-radius: 10px;
-    background: var(--metric-gradient, linear-gradient(135deg, #3B82F6 0%, #2563EB 100%));
+    background: var(--metric-accent, var(--brand));
     display: flex;
     align-items: center;
     justify-content: center;
@@ -98,11 +98,11 @@
       transition: transform 0.3s ease;
 
       &.trend-up {
-        color: #10B981;
+        color: var(--tone-green);
       }
 
       &.trend-down {
-        color: #EF4444;
+        color: var(--ion-color-danger);
       }
     }
   }

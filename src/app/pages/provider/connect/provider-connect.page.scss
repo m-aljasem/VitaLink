@@ -1,5 +1,5 @@
 .provider-connect-content {
-  --background: linear-gradient(180deg, var(--app-surface-soft-2) 0%, var(--app-surface) 100%);
+  --background: var(--app-surface-soft-2);
   background: var(--app-surface-soft) !important;
   background-color: var(--app-surface-soft) !important;
   
@@ -137,11 +137,11 @@
     height: 80px;
     margin: 0 auto 1.5rem;
     border-radius: 20px;
-    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    background: var(--tone-rose);
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 8px 20px rgba(245, 87, 108, 0.3);
+    box-shadow: var(--app-shadow-sm);
 
     ion-icon {
       font-size: 2.5rem;
@@ -153,10 +153,7 @@
     font-size: 2rem;
     font-weight: 700;
     margin: 0 0 0.5rem 0;
-    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: var(--ion-text-color);
   }
 
   .subtitle {
@@ -169,14 +166,14 @@
 
 // Generate Button
 .generate-button {
-  --background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  --background: var(--tone-rose);
   --color: white;
   --border-radius: 16px;
   --padding-top: 16px;
   --padding-bottom: 16px;
   font-weight: 600;
   font-size: 1rem;
-  box-shadow: 0 4px 15px rgba(245, 87, 108, 0.3);
+  box-shadow: var(--app-shadow-sm);
   margin-bottom: 1.5rem;
   transition: all 0.3s ease;
   position: relative;
@@ -208,10 +205,10 @@
 
 @keyframes pulse {
   0%, 100% {
-    box-shadow: 0 4px 15px rgba(245, 87, 108, 0.3);
+    box-shadow: var(--app-shadow-sm);
   }
   50% {
-    box-shadow: 0 4px 25px rgba(245, 87, 108, 0.5);
+    box-shadow: var(--app-shadow-sm);
   }
 }
 
@@ -219,9 +216,9 @@
 .token-card {
   margin: 0 0 2rem 0;
   border-radius: 20px;
-  box-shadow: 0 8px 25px rgba(245, 87, 108, 0.15);
-  border: 1px solid rgba(245, 87, 108, 0.2);
-  background: linear-gradient(135deg, rgba(var(--app-surface-rgb), 0.95) 0%, rgba(var(--app-surface-rgb), 0.98) 100%);
+  box-shadow: var(--app-shadow-sm);
+  border: 1px solid rgba(var(--tone-rose-rgb), 0.2);
+  background: rgba(var(--app-surface-rgb), 0.95);
   overflow: hidden;
   animation: slideInDown 0.5s ease-out;
   transition: all 0.5s ease-out;
@@ -246,11 +243,11 @@
       width: 48px;
       height: 48px;
       border-radius: 12px;
-      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      background: var(--tone-rose);
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 4px 12px rgba(245, 87, 108, 0.3);
+      box-shadow: var(--app-shadow-sm);
 
       ion-icon {
         font-size: 1.5rem;
@@ -270,7 +267,7 @@
     text-align: center;
     margin-bottom: 1.5rem;
     padding: 1.5rem;
-    background: linear-gradient(135deg, rgba(245, 87, 108, 0.05) 0%, rgba(240, 147, 251, 0.05) 100%);
+    background: rgba(var(--tone-rose-rgb), 0.05);
     border-radius: 16px;
 
     .token-code-wrapper {
@@ -284,10 +281,7 @@
         font-size: 3rem;
         font-weight: 700;
         letter-spacing: 0.5rem;
-        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
+        color: var(--brand);
         font-family: 'Courier New', monospace;
         cursor: pointer;
         user-select: none;
@@ -302,7 +296,7 @@
       }
 
       .copy-button {
-        --color: #f5576c;
+        --color: var(--tone-rose);
         --padding-start: 8px;
         --padding-end: 8px;
         --padding-top: 8px;
@@ -339,8 +333,8 @@
   }
 
   .share-button {
-    --border-color: #f5576c;
-    --color: #f5576c;
+    --border-color: var(--tone-rose);
+    --color: var(--tone-rose);
     --border-radius: 12px;
     --border-width: 2px;
     font-weight: 500;
@@ -363,10 +357,10 @@
     }
 
     &:active {
-      --color: #f5576c;
+      --color: var(--tone-rose);
       
       ion-icon {
-        color: #f5576c;
+        color: var(--tone-rose);
       }
     }
   }
@@ -401,13 +395,13 @@
     }
 
     .patient-count-badge {
-      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      background: var(--tone-rose);
       color: white;
       padding: 0.5rem 1rem;
       border-radius: 20px;
       font-weight: 600;
       font-size: 0.875rem;
-      box-shadow: 0 4px 10px rgba(245, 87, 108, 0.3);
+      box-shadow: var(--app-shadow-sm);
     }
   }
 
@@ -421,7 +415,7 @@
     margin: 0;
     border-radius: 16px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-    border: 1px solid rgba(245, 87, 108, 0.1);
+    border: 1px solid rgba(var(--tone-rose-rgb), 0.1);
     transition: all 0.3s ease;
     animation: slideInUp 0.5s ease-out backwards;
 
@@ -448,12 +442,12 @@
         width: 56px;
         height: 56px;
         border-radius: 16px;
-        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        background: var(--tone-rose);
         display: flex;
         align-items: center;
         justify-content: center;
         flex-shrink: 0;
-        box-shadow: 0 4px 10px rgba(245, 87, 108, 0.3);
+        box-shadow: var(--app-shadow-sm);
 
         ion-icon {
           font-size: 1.75rem;
@@ -491,7 +485,7 @@
       }
 
       .remove-button {
-        --color: #f5576c;
+        --color: var(--tone-rose);
         --padding-start: 8px;
         --padding-end: 8px;
         margin: 0;
@@ -585,7 +579,7 @@
     background: linear-gradient(
       90deg,
       transparent 0%,
-      rgba(245, 87, 108, 0.05) 50%,
+      rgba(var(--tone-rose-rgb), 0.05) 50%,
       transparent 100%
     );
     background-size: 1000px 100%;

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ObservationService, Observation } from './observation.service';
+import { ObservationService } from './observation.service';
 import { AuthService } from './auth.service';
 import { observationsToCSV, observationsToJSON, observationsToFHIR, downloadFile } from '../shared/utils/export';
 

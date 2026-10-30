@@ -25,6 +25,7 @@ import { ObservationChanges } from '../../../core/observation.service';
 import { isOutOfRange } from '../../../core/clinical';
 import { BP_RANGES, canonicalUnit } from '../../../core/units';
 import { SeverityBadgeComponent } from '../../../shared/components/severity-badge/severity-badge.component';
+import { METRIC_COLORS, BRAND_COLOR } from '../../../core/metric-colors';
 
 @Component({
   selector: 'app-metric-detail',
@@ -43,16 +44,9 @@ export class MetricDetailPage implements OnInit {
   observations: Observation[] = [];
   chartData: number[] = [];
   chartLabels: string[] = [];
-  chartColor = '#3B82F6';
+  chartColor = BRAND_COLOR;
 
-  metricColors: { [key in MetricType]: string } = {
-    bp: '#EF4444',
-    glucose: '#F59E0B',
-    spo2: '#3B82F6',
-    hr: '#10B981',
-    pain: '#8B5CF6',
-    weight: '#6366F1',
-  };
+  metricColors: { [key in MetricType]: string } = { ...METRIC_COLORS };
 
   // Form values
   systolic: number | null = null;
@@ -103,17 +97,6 @@ export class MetricDetailPage implements OnInit {
     return rtlLanguages.includes(currentLang) ? 'arrow-forward' : 'arrow-back';
   }
 
-  getGradient(): string {
-    const gradients: { [key in MetricType]: string } = {
-      bp: 'linear-gradient(135deg, #EF4444 0%, #DC2626 100%)',
-      glucose: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
-      spo2: 'linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)',
-      hr: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
-      pain: 'linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%)',
-      weight: 'linear-gradient(135deg, #6366F1 0%, #4F46E5 100%)',
-    };
-    return gradients[this.metric] || 'linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)';
-  }
 
   getMetricIcon(metric: MetricType): string {
     const icons: { [key in MetricType]: string } = {

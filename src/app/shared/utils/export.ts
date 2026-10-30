@@ -59,7 +59,7 @@ export function observationsToFHIR(observations: Observation[], profile: any): s
   return JSON.stringify(bundle, null, 2);
 }
 
-function createFHIRObservation(obs: Observation, profile: any): any {
+function createFHIRObservation(obs: Observation, _profile: any): any {
   const observation: any = {
     resourceType: 'Observation',
     id: obs.id || undefined,

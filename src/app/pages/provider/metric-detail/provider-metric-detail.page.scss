@@ -29,7 +29,7 @@ ion-header {
   gap: 1rem;
   margin-bottom: 1.5rem;
   padding: 1rem;
-  background: linear-gradient(135deg, var(--metric-color) 0%, var(--metric-color)dd 100%);
+  background: var(--metric-color);
   border-radius: 16px;
   color: white;
 
@@ -417,7 +417,7 @@ ion-header {
 // Dark mode adjustments
 @media (prefers-color-scheme: dark) {
   .metric-header {
-    background: linear-gradient(135deg, rgba(var(--ion-color-primary-rgb), 0.4) 0%, rgba(var(--ion-color-primary-rgb), 0.3) 100%);
+    background: rgba(var(--ion-color-primary-rgb), 0.4);
   }
 
   .record-card {

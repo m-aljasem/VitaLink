@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
-  IonContent, IonHeader, IonToolbar, IonCard, IonCardContent, IonText, IonIcon, IonChip, IonButton, IonButtons, AlertController, IonRefresher, IonRefresherContent
+  IonContent, IonHeader, IonToolbar, IonCard, IonCardContent, IonIcon, IonChip, IonButton, IonButtons, AlertController, IonRefresher, IonRefresherContent
 } from '@ionic/angular/standalone';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { CommonModule } from '@angular/common';
@@ -13,6 +13,7 @@ import { SharingService, ProviderLink } from '../../../core/sharing.service';
 import { ObservationService, MetricType, Observation } from '../../../core/observation.service';
 import { MetricFormatService } from '../../../core/metric-format.service';
 import { SeverityBadgeComponent } from '../../../shared/components/severity-badge/severity-badge.component';
+import { METRIC_COLORS } from '../../../core/metric-colors';
 
 interface MetricWidget {
   metric: MetricType;
@@ -44,12 +45,12 @@ export class ProviderPatientDetailPage implements OnInit {
   loading = true;
 
   metricConfig: { [key in MetricType]: { label: string; icon: string; color: string } } = {
-    bp: { label: 'METRICS.BP', icon: 'pulse', color: '#EF4444' },
-    glucose: { label: 'METRICS.GLUCOSE', icon: 'water', color: '#F59E0B' },
-    spo2: { label: 'METRICS.SPO2', icon: 'pulse-outline', color: '#3B82F6' },
-    hr: { label: 'METRICS.HR', icon: 'heart', color: '#10B981' },
-    pain: { label: 'METRICS.PAIN', icon: 'sad', color: '#8B5CF6' },
-    weight: { label: 'METRICS.WEIGHT', icon: 'scale', color: '#6366F1' },
+    bp: { label: 'METRICS.BP', icon: 'pulse', color: METRIC_COLORS.bp },
+    glucose: { label: 'METRICS.GLUCOSE', icon: 'water', color: METRIC_COLORS.glucose },
+    spo2: { label: 'METRICS.SPO2', icon: 'pulse-outline', color: METRIC_COLORS.spo2 },
+    hr: { label: 'METRICS.HR', icon: 'heart', color: METRIC_COLORS.hr },
+    pain: { label: 'METRICS.PAIN', icon: 'sad', color: METRIC_COLORS.pain },
+    weight: { label: 'METRICS.WEIGHT', icon: 'scale', color: METRIC_COLORS.weight },
   };
 
   constructor(

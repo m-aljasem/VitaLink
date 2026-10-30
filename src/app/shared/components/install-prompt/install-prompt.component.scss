@@ -52,12 +52,12 @@
   right: -8px;
   width: 36px;
   height: 36px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--brand);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+  box-shadow: var(--app-shadow-sm);
   animation: pulse 2s infinite;
   
   ion-icon {
@@ -71,10 +71,7 @@
   font-size: 1.75rem;
   font-weight: 700;
   color: var(--ion-color-dark);
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--brand);
 }
 
 .install-subtitle {
@@ -136,9 +133,9 @@
 }
 
 .install-button {
-  --background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  --background-hover: linear-gradient(135deg, #5568d3 0%, #6a3f8f 100%);
-  --box-shadow: 0 4px 16px rgba(102, 126, 234, 0.4);
+  --background: var(--brand);
+  --background-hover: var(--brand-strong);
+  --box-shadow: var(--app-shadow-sm);
   --border-radius: 12px;
   font-weight: 600;
   text-transform: none;

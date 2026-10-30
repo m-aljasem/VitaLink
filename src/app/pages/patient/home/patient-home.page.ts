@@ -20,6 +20,7 @@ import { SeverityBadgeComponent } from '../../../shared/components/severity-badg
 import { CommonModule } from '@angular/common';
 import { addIcons } from 'ionicons';
 import { heart, water, pulse, thermometer, bandage, scale, timeOutline, createOutline, trash, pricetagOutline, add, medkit, documentTextOutline } from 'ionicons/icons';
+import { METRIC_COLORS, BRAND_COLOR } from '../../../core/metric-colors';
 
 interface MetricData {
   metric: MetricType;
@@ -56,14 +57,7 @@ export class PatientHomePage implements OnInit, ViewWillEnter, OnDestroy {
   showRecordModal = false;
   selectedRecord: Observation | null = null;
 
-  metricColors: { [key in MetricType]: string } = {
-    bp: '#EF4444',
-    glucose: '#F59E0B',
-    spo2: '#3B82F6',
-    hr: '#10B981',
-    pain: '#8B5CF6',
-    weight: '#6366F1',
-  };
+  metricColors: { [key in MetricType]: string } = { ...METRIC_COLORS };
 
   constructor(
     private authService: AuthService,
@@ -121,20 +115,9 @@ export class PatientHomePage implements OnInit, ViewWillEnter, OnDestroy {
   }
 
   getMetricColor(metric: string): string {
-    return this.metricColors[metric as MetricType] || '#3B82F6';
+    return this.metricColors[metric as MetricType] || BRAND_COLOR;
   }
 
-  getMetricGradient(metric: string): string {
-    const gradients: { [key: string]: string } = {
-      bp: 'linear-gradient(135deg, #EF4444 0%, #DC2626 100%)',
-      glucose: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
-      spo2: 'linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)',
-      hr: 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
-      pain: 'linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%)',
-      weight: 'linear-gradient(135deg, #6366F1 0%, #4F46E5 100%)',
-    };
-    return gradients[metric] || 'linear-gradient(135deg, #3B82F6 0%, #2563EB 100%)';
-  }
 
   async ngOnInit() {
     this.profile = await this.authService.getCurrentProfile();

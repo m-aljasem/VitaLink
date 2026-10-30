@@ -21,7 +21,7 @@
     &:focus-within {
       --border-color: var(--ion-color-primary);
       --background: var(--app-surface);
-      box-shadow: 0 2px 8px rgba(var(--ion-color-primary-rgb), 0.3);
+      box-shadow: var(--app-shadow-sm);
     }
   }
 }

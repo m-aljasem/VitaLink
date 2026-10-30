@@ -1,5 +1,5 @@
 .onboarding-content {
-  --background: linear-gradient(180deg, #667EEA 0%, #764BA2 50%, #F093FB 100%);
+  --background: var(--brand);
   position: relative;
   overflow: hidden;
 
@@ -64,10 +64,7 @@
       font-size: 2rem;
       font-weight: 700;
       margin: 0 0 0.75rem 0;
-      background: linear-gradient(135deg, white 0%, #f0f0f0 100%); // gradient text on the coloured header, same in both themes
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      color: #ffffff; // on the brand-coloured header in both themes
     }
 
     p {
@@ -116,7 +113,7 @@
 
   &.patient-card {
     .role-icon-wrapper {
-      background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+      background: var(--tone-green);
     }
 
     h2 {
@@ -129,7 +126,7 @@
 
   &.provider-card {
     .role-icon-wrapper {
-      background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
+      background: var(--brand);
     }
 
     h2 {
@@ -185,11 +182,11 @@
           border: none !important;
           
           &:hover {
-            background: rgba(102, 126, 234, 0.1) !important;
+            background: rgba(var(--brand-rgb), 0.1) !important;
           }
           
           &.mdc-list-item--selected {
-            background: rgba(102, 126, 234, 0.15) !important;
+            background: rgba(var(--brand-rgb), 0.15) !important;
           }
         }
       }
@@ -231,10 +228,10 @@
         }
         
         &.selected {
-          --background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          --background: var(--brand);
           --color: white;
-          --border-color: rgba(102, 126, 234, 0.3);
-          box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+          --border-color: rgba(var(--brand-rgb), 0.3);
+          box-shadow: var(--app-shadow-sm);
           transform: scale(1.02);
         }
         
@@ -262,9 +259,9 @@
     margin-inline: 0;
     
     &.item-has-focus {
-      --border-color: #667EEA;
+      --border-color: var(--brand);
       --border-width: 2px;
-      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+      box-shadow: var(--app-shadow-sm);
       transform: translateY(-2px);
     }
     
@@ -323,9 +320,9 @@
     border: 2px solid transparent;
 
     &.selected {
-      --background: linear-gradient(135deg, #667EEA 0%, #764BA2 100%);
+      --background: var(--brand);
       --color: white;
-      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+      box-shadow: var(--app-shadow-sm);
       transform: translateY(-2px);
     }
 
@@ -336,14 +333,14 @@
 }
 
 .next-button {
-  --background: linear-gradient(135deg, #667EEA 0%, #764BA2 100%);
+  --background: var(--brand);
   --color: white;
   --border-radius: 16px;
   --padding-top: 16px;
   --padding-bottom: 16px;
   font-weight: 600;
   font-size: 1rem;
-  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+  box-shadow: var(--app-shadow-sm);
   margin: 0 0 0.75rem 0;
   transition: all 0.3s ease;
 

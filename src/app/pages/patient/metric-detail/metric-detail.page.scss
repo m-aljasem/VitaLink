@@ -1,5 +1,5 @@
 .metric-detail-content {
-  --background: linear-gradient(180deg, var(--app-surface-soft-2) 0%, var(--app-surface) 100%);
+  --background: var(--app-surface-soft-2);
 }
 
 .metric-detail-container {
@@ -19,7 +19,7 @@
   position: relative;
 
   .back-button {
-    --color: var(--metric-color, #3B82F6);
+    --color: var(--metric-color, var(--brand));
     --padding-start: 8px;
     --padding-end: 8px;
     --padding-top: 8px;
@@ -50,10 +50,7 @@
     font-size: 1.25rem;
     font-weight: 700;
     margin: 0;
-    background: var(--metric-gradient, linear-gradient(135deg, #3B82F6 0%, #2563EB 100%));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: var(--metric-accent, var(--brand));
     flex: 1;
     text-align: center;
   }
@@ -83,7 +80,7 @@
 
       ion-icon {
         font-size: 1.25rem;
-        color: var(--metric-color, #3B82F6);
+        color: var(--metric-color, var(--brand));
       }
     }
 
@@ -124,7 +121,7 @@
 
         ion-icon {
           font-size: 1.25rem;
-          color: var(--metric-color, #3B82F6);
+          color: var(--metric-color, var(--brand));
         }
       }
 
@@ -144,7 +141,7 @@
           border: 2px solid transparent;
 
           &.active {
-            --background: var(--metric-gradient, linear-gradient(135deg, #3B82F6 0%, #2563EB 100%));
+            --background: var(--metric-accent, var(--brand));
             --color: white;
             border-color: rgba(0, 0, 0, 0.1);
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
@@ -177,7 +174,7 @@
         font-weight: 500;
 
         ion-icon {
-          color: var(--metric-color, #3B82F6);
+          color: var(--metric-color, var(--brand));
         }
       }
     }
@@ -196,7 +193,7 @@
 
         ion-icon {
           font-size: 1.25rem;
-          color: var(--metric-color, #3B82F6);
+          color: var(--metric-color, var(--brand));
         }
       }
 
@@ -222,7 +219,7 @@
           }
 
           &.selected {
-            --background: var(--metric-gradient, linear-gradient(135deg, #3B82F6 0%, #2563EB 100%));
+            --background: var(--metric-accent, var(--brand));
             --color: white;
             border-color: rgba(0, 0, 0, 0.1);
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
@@ -233,7 +230,7 @@
     }
 
     .save-button {
-      --background: var(--metric-gradient, linear-gradient(135deg, #3B82F6 0%, #2563EB 100%));
+      --background: var(--metric-accent, var(--brand));
       --color: white;
       --border-radius: 16px;
       --padding-top: 16px;
@@ -259,7 +256,7 @@
   margin: 2rem 0;
   
   .add-record-button {
-    --background: var(--metric-gradient, linear-gradient(135deg, #3B82F6 0%, #2563EB 100%));
+    --background: var(--metric-accent, var(--brand));
     --color: white;
     --border-radius: 16px;
     --padding-top: 16px;
@@ -304,7 +301,7 @@
 
       ion-icon {
         font-size: 1.5rem;
-        color: var(--metric-color, #3B82F6);
+        color: var(--metric-color, var(--brand));
       }
     }
   }
@@ -324,7 +321,7 @@
 
     ion-icon {
       font-size: 1.75rem;
-      color: var(--metric-color, #3B82F6);
+      color: var(--metric-color, var(--brand));
     }
   }
 
@@ -337,7 +334,7 @@
   .history-card {
     margin: 0;
     border-radius: 16px;
-    border-left: 4px solid var(--metric-color, #3B82F6);
+    border-left: 4px solid var(--metric-color, var(--brand));
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
     transition: all 0.3s ease;
     background: var(--app-surface);
@@ -407,13 +404,13 @@
 
           .history-chip {
             --background: transparent;
-            --color: var(--chip-color, #3B82F6);
+            --color: var(--chip-color, var(--brand));
             font-weight: 500;
             font-size: 0.75rem;
             height: 28px;
             border-radius: 14px;
             margin: 0;
-            border: 1px solid var(--chip-color, #3B82F6);
+            border: 1px solid var(--chip-color, var(--brand));
             opacity: 0.8;
           }
         }
@@ -552,7 +549,7 @@
 
       .record-chip {
         --background: rgba(var(--chip-color-rgb, 59, 130, 246), 0.1);
-        --color: var(--chip-color, #3B82F6);
+        --color: var(--chip-color, var(--brand));
         font-size: 0.875rem;
       }
     }
@@ -565,19 +562,19 @@
   gap: 0.75rem;
 
   .edit-button {
-    --background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
+    --background: var(--brand);
     --color: white;
     --border-radius: 12px;
     font-weight: 600;
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    box-shadow: var(--app-shadow-sm);
   }
 
   .delete-button {
-    --background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
+    --background: var(--ion-color-danger);
     --color: white;
     --border-radius: 12px;
     font-weight: 600;
-    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+    box-shadow: var(--app-shadow-sm);
   }
 
   .ok-button {

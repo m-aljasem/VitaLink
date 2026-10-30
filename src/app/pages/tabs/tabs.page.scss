@@ -1,5 +1,5 @@
 .custom-tab-bar {
-  --background: linear-gradient(180deg, rgba(var(--app-surface-rgb), 0.95) 0%, rgba(var(--app-surface-rgb), 0.98) 100%);
+  --background: rgba(var(--app-surface-rgb), 0.95);
   --border: none;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
@@ -23,7 +23,7 @@
     transform: translateX(-50%);
     width: 40px;
     height: 4px;
-    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+    background: var(--brand);
     border-radius: 0 0 4px 4px;
     opacity: 0.3;
     z-index: 1;
@@ -36,14 +36,14 @@
     left: 4px;
     width: calc(33.333% - 5.33px);
     height: calc(100% - 16px);
-    background: linear-gradient(135deg, rgba(245, 87, 108, 0.15) 0%, rgba(240, 147, 251, 0.15) 100%);
+    background: rgba(var(--brand-rgb), 0.12);
     border-radius: 16px;
     transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94), 
                 background 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
                 box-shadow 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     z-index: 0;
     pointer-events: none;
-    box-shadow: 0 2px 8px rgba(245, 87, 108, 0.2);
+    box-shadow: var(--app-shadow-sm);
     will-change: transform;
     backface-visibility: hidden;
     transform: translateZ(0);
@@ -52,27 +52,27 @@
   // Position sliding background based on selected tab (new order: Connect, Home, Settings)
   &:has(.tab-button-connect.tab-selected) .sliding-background {
     transform: translateX(0) translateZ(0);
-    background: linear-gradient(135deg, rgba(245, 87, 108, 0.15) 0%, rgba(240, 147, 251, 0.15) 100%);
-    box-shadow: 0 2px 8px rgba(245, 87, 108, 0.2);
+    background: rgba(var(--brand-rgb), 0.12);
+    box-shadow: var(--app-shadow-sm);
   }
 
   &:has(.tab-button-home.tab-selected) .sliding-background {
     transform: translateX(calc(100% + 4px)) translateZ(0);
-    background: linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%);
-    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+    background: rgba(var(--brand-rgb), 0.12);
+    box-shadow: var(--app-shadow-sm);
   }
 
   &:has(.tab-button-settings.tab-selected) .sliding-background {
     transform: translateX(calc(200% + 8px)) translateZ(0);
-    background: linear-gradient(135deg, rgba(79, 172, 254, 0.15) 0%, rgba(0, 242, 254, 0.15) 100%);
-    box-shadow: 0 2px 8px rgba(79, 172, 254, 0.2);
+    background: rgba(var(--brand-rgb), 0.12);
+    box-shadow: var(--app-shadow-sm);
   }
 
   ion-tab-button {
     position: relative;
     z-index: 1;
     --color: #9ca3af;
-    --color-selected: #667eea;
+    --color-selected: var(--brand);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     border-radius: 16px;
@@ -101,19 +101,19 @@
       transform: translateX(-50%) scaleX(0);
       width: 30px;
       height: 3px;
-      background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+      background: var(--brand);
       border-radius: 2px;
       transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     &.tab-selected {
-      --color: #667eea;
+      --color: var(--brand);
       background: transparent; // Remove individual background, let sliding background show
       transform: translateY(-4px);
 
       ion-icon {
         transform: scale(1.15);
-        filter: drop-shadow(0 2px 4px rgba(102, 126, 234, 0.3));
+        filter: drop-shadow(0 2px 4px rgba(var(--brand-rgb), 0.3));
       }
 
       ion-label {
@@ -129,34 +129,34 @@
     // Hover effect for non-mobile
     @media (hover: hover) {
       &:hover:not(.tab-selected) {
-        --color: #667eea;
-        background: rgba(102, 126, 234, 0.05);
+        --color: var(--brand);
+        background: rgba(var(--brand-rgb), 0.05);
         transform: translateY(-2px);
       }
     }
 
     // Individual tab button colors (background handled by sliding element)
     &.tab-button-home.tab-selected {
-      --color-selected: #667eea;
+      --color-selected: var(--brand);
 
       &::after {
-        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        background: var(--brand);
       }
     }
 
     &.tab-button-connect.tab-selected {
-      --color-selected: #f5576c;
+      --color-selected: var(--brand);
 
       &::after {
-        background: linear-gradient(90deg, #f5576c 0%, #f093fb 100%);
+        background: var(--brand);
       }
     }
 
     &.tab-button-settings.tab-selected {
-      --color-selected: #4facfe;
+      --color-selected: var(--brand);
 
       &::after {
-        background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+        background: var(--brand);
       }
     }
   }

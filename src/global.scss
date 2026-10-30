@@ -42,11 +42,11 @@
     border: none !important;
     
     &:hover {
-      background: rgba(102, 126, 234, 0.1) !important;
+      background: rgba(var(--brand-rgb), 0.1) !important;
     }
     
     &.mdc-list-item--selected {
-      background: rgba(102, 126, 234, 0.15) !important;
+      background: rgba(var(--brand-rgb), 0.15) !important;
     }
   }
 }

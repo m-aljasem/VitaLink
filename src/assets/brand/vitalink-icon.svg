@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="VitaLink">
+  <!-- Full-bleed so launchers/PWA can mask it; the mark stays inside the central safe zone. -->
+  <rect width="512" height="512" fill="#146C68"/>
+  <path d="M132 268 H196 L224 206 L266 330 L296 236 L318 268 H380"
+        fill="none" stroke="#FFFFFF" stroke-width="30" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="132" cy="268" r="24" fill="#FFFFFF"/>
+  <circle cx="380" cy="268" r="24" fill="#FFFFFF"/>
+</svg>

@@ -7,7 +7,7 @@ import { AuthService } from './auth.service';
  * If user is authenticated, redirect to home
  * If user is not authenticated, allow access to auth pages
  */
-export const authGuard: CanActivateFn = async (route, state) => {
+export const authGuard: CanActivateFn = async (_route, _state) => {
   const authService = inject(AuthService);
   const router = inject(Router);
 

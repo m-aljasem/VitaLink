@@ -1,5 +1,5 @@
 .patient-connect-content {
-  --background: linear-gradient(180deg, var(--app-surface-soft-2) 0%, var(--app-surface) 100%);
+  --background: var(--app-surface-soft-2);
   background: var(--app-surface-soft) !important;
   background-color: var(--app-surface-soft) !important;
   
@@ -136,11 +136,11 @@
     height: 80px;
     margin: 0 auto 1.5rem;
     border-radius: 20px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: var(--brand);
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+    box-shadow: var(--app-shadow-sm);
 
     ion-icon {
       font-size: 2.5rem;
@@ -152,10 +152,7 @@
     font-size: 2rem;
     font-weight: 700;
     margin: 0 0 0.5rem 0;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: var(--ion-text-color);
   }
 
   .subtitle {
@@ -174,14 +171,17 @@
 }
 
 .share-button {
-  --background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  --color: white;
+  --background: var(--app-surface);
+  --color: var(--brand);
+  --border-color: var(--app-line-strong);
+  --border-style: solid;
+  --border-width: 1px;
   --border-radius: 16px;
   --padding-top: 16px;
   --padding-bottom: 16px;
   font-weight: 600;
   font-size: 1rem;
-  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+  box-shadow: var(--app-shadow-sm);
   transition: all 0.3s ease;
 
   &:active {
@@ -194,14 +194,14 @@
 }
 
 .add-button {
-  --background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-  --color: white;
+  --background: var(--brand);
+  --color: var(--brand-contrast);
   --border-radius: 16px;
   --padding-top: 16px;
   --padding-bottom: 16px;
   font-weight: 600;
   font-size: 1rem;
-  box-shadow: 0 4px 15px rgba(245, 87, 108, 0.3);
+  box-shadow: var(--app-shadow-sm);
   transition: all 0.3s ease;
 
   &:active {
@@ -214,16 +214,18 @@
 }
 
 .pdf-export-button {
-  --background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-  --color: white;
+  --background: var(--app-surface);
+  --color: var(--brand);
+  --border-color: var(--app-line-strong);
+  --border-style: solid;
   --border-radius: 16px;
   --padding-top: 16px;
   --padding-bottom: 16px;
   font-weight: 600;
   font-size: 1rem;
-  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+  box-shadow: none;
   transition: all 0.3s ease;
-  --border-width: 0;
+  --border-width: 1px;
 
   &:active {
     transform: scale(0.98);
@@ -259,13 +261,13 @@
     }
 
     .provider-count-badge {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: var(--brand);
       color: white;
       padding: 0.5rem 1rem;
       border-radius: 20px;
       font-weight: 600;
       font-size: 0.875rem;
-      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+      box-shadow: var(--app-shadow-sm);
     }
   }
 }
@@ -280,7 +282,7 @@
   margin: 0;
   border-radius: 16px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-  border: 1px solid rgba(102, 126, 234, 0.1);
+  border: 1px solid rgba(var(--brand-rgb), 0.1);
   transition: all 0.3s ease;
   animation: slideInUp 0.5s ease-out backwards;
 
@@ -307,12 +309,12 @@
       width: 56px;
       height: 56px;
       border-radius: 14px;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: var(--brand);
       display: flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
-      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+      box-shadow: var(--app-shadow-sm);
 
       ion-icon {
         font-size: 1.75rem;
@@ -391,7 +393,7 @@
   margin: 0;
   border-radius: 16px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-  border: 1px solid rgba(102, 126, 234, 0.1);
+  border: 1px solid rgba(var(--brand-rgb), 0.1);
   animation: slideInUp 0.5s ease-out backwards;
 
   @for $i from 1 through 3 {
@@ -499,7 +501,7 @@
     margin: 0 0 1.5rem 0;
     border-radius: 16px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-    border: 1px solid rgba(102, 126, 234, 0.1);
+    border: 1px solid rgba(var(--brand-rgb), 0.1);
 
     ion-card-content {
       padding: 1.5rem;
@@ -553,14 +555,14 @@
   }
 
   .generate-pdf-button {
-    --background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    --background: var(--tone-green);
     --color: white;
     --border-radius: 16px;
     --padding-top: 16px;
     --padding-bottom: 16px;
     font-weight: 600;
     font-size: 1rem;
-    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+    box-shadow: var(--app-shadow-sm);
     margin-top: 1rem;
     transition: all 0.3s ease;
 
@@ -586,11 +588,11 @@
       height: 64px;
       margin: 0 auto 1rem;
       border-radius: 16px;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: var(--brand);
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+      box-shadow: var(--app-shadow-sm);
 
       ion-icon {
         font-size: 2rem;
@@ -631,7 +633,7 @@
     &:focus-within {
       --border-color: var(--ion-color-primary);
       --background: var(--app-surface);
-      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.2);
+      box-shadow: var(--app-shadow-sm);
       transform: translateY(-2px) scale(1.02);
     }
 
@@ -645,7 +647,7 @@
     margin: 2rem 0;
     border-radius: 16px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-    border: 1px solid rgba(102, 126, 234, 0.1);
+    border: 1px solid rgba(var(--brand-rgb), 0.1);
 
     ion-card-content {
       padding: 1.5rem;
@@ -691,14 +693,14 @@
   }
 
   .confirm-button {
-    --background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --background: var(--brand);
     --color: white;
     --border-radius: 16px;
     --padding-top: 16px;
     --padding-bottom: 16px;
     font-weight: 600;
     font-size: 1rem;
-    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    box-shadow: var(--app-shadow-sm);
     margin-top: 1rem;
     transition: all 0.3s ease;
 
@@ -726,7 +728,7 @@
     margin: 0 0 1.5rem 0;
     border-radius: 16px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-    border: 1px solid rgba(102, 126, 234, 0.1);
+    border: 1px solid rgba(var(--brand-rgb), 0.1);
 
     ion-card-content {
       padding: 1.5rem;
@@ -766,14 +768,14 @@
   }
 
   .revoke-button {
-    --background: linear-gradient(135deg, #f5576c 0%, #f093fb 100%);
+    --background: var(--tone-rose);
     --color: white;
     --border-radius: 16px;
     --padding-top: 16px;
     --padding-bottom: 16px;
     font-weight: 600;
     font-size: 1rem;
-    box-shadow: 0 4px 15px rgba(245, 87, 108, 0.3);
+    box-shadow: var(--app-shadow-sm);
     margin-top: 1.5rem;
 
     &:active {

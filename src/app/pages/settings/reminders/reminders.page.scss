@@ -1,5 +1,5 @@
 .reminders-content {
-  --background: linear-gradient(180deg, var(--app-surface-soft-2) 0%, var(--app-surface) 100%);
+  --background: var(--app-surface-soft-2);
 }
 
 .reminders-container {
@@ -35,11 +35,11 @@
     height: 80px;
     margin: 0 auto 1.5rem;
     border-radius: 20px;
-    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    background: var(--tone-rose);
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 8px 20px rgba(245, 87, 108, 0.3);
+    box-shadow: var(--app-shadow-sm);
 
     ion-icon {
       font-size: 2.5rem;
@@ -51,10 +51,7 @@
     font-size: 2rem;
     font-weight: 700;
     margin: 0 0 0.5rem 0;
-    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: var(--ion-text-color);
   }
 
   .subtitle {
@@ -66,14 +63,14 @@
 }
 
 .add-button {
-  --background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  --background: var(--tone-rose);
   --color: white;
   --border-radius: 16px;
   --padding-top: 16px;
   --padding-bottom: 16px;
   font-weight: 600;
   font-size: 1rem;
-  box-shadow: 0 4px 15px rgba(245, 87, 108, 0.3);
+  box-shadow: var(--app-shadow-sm);
   margin-bottom: 2rem;
   transition: all 0.3s ease;
 
@@ -96,7 +93,7 @@
   margin: 0;
   border-radius: 16px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-  border: 1px solid rgba(245, 87, 108, 0.1);
+  border: 1px solid rgba(var(--tone-rose-rgb), 0.1);
   transition: all 0.3s ease;
   animation: slideInUp 0.5s ease-out backwards;
 
@@ -123,12 +120,12 @@
       width: 48px;
       height: 48px;
       border-radius: 12px;
-      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      background: var(--tone-rose);
       display: flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
-      box-shadow: 0 4px 12px rgba(245, 87, 108, 0.3);
+      box-shadow: var(--app-shadow-sm);
 
       ion-icon {
         font-size: 1.5rem;
@@ -168,8 +165,8 @@
 
         .day-chip {
           margin: 0;
-          --background: rgba(245, 87, 108, 0.1);
-          --color: #f5576c;
+          --background: rgba(var(--tone-rose-rgb), 0.1);
+          --color: var(--tone-rose);
           font-weight: 500;
           font-size: 0.75rem;
           height: 28px;
@@ -186,12 +183,12 @@
       flex-shrink: 0;
 
       .reminder-toggle {
-        --handle-background-checked: #f5576c;
-        --track-background-checked: rgba(245, 87, 108, 0.3);
+        --handle-background-checked: var(--tone-rose);
+        --track-background-checked: rgba(var(--tone-rose-rgb), 0.3);
       }
 
       .delete-button {
-        --color: #f5576c;
+        --color: var(--tone-rose);
         --padding-start: 8px;
         --padding-end: 8px;
         margin: 0;

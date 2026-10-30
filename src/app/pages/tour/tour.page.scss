@@ -1,5 +1,5 @@
 .tour-content {
-  --background: linear-gradient(180deg, #667EEA 0%, #764BA2 50%, #F093FB 100%);
+  --background: var(--brand);
   position: relative;
   overflow: hidden;
 
@@ -92,15 +92,15 @@
     }
 
     &.home-icon {
-      background: linear-gradient(135deg, rgba(16, 185, 129, 0.3) 0%, rgba(5, 150, 105, 0.3) 100%);
+      background: rgba(var(--tone-green-rgb), 0.3);
     }
 
     &.connect-icon {
-      background: linear-gradient(135deg, rgba(59, 130, 246, 0.3) 0%, rgba(37, 99, 235, 0.3) 100%);
+      background: rgba(var(--brand-rgb), 0.3);
     }
 
     &.settings-icon {
-      background: linear-gradient(135deg, rgba(139, 92, 246, 0.3) 0%, rgba(124, 58, 237, 0.3) 100%);
+      background: rgba(var(--tone-violet-rgb), 0.3);
     }
   }
 
@@ -108,10 +108,7 @@
     font-size: 2.5rem;
     font-weight: 700;
     margin: 0 0 1.5rem 0;
-    background: linear-gradient(135deg, white 0%, #f0f0f0 100%); // gradient text on the coloured header, same in both themes
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: #ffffff; // on the brand-coloured header in both themes
     text-shadow: 0 2px 10px rgba(255, 255, 255, 0.3);
     animation: fadeInUp 0.6s ease-out 0.2s both;
   }
@@ -127,8 +124,8 @@
   }
 
   .get-started-button {
-    --background: linear-gradient(135deg, white 0%, #f0f0f0 100%); // gradient text on the coloured header, same in both themes
-    --color: #667EEA;
+    --background: #ffffff;
+    --color: var(--brand);
     --border-radius: 16px;
     --padding-top: 18px;
     --padding-bottom: 18px;

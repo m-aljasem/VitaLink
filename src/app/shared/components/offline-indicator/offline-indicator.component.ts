@@ -22,7 +22,7 @@ import { Subscription } from 'rxjs';
       top: 0;
       left: 0;
       right: 0;
-      background: #f59e0b;
+      background: var(--tone-amber);
       color: white;
       padding: 0.75rem 1rem;
       display: flex;
