@@ -1,0 +1,38 @@
+<section class="photo-reader" [attr.aria-busy]="busy" aria-labelledby="photo-title">
+  <h3 id="photo-title">{{ 'PHOTO_READING.TITLE' | translate }}</h3>
+  <p>{{ 'PHOTO_READING.TIPS' | translate }}</p>
+  <input #camera type="file" accept="image/jpeg,image/png,image/webp" capture="environment" hidden (change)="select($event)">
+  <input #gallery type="file" accept="image/jpeg,image/png,image/webp" hidden (change)="select($event)">
+  <div class="photo-actions">
+    <ion-button fill="outline" size="small" [disabled]="busy || disabled" (click)="camera.click()">
+      <ion-icon name="camera-outline" slot="start"></ion-icon>
+      {{ 'PHOTO_READING.TAKE_PHOTO' | translate }}
+    </ion-button>
+    <ion-button fill="clear" size="small" [disabled]="busy || disabled" (click)="gallery.click()">
+      <ion-icon name="image-outline" slot="start"></ion-icon>
+      {{ 'PHOTO_READING.CHOOSE_PHOTO' | translate }}
+    </ion-button>
+  </div>
+  <ng-container *ngIf="image">
+    <img class="photo-preview" [src]="image" [alt]="'PHOTO_READING.PREVIEW_ALT' | translate">
+    <ng-container *ngIf="!analyzed && provider as activeProvider">
+      <label class="photo-consent">
+        <input type="checkbox" [(ngModel)]="consent" [disabled]="busy || disabled">
+        <span>{{ 'PHOTO_READING.CONSENT' | translate: { provider: activeProvider.label } }}</span>
+      </label>
+      <ion-button expand="block" [disabled]="!consent || busy || disabled" (click)="analyze()">
+        {{ 'PHOTO_READING.ANALYZE' | translate }}
+      </ion-button>
+    </ng-container>
+    <p *ngIf="analyzed" role="status">{{ 'PHOTO_READING.EXTRACTED' | translate }}</p>
+    <ion-button fill="clear" size="small" [disabled]="busy || disabled" (click)="clear()">
+      {{ 'PHOTO_READING.REMOVE_PHOTO' | translate }}
+    </ion-button>
+  </ng-container>
+  <div *ngIf="busy" class="photo-progress" role="status">
+    <ion-spinner name="dots"></ion-spinner>
+    <span>{{ 'PHOTO_READING.PROCESSING' | translate }}</span>
+  </div>
+  <p *ngIf="errorKey" class="photo-error" role="alert">{{ errorKey | translate }}</p>
+  <p class="photo-hint">{{ 'PHOTO_READING.MANUAL_HINT' | translate }}</p>
+</section>

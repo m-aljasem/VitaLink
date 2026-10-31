@@ -1,0 +1,15 @@
+{
+  "lock": false,
+  "nodeModulesDir": "none",
+  "imports": {
+    "@supabase/supabase-js": "npm:@supabase/supabase-js@2.49.8"
+  },
+  "tasks": {
+    "test": "deno test validation_test.ts provider_test.ts",
+    "check": "deno check index.ts validation_test.ts provider_test.ts"
+  },
+  "fmt": {
+    "singleQuote": true,
+    "lineWidth": 100
+  }
+}

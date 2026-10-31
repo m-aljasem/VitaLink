@@ -1,0 +1,18 @@
+.photo-reader {
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border: 1px solid var(--app-line-strong);
+  border-radius: 12px;
+  background: var(--app-surface);
+
+  h3 { margin: 0 0 0.5rem; font-size: 1rem; font-weight: 600; }
+  p { margin: 0.5rem 0; line-height: 1.5; }
+}
+
+.photo-actions { display: flex; flex-wrap: wrap; gap: 0.25rem; }
+.photo-preview { display: block; width: 100%; max-height: 300px; object-fit: contain; margin: 0.75rem 0; border-radius: 8px; }
+.photo-consent { display: flex; align-items: flex-start; gap: 0.75rem; line-height: 1.5; margin: 1rem 0; }
+.photo-consent input { flex-shrink: 0; width: 20px; height: 20px; margin-top: 0.15rem; }
+.photo-progress { display: flex; align-items: center; gap: 0.75rem; }
+.photo-error { color: var(--ion-color-danger); }
+.photo-hint { color: var(--ion-color-medium-shade); font-size: 0.85rem; }

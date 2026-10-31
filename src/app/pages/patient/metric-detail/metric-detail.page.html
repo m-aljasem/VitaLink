@@ -16,12 +16,23 @@
             {{ (editingRecord ? 'METRICS.EDIT_RECORD' : 'METRICS.ENTER_VALUE') | translate }}
           </h2>
 
+          <app-device-photo-reader
+            *ngIf="photoReaderActive && !editingRecord && (metric === 'bp' || metric === 'glucose')"
+            [metric]="metric"
+            [disabled]="saving"
+            (busyChange)="photoBusy = $event"
+            (photoChange)="photoReviewed = false"
+            (reading)="applyPhotoReading($event)">
+          </app-device-photo-reader>
+
           <div *ngIf="metric === 'bp'" class="form-fields bp-fields">
             <ion-item class="form-item">
               <ion-label position="stacked">{{ 'ONBOARDING.SYSTOLIC' | translate }}</ion-label>
               <ion-input 
                 type="number" 
                 [(ngModel)]="systolic"
+                (ngModelChange)="photoValueChanged()"
+                [disabled]="photoBusy || saving"
                 [min]="50"
                 [max]="250"
                 [step]="1"
@@ -33,10 +44,22 @@
               <ion-input 
                 type="number" 
                 [(ngModel)]="diastolic"
+                (ngModelChange)="photoValueChanged()"
+                [disabled]="photoBusy || saving"
                 [min]="30"
                 [max]="150"
                 [step]="1"
                 placeholder="30-150">
+              </ion-input>
+            </ion-item>
+          </div>
+
+          <div *ngIf="metric === 'bp'" class="form-fields">
+            <ion-item class="form-item">
+              <ion-label position="stacked">{{ 'PHOTO_READING.PULSE' | translate }}</ion-label>
+              <ion-input type="number" inputmode="numeric" [(ngModel)]="pulse"
+                (ngModelChange)="photoValueChanged()" [disabled]="photoBusy || saving"
+                [min]="30" [max]="220" [step]="1" placeholder="30–220">
               </ion-input>
             </ion-item>
           </div>
@@ -48,6 +71,8 @@
                 type="number"
                 inputmode="decimal"
                 [(ngModel)]="numericValue"
+                (ngModelChange)="photoValueChanged()"
+                [disabled]="photoBusy || saving"
                 [min]="inputRange.min"
                 [max]="inputRange.max"
                 [step]="inputRange.step"
@@ -112,7 +137,13 @@
             </ion-textarea>
           </ion-item>
 
-          <ion-button expand="block" (click)="save()" class="save-button" [disabled]="saving">
+          <label *ngIf="photoReviewRequired" class="photo-review">
+            <input type="checkbox" [(ngModel)]="photoReviewed" [disabled]="photoBusy || saving">
+            <span>{{ 'PHOTO_READING.REVIEW' | translate }}</span>
+          </label>
+
+          <ion-button expand="block" (click)="save()" class="save-button"
+            [disabled]="saving || photoBusy || (photoReviewRequired && !photoReviewed)">
             <ion-icon name="checkmark-circle" slot="start"></ion-icon>
             {{ 'COMMON.SAVE' | translate }}
           </ion-button>

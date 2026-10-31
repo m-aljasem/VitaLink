@@ -23,7 +23,9 @@ import { DateFormatService } from '../../../core/date-format.service';
 import { MetricFormatService } from '../../../core/metric-format.service';
 import { ObservationChanges } from '../../../core/observation.service';
 import { isOutOfRange } from '../../../core/clinical';
-import { BP_RANGES, canonicalUnit } from '../../../core/units';
+import { BP_RANGES, canonicalUnit, fromDisplay } from '../../../core/units';
+import { DeviceReading } from '../../../core/device-photo.service';
+import { DevicePhotoReaderComponent } from '../../../shared/components/device-photo-reader/device-photo-reader.component';
 import { SeverityBadgeComponent } from '../../../shared/components/severity-badge/severity-badge.component';
 import { METRIC_COLORS, BRAND_COLOR } from '../../../core/metric-colors';
 
@@ -36,7 +38,7 @@ import { METRIC_COLORS, BRAND_COLOR } from '../../../core/metric-colors';
     CommonModule, FormsModule,
     IonContent, IonHeader, IonTitle, IonToolbar, IonButton, IonInput, IonItem, IonLabel,
     IonChip, IonButtons, IonText, IonCard, IonCardContent, IonIcon, IonModal, IonTextarea, TranslateModule, LineChartComponent,
-    SeverityBadgeComponent
+    SeverityBadgeComponent, DevicePhotoReaderComponent
   ],
 })
 export class MetricDetailPage implements OnInit {
@@ -55,6 +57,11 @@ export class MetricDetailPage implements OnInit {
   numericValue: number | null = null; // in the user's display unit
   note = '';
   saving = false;
+  photoBusy = false;
+  photoReaderActive = true;
+  photoReviewRequired = false;
+  photoReviewed = false;
+  private photoGlucose: { displayed: number; canonical: number; unit: string } | null = null;
   selectedTags: string[] = [];
   selectedDateTime = new Date().toISOString();
   dateSelectionMode: 'right-now' | 'custom' = 'right-now';
@@ -85,6 +92,17 @@ export class MetricDetailPage implements OnInit {
       addCircle, time, calendarOutline, checkmarkCircle, pricetagOutline, barChart,
       createOutline, trash, documentTextOutline
     });
+  }
+
+  ionViewWillEnter() {
+    this.photoReaderActive = true;
+  }
+
+  ionViewWillLeave() {
+    // Ionic may cache the page instead of destroying it.
+    this.photoReaderActive = false;
+    this.photoBusy = false;
+    this.photoReviewed = false;
   }
 
   goBack() {
@@ -172,9 +190,36 @@ export class MetricDetailPage implements OnInit {
     }
   }
 
+  applyPhotoReading(reading: DeviceReading) {
+    if (!this.photoReaderActive || reading.metric !== this.metric || this.editingRecord || this.saving) return;
+    if (reading.metric === 'bp') {
+      this.systolic = reading.systolic;
+      this.diastolic = reading.diastolic;
+      this.pulse = reading.pulse;
+    } else {
+      const canonical = fromDisplay('glucose', reading.value, {
+        glucose_unit: reading.unit, weight_unit: 'kg',
+      });
+      this.numericValue = this.format.toDisplay('glucose', canonical);
+      // Preserve the original reading if display-unit conversion rounds it.
+      this.photoGlucose = { displayed: this.numericValue, canonical, unit: this.format.units.glucose_unit };
+    }
+    this.photoReviewRequired = true;
+    this.photoReviewed = false;
+    this.setRightNow();
+  }
+
+  photoValueChanged() {
+    this.photoReviewed = false;
+    this.photoGlucose = null;
+  }
+
   async save() {
     const user = this.authService.getCurrentUser();
-    if (!user || this.saving) return;
+    if (!user || this.saving || this.photoBusy) return;
+    if (this.photoReviewRequired && !this.photoReviewed) {
+      return this.showToast('PHOTO_READING.REVIEW_REQUIRED', 'danger');
+    }
 
     if (new Date(this.selectedDateTime) > new Date()) {
       return this.showToast('METRICS.DATE_FUTURE_ERROR', 'danger');
@@ -202,8 +247,14 @@ export class MetricDetailPage implements OnInit {
       }
       changes.systolic = this.systolic;
       changes.diastolic = this.diastolic;
-      if (this.pulse) {
-        changes.context = { pulse: this.pulse };
+      changes.context = { ...this.editingRecord?.context };
+      delete changes.context.pulse;
+      if (this.pulse !== null && this.pulse !== undefined) {
+        const pulse = Number(this.pulse);
+        if (!Number.isInteger(pulse) || pulse < 30 || pulse > 220) {
+          return this.showToast('PHOTO_READING.PULSE_RANGE_ERROR', 'danger');
+        }
+        changes.context.pulse = pulse;
       }
     } else {
       if (this.numericValue === null || this.numericValue === undefined || isNaN(Number(this.numericValue))) {
@@ -216,7 +267,10 @@ export class MetricDetailPage implements OnInit {
           min: range.min, max: range.max, unit: this.format.unitLabel(this.metric),
         });
       }
-      changes.numeric_value = this.format.fromDisplay(this.metric, value);
+      changes.numeric_value = this.metric === 'glucose' && this.photoGlucose?.displayed === value &&
+        this.photoGlucose.unit === this.format.units.glucose_unit
+        ? this.photoGlucose.canonical
+        : this.format.fromDisplay(this.metric, value);
     }
 
     this.saving = true;
@@ -270,7 +324,11 @@ export class MetricDetailPage implements OnInit {
   private resetForm() {
     this.systolic = null;
     this.diastolic = null;
+    this.pulse = null;
     this.numericValue = null;
+    this.photoReviewRequired = false;
+    this.photoReviewed = false;
+    this.photoGlucose = null;
     this.note = '';
     this.selectedTags = [];
     this.selectedDateTime = new Date().toISOString();
@@ -369,6 +427,7 @@ export class MetricDetailPage implements OnInit {
   }
 
   setRightNow() {
+    this.photoReviewed = false;
     this.selectedDateTime = new Date().toISOString();
     this.dateSelectionMode = 'right-now';
   }
@@ -388,6 +447,7 @@ export class MetricDetailPage implements OnInit {
 
     const { data } = await modal.onWillDismiss();
     if (data && data.selectedDate) {
+      this.photoReviewed = false;
       // Ensure selected date is not in the future
       const selectedDate = new Date(data.selectedDate);
       const now = new Date();
@@ -412,7 +472,10 @@ export class MetricDetailPage implements OnInit {
   }
 
   async editRecord() {
-    if (!this.selectedRecord) return;
+    if (!this.selectedRecord || this.photoBusy || this.saving) return;
+    this.photoReviewRequired = false;
+    this.photoReviewed = false;
+    this.photoGlucose = null;
     
     this.editingRecord = this.selectedRecord;
     this.showRecordModal = false;
@@ -421,6 +484,7 @@ export class MetricDetailPage implements OnInit {
     if (this.selectedRecord.metric === 'bp') {
       this.systolic = this.selectedRecord.systolic || null;
       this.diastolic = this.selectedRecord.diastolic || null;
+      this.pulse = this.selectedRecord.context?.pulse ?? null;
     } else if (this.selectedRecord.numeric_value != null) {
       this.numericValue = this.format.toDisplay(this.metric, Number(this.selectedRecord.numeric_value));
     }

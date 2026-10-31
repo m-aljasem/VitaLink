@@ -48,6 +48,7 @@
 
 ### 📊 Health Tracking
 - ✅ **Comprehensive Metrics** - Blood Pressure, Glucose, SpO₂, Heart Rate, Pain, Weight
+- 📷 **AI Photo Entry** - Capture a blood-pressure monitor or glucometer, review extracted values, then save. Requires internet and [backend setup](docs/DEVICE_PHOTO_READINGS.md).
 - ✅ **Out-of-Range Flags** - Readings are labelled (e.g. "High", "Very low") using general adult ranges, with guidance for urgent values
 - ✅ **Your Units** - mg/dL or mmol/L, kg or lb (defaults by country)
 - ✅ **Notes & Quick Add** - Add a note to any reading; log anything from the home screen's + button
