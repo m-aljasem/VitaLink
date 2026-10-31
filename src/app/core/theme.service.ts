@@ -11,7 +11,7 @@ const STORAGE_KEY = 'vitalink-theme';
   providedIn: 'root',
 })
 export class ThemeService {
-  private preference: ThemePreference = 'system';
+  private preference: ThemePreference = 'light';
   private media = window.matchMedia('(prefers-color-scheme: dark)');
 
   init(): void {

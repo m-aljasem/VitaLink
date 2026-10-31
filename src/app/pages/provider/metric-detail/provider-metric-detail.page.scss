@@ -415,7 +415,7 @@ ion-header {
 }
 
 // Dark mode adjustments
-@media (prefers-color-scheme: dark) {
+:host-context(.ion-palette-dark) {
   .metric-header {
     background: rgba(var(--ion-color-primary-rgb), 0.4);
   }

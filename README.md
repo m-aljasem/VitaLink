@@ -56,7 +56,7 @@
 - ✅ **Smart Reminders** - Personalized health reminders with notifications
 - ✅ **Doctor-Ready Reports** - PDF with averages, ranges, time in range and morning vs evening BP
 - ✅ **Data Export** - CSV, JSON or FHIR (with HL7 interpretation codes)
-- ✅ **Dark Mode** - Follows the system or set manually
+- ✅ **Theme Choice** - Light by default; choose dark mode or follow the system in Settings
 
 ### 👥 Provider Sharing
 - ✅ **6-Digit Code System** - Secure provider-patient linking

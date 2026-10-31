@@ -38,7 +38,7 @@ export class SettingsPage implements OnInit {
   updateAvailable = false;
   checkingUpdate = false;
   updating = false;
-  theme: ThemePreference = 'system';
+  theme: ThemePreference = 'light';
 
   constructor(
     private authService: AuthService,
